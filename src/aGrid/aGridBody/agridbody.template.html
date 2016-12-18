@@ -1,0 +1,22 @@
+<table class="a-grid__body">
+    <thead>
+        <tr>
+            <th class="a-grid-body__column_check" *ngIf="check!=false"></th>
+            <th class="a-grid__body-column" *ngFor="let column of columns" [style.width]="column.width+'px'"></th>
+            <th class="a-grid__body-column"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of items; let i = index;" class="a-grid__row" [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}"
+            (click)="rowSelect(i)" (dblclick)="rowCheck(!item[checkedProperty], i)">
+            <td class="a-grid__cell_check" *ngIf="check!=false">
+                <input #rowCheckBox type="checkbox" [ngModel]="item[checkedProperty]" (click)="rowCheck(rowCheckBox.checked, i)">
+            </td>
+            <td *ngFor="let column of columns" class="a-grid__cell">
+                <a-grid-column-cell-loader *ngIf="column.cell" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
+                <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

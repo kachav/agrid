@@ -1,0 +1,7 @@
+#lib for npm packaging#
+/lib
+
+#npm and bower modules#
+/node_modules
+/bower_components
+npm-debug.log

@@ -1,0 +1,14 @@
+        :host{
+            display: inline-block;
+        }
+
+        .a-grid__button{
+            border: none;
+            outline: none;
+        }
+        .a-grid__button:hover{
+            background-color:  #d3dbe0;
+        }
+        .a-grid__button:active{
+            background-color:  #bac4ce;
+        }

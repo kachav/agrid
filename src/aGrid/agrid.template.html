@@ -1,0 +1,36 @@
+<ng-content></ng-content>
+<div name="gridView" class="a-grid">
+	<div #headerContainer class="a-grid__header-container noselect">
+		<table class="a-grid__header" [style.padding-right]="headerPaddingRight">
+			<thead>
+				<tr>
+					<th class="a-grid__column_check" *ngIf="check!=false"></th>
+					<th class="a-grid__column a-grid__column_sortable" *ngFor="let column of columns; let i = index;" [style.width]="column.width+'px'">
+						<span class="a-grid__column-title" (click)="printScroll(bodyContainer, headerContainer)">
+                            <span *ngIf="!column.header" [textContent]="column.colTitle || ''"></span>
+						<a-grid-column-header-loader *ngIf="column.header" [column]="column"></a-grid-column-header-loader>
+						</span>
+
+						<div *ngIf="column.resizable" (mousedown)="colResizerMouseDown($event, i)" class="a-grid__column-resizer" [ngClass]="{'a-grid__column-resizer_active':i==activeColIndex}"
+							[ngStyle]="i==activeColIndex?activeColStyle.styles:null"></div>
+					</th>
+					<th></th>
+				</tr>
+				<tr>
+					<th class="a-grid__column_check" *ngIf="check!=false"></th>
+					<th *ngFor="let column of columns; let i = index;">
+						<a-grid-filter-loader *ngIf="column.filter" [column]="column"></a-grid-filter-loader>
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div #bodyContainer class="a-grid__body-container" (scroll)="onScroll($event, headerContainer)">
+		<a-grid-body [columns]="bodyColumns" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
+			(onSelect)="rowSelect($event)" (onCheck)="rowCheck($event)"></a-grid-body>
+	</div>
+	<div #bottomContainer>
+		<ng-content select="a-grid-bottom"></ng-content>
+	</div>
+</div>

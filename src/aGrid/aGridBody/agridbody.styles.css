@@ -1,0 +1,56 @@
+:host{
+    display: block;
+}
+
+.a-grid-body__column_check {
+    width: 20px;
+    padding: 0 7px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.a-grid__body-column{
+    padding: 0;
+}
+
+.a-grid__row {
+    line-height: 25px;
+    font-size: 12px;
+    background-color: #fafafa;
+}
+
+.a-grid__row:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.a-grid__row.a-grid__row_checked {
+    background-color: #bac4ce;
+}
+
+
+.a-grid__row:hover,.a-grid__row_selected:hover,.a-grid__row_checked:hover {
+    background-color: #d3dbe0;
+}
+
+.a-grid__row.a-grid__row_selected {
+    
+    background-color: #909eaf;
+}
+
+.a-grid__cell {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 7px;
+}
+        
+.a-grid-check {
+    width: 20px;
+}
+
+.a-grid__body {
+    border-spacing: 0;
+    table-layout: fixed;
+    white-space: nowrap;
+    width:100%;
+}

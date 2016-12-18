@@ -1,0 +1,10 @@
+        :host{
+            display: block;
+            text-align: center;
+        }
+
+        .ag-pager{
+            display: inline-block;
+            padding: 5px;
+            font-size: 12px;
+        }
