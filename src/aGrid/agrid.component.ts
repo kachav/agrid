@@ -51,14 +51,6 @@ export class aGrid {
 
   headerPaddingRight = "0px";
 
-  ngOnChanges(changes: SimpleChange) {
-    this.calculateHeaderPadding();
-  }
-
-  calculateHeaderPadding() {
-    this.headerPaddingRight = `${this.bodyContainer.nativeElement.offsetWidth - this.bodyContainer.nativeElement.clientWidth}px`;
-  }
-
   private xPrev: number;
   private activeColIndex = -1;
   private activeColStyle = {
@@ -109,7 +101,6 @@ export class aGrid {
   //body scrolling
   onScroll(e, header) {
     if (e.target.scrollLeft !== header.scrollLeft) {
-      this.calculateHeaderPadding();
       this.renderer.setElementProperty(header, "scrollLeft", e.target.scrollLeft);
     }
   }
@@ -141,11 +132,6 @@ export class aGrid {
       //save current coordinate as previous coordinate
       this.xPrev = e.pageX;
     }
-  }
-
-  //document mouseMove event
-  @HostListener('window:resize', ['$event']) windowResize(e) {
-    this.calculateHeaderPadding();
   }
 
 

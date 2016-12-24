@@ -1,5 +1,7 @@
-		<div style="height:250px;">
-			<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onSelectRow)="tableState.select($event)"
+		<button (click)="tableState.addItem()">+</button>
+		
+		<div style="height: calc(100vh - 50px);">
+			<a-grid [items]="tableState.items$ | async" (onSelectRow)="tableState.select($event)"
 				(onCheckRow)="tableState.check($event)">
 				<a-grid-column [colName]="'aaa'" [colTitle]="'aaaTitle'">
 					<a-grid-filter>

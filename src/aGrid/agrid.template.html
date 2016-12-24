@@ -1,7 +1,7 @@
 <ng-content></ng-content>
 <div name="gridView" class="a-grid">
 	<div #headerContainer class="a-grid__header-container noselect">
-		<table class="a-grid__header" [style.padding-right]="headerPaddingRight">
+		<table class="a-grid__header" #headertable>
 			<thead>
 				<tr>
 					<th class="a-grid__column_check" *ngIf="check!=false"></th>
@@ -26,7 +26,7 @@
 			</thead>
 		</table>
 	</div>
-	<div #bodyContainer class="a-grid__body-container" (scroll)="onScroll($event, headerContainer)">
+	<div #bodyContainer class="a-grid__body-container" [scrollToPaddingRight]="headertable" (scroll)="onScroll($event, headerContainer)">
 		<a-grid-body [columns]="bodyColumns" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onSelect)="rowSelect($event)" (onCheck)="rowCheck($event)"></a-grid-body>
 	</div>

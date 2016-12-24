@@ -28,26 +28,26 @@ export class homeTableState {
         return this._items.getValue().filter(item => item[this.checkedProperty]);
     }
 
-    modifyDays(index:number, value:number){
-        let items=this._items.getValue();
+    modifyDays(index: number, value: number) {
+        let items = this._items.getValue();
 
-        if(items[index]){
-            items[index].eee=items[index].eee+value;
+        if (items[index]) {
+            items[index].eee = items[index].eee + value;
             this._items.next([...items]);
         }
     }
 
-    addDay(index:number){
-        this.modifyDays(index,1);
+    addDay(index: number) {
+        this.modifyDays(index, 1);
     }
 
-    removeDay(index:number){
-        this.modifyDays(index,-1);
+    removeDay(index: number) {
+        this.modifyDays(index, -1);
     }
 
-    public aaaFilter:string;
+    public aaaFilter: string;
 
-    public dddFilter:string;
+    public dddFilter: string;
 
     public selectedProperty: string;
     public checkedProperty: string;
@@ -60,14 +60,24 @@ export class homeTableState {
 
         this.load();
 
-        this.aaaFilter="";
-        this.dddFilter="";
+        this.aaaFilter = "";
+        this.dddFilter = "";
+    }
+
+    count = 10;
+
+    addItem() {
+        let arr = this._items.getValue();
+        arr.push({ _ouid: this.count, aaa: `aaa-value ${this.count}`, sss: `sss-value ${this.count}`, ddd: `ddd-value ${this.count}`, eee: 1 });
+        this.count++;
+
+        this._items.next(arr);
     }
 
     load() {
         let arr = [];
-        for (let i = 1; i < 100; i++) {
-            arr.push({ _ouid: i, aaa: `aaa-value ${i}`, sss: `sss-value ${i}`, ddd: `ddd-value ${i}`, eee:1 });
+        for (let i = 1; i < this.count; i++) {
+            arr.push({ _ouid: i, aaa: `aaa-value ${i}`, sss: `sss-value ${i}`, ddd: `ddd-value ${i}`, eee: 1 });
         }
 
         this._items.next(arr);
