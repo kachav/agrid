@@ -1,0 +1,19 @@
+:host{
+    display: block;
+    position: absolute;
+    right: 0;
+    top:0;
+    cursor: e-resize;
+    z-index: 999;
+}
+
+.a-grid__column-resizer{
+    width: 7px;
+    height: 20px;
+}
+
+
+.a-grid__column-resizer_active{
+    background-color: #868686;
+    opacity: 0.5;
+}

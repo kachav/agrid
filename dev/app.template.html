@@ -1,12 +1,15 @@
-		<button (click)="tableState.addItem()">+</button>
+		
+		<label><input type="checkbox" [(ngModel)]="showFilters" />hide controls</label>
+		
+		<button *ngIf="showFilters" (click)="tableState.addItem()">+</button>		
 		
 		<div style="height: calc(100vh - 50px);">
-			<a-grid [items]="tableState.items$ | async" (onSelectRow)="tableState.select($event)"
+			<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onSelectRow)="tableState.select($event)"
 				(onCheckRow)="tableState.check($event)">
 				<a-grid-column [colName]="'aaa'" [colTitle]="'aaaTitle'">
 					<a-grid-filter>
 						<template>
-							<input [(ngModel)]="tableState.aaaFilter" class="a-grid__filter-control" type="text" />
+							<input [(ngModel)]="tableState.aaaFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
 						</template>
 					</a-grid-filter>
 				</a-grid-column>
@@ -14,7 +17,7 @@
 				<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
 					<a-grid-filter>
 						<template>
-							<input [(ngModel)]="tableState.dddFilter" class="a-grid__filter-control" type="text" />
+							<input [(ngModel)]="tableState.dddFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
 						</template>
 					</a-grid-filter>
 				</a-grid-column>

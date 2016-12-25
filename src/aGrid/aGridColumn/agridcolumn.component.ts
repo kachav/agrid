@@ -15,4 +15,12 @@ export class aGridColumn {
     @Input() colTitle:string;
     @Input() resizable:boolean = true;
     @Input() width:number = 100;
+
+    public setWidth(_width:number){
+        this.width=_width;
+    }
+
+    public changeWidth(_change:number){
+        this.setWidth(this.width+_change);
+    }
 }

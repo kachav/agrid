@@ -1,7 +1,6 @@
+import './polifills';
 
 import { AppModule } from './app.module';
-
-import './polifills';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

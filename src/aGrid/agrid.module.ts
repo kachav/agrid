@@ -11,6 +11,8 @@ import {aGridColumnHeaderLoader} from './aGridColumn/agridheaderloader.component
 import {aGridPager} from './aGridPager/agridpager.component';
 import {aGridButton} from './aGridButton/agridbutton.component';
 import {ScrollToPaddingRight} from './scrollToPaddingRight/scrollToPaddingRight.directive';
+import {ContentUpdated} from './contentUpdated/contentUpdated.directive';
+import {AGridColumnResizer} from './aGridColumnResizer/aGridColumnResizer.component';
 
 import { NgModule } from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -20,7 +22,7 @@ import { COMPILER_PROVIDERS } from '@angular/compiler';
 @NgModule({
     imports:[CommonModule, FormsModule],
     providers:[COMPILER_PROVIDERS],
-    declarations:[aGrid,ScrollToPaddingRight,aGridBottom,aGridButton, aGridFilterLoader, aGridPager, aGridBody, aGridColumn, aGridFilter, aGridCell, aGridColumnCellLoader,aGridHeader,aGridColumnHeaderLoader],
+    declarations:[aGrid,ScrollToPaddingRight,ContentUpdated,AGridColumnResizer,aGridBottom,aGridButton, aGridFilterLoader, aGridPager, aGridBody, aGridColumn, aGridFilter, aGridCell, aGridColumnCellLoader,aGridHeader,aGridColumnHeaderLoader],
     exports:[aGrid,ScrollToPaddingRight,aGridBottom, aGridPager,aGridButton, aGridFilterLoader, aGridBody, aGridFilter, CommonModule, FormsModule, aGridColumn, aGridCell, aGridColumnCellLoader,aGridHeader,aGridColumnHeaderLoader]
 })
 export class AgridModule{}

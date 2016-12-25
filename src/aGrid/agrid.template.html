@@ -1,18 +1,16 @@
 <ng-content></ng-content>
 <div name="gridView" class="a-grid">
-	<div #headerContainer class="a-grid__header-container noselect">
+	<div #headerContainer class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged($event)">
 		<table class="a-grid__header" #headertable>
 			<thead>
 				<tr>
 					<th class="a-grid__column_check" *ngIf="check!=false"></th>
 					<th class="a-grid__column a-grid__column_sortable" *ngFor="let column of columns; let i = index;" [style.width]="column.width+'px'">
-						<span class="a-grid__column-title" (click)="printScroll(bodyContainer, headerContainer)">
+						<span class="a-grid__column-title">
                             <span *ngIf="!column.header" [textContent]="column.colTitle || ''"></span>
 						<a-grid-column-header-loader *ngIf="column.header" [column]="column"></a-grid-column-header-loader>
 						</span>
-
-						<div *ngIf="column.resizable" (mousedown)="colResizerMouseDown($event, i)" class="a-grid__column-resizer" [ngClass]="{'a-grid__column-resizer_active':i==activeColIndex}"
-							[ngStyle]="i==activeColIndex?activeColStyle.styles:null"></div>
+							<a-grid-column-resizer (columnResized)="column.changeWidth($event); updateColumns();" *ngIf="column.resizable"></a-grid-column-resizer>
 					</th>
 					<th></th>
 				</tr>
@@ -26,11 +24,11 @@
 			</thead>
 		</table>
 	</div>
-	<div #bodyContainer class="a-grid__body-container" [scrollToPaddingRight]="headertable" (scroll)="onScroll($event, headerContainer)">
+	<div #bodyContainer class="a-grid__body-container" [style.height]="bodyHeight" [scrollToPaddingRight]="headertable" (scroll)="onScroll($event, headerContainer)">
 		<a-grid-body [columns]="bodyColumns" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onSelect)="rowSelect($event)" (onCheck)="rowCheck($event)"></a-grid-body>
 	</div>
-	<div #bottomContainer>
+	<div #bottomContainer (contentUpdated)="bottomHeightChanged($event)">
 		<ng-content select="a-grid-bottom"></ng-content>
 	</div>
 </div>

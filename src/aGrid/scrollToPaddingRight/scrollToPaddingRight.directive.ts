@@ -21,6 +21,10 @@ export class ScrollToPaddingRight {
         }, DEBOUNCE_TIME);
     }
 
+    ngAfterViewInit(){
+        this.calculatePadding();
+    }
+
 
     //calculating width of current element's vertical scrollbar and set it as padding right to target element
     private calculatePadding() {

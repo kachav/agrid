@@ -1,4 +1,4 @@
-import { Input, Component, TemplateRef, ContentChild, ElementRef, ViewContainerRef } from "@angular/core";
+import {Component, TemplateRef, ContentChild} from "@angular/core";
 
 @Component({
     selector: "a-grid-cell",

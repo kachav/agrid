@@ -67,7 +67,7 @@ export class homeTableState {
     count = 10;
 
     addItem() {
-        let arr = this._items.getValue();
+        let arr = [...this._items.getValue()];
         arr.push({ _ouid: this.count, aaa: `aaa-value ${this.count}`, sss: `sss-value ${this.count}`, ddd: `ddd-value ${this.count}`, eee: 1 });
         this.count++;
 

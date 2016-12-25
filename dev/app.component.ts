@@ -12,6 +12,8 @@ import { homeTableState } from './app.table.state';
 export class AppComponent {
     constructor(private tableState: homeTableState) { }
 
+    showFilters=true;
+
     showMessage(message) {
         alert(JSON.stringify(message));
     }
