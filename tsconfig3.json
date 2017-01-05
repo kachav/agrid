@@ -7,16 +7,17 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "noEmit": true,
+    "noEmitHelpers": true,
     "strictNullChecks": false,
-    "baseUrl": "./dev"
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "typeRoots": [
-    "./node_modules/@types"
-  ],
-  "types": [
+    "baseUrl": "./src",
+    "paths": {
+    },
+    "lib": [
+      "dom",
+      "es6"
+    ],
+    "types": [
       "hammerjs",
       "jasmine",
       "node",
@@ -24,11 +25,17 @@
       "source-map",
       "uglify-js",
       "webpack"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
   ],
-  "compileOnSave": false,
-  "buildOnSave": false,
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
     "useWebpackText": true
-  }
+  },
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "atom": { "rewriteTsconfig": false }
 }

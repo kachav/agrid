@@ -1,4 +1,4 @@
-import { Input, Component, TemplateRef, ContentChild, ElementRef, ViewContainerRef } from "@angular/core";
+import { Input, Component, ViewContainerRef } from "@angular/core";
 import {aGridColumn} from './agridcolumn.component';
 
 

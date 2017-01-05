@@ -1,64 +1,74 @@
-		
-		<label><input type="checkbox" [(ngModel)]="showFilters" />hide controls</label>
-		
-		<button *ngIf="showFilters" (click)="tableState.addItem()">+</button>		
-		
-		<div style="height: calc(100vh - 50px);">
-			<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onSelectRow)="tableState.select($event)"
-				(onCheckRow)="tableState.check($event)">
-				<a-grid-column [colName]="'aaa'" [colTitle]="'aaaTitle'">
-					<a-grid-filter>
-						<template>
-							<input [(ngModel)]="tableState.aaaFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
-						</template>
-					</a-grid-filter>
-				</a-grid-column>
+<label><input type="checkbox" [(ngModel)]="showFilters" />hide controls</label>
 
-				<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
-					<a-grid-filter>
-						<template>
-							<input [(ngModel)]="tableState.dddFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
-						</template>
-					</a-grid-filter>
-				</a-grid-column>
+<label><input type="checkbox" [(ngModel)]="showCol2" />show col 2</label>
 
-				<a-grid-column>
-					<a-grid-cell>
-						<template let-index="rowIndex" let-row="rowData">
-							{{row.aGridChecked}}
-						</template>
-					</a-grid-cell>
-				</a-grid-column>
+<button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
-				<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="400">
-					<a-grid-header>
-						<template let-col="$implicit">
-							<a (click)="showMessage(col.width)">{{col.width}}</a>
-						</template>
-					</a-grid-header>
-				</a-grid-column>
+<div style="height: calc(100vh - 50px);">
+	<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
+		(onRowDoubleClick)="tableState.checkDblClick($event)">
 
-				<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
+		<a-grid-column [colName]="'check'" [resizable]="false" [width]="40">
+			<a-grid-cell>
+				<template let-index="rowIndex" let-row="rowData">
+					<input type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
+				</template>
+			</a-grid-cell>
+		</a-grid-column>
 
-				<a-grid-column>
-					<a-grid-cell>
-						<template let-index="rowIndex" let-row="rowData">
-							<button (click)="tableState.removeDay(index)">-</button> {{row.eee}}
-							<button (click)="tableState.addDay(index)">+</button>
-						</template>
-					</a-grid-cell>
-				</a-grid-column>
+		<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
+			<a-grid-filter>
+				<template>
+					<input [(ngModel)]="tableState.aaaFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
+				</template>
+			</a-grid-filter>
+		</a-grid-column>
 
-				<a-grid-bottom>
-					<a-grid-pager>
-						<a-grid-button (click)="showMessage(123)">
-							<<</a-grid-button>
-								<a-grid-button>
-									<</a-grid-button>
-										<span>1 of 1</span>
-										<a-grid-button>></a-grid-button>
-										<a-grid-button>>></a-grid-button>
-					</a-grid-pager>
-				</a-grid-bottom>
-			</a-grid>
-		</div>
+		<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
+			<a-grid-filter>
+				<template>
+					<input [(ngModel)]="tableState.dddFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
+				</template>
+			</a-grid-filter>
+		</a-grid-column>
+
+		<a-grid-column>
+			<a-grid-cell>
+				<template let-index="rowIndex" let-row="rowData">
+					{{row.aGridChecked}}
+				</template>
+			</a-grid-cell>
+		</a-grid-column>
+
+		<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="400">
+			<a-grid-header>
+				<template let-col="$implicit">
+					<a (click)="showMessage(col.width)">{{col.width}}</a>
+				</template>
+			</a-grid-header>
+		</a-grid-column>
+
+		<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
+
+		<a-grid-column [resizable]="true">
+			<a-grid-cell>
+				<template let-index="rowIndex" let-row="rowData">
+					<button (click)="tableState.removeDay(index)">-</button> {{row.eee}}
+					<button (click)="tableState.addDay(index)">+</button>
+				</template>
+			</a-grid-cell>
+		</a-grid-column>
+
+		<a-grid-bottom>
+			<a-grid-pager>
+				<a-grid-button (click)="showMessage(123)">
+					<<</a-grid-button>
+						<a-grid-button>
+							<</a-grid-button>
+								<span>1 of 1</span>
+								<a-grid-button>></a-grid-button>
+								<a-grid-button>>></a-grid-button>
+			</a-grid-pager>
+		</a-grid-bottom>
+	</a-grid>
+</div>

@@ -1,15 +1,15 @@
 import {
-  Component, Input, Output, EventEmitter, HostListener,
-  ElementRef, Renderer, ViewChild,
-  ContentChildren, ContentChild, SimpleChange
+  Component, Input, Output, EventEmitter,
+  ElementRef, ViewChild,
+  ContentChildren
 } from '@angular/core';
 import { aGridColumn } from './aGridColumn/agridcolumn.component';
+
 import { aGridBottom } from './aGridBottom/agridbottom.component';
 
-import { DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
-
-import {isFinite} from 'lodash';
+import { isFinite } from 'lodash';
 
 @Component({
   // The selector is what angular internally uses
@@ -24,12 +24,15 @@ export class aGrid {
   bodyColumns: aGridColumn[] = [];
 
   private updateColumns() {
-    this.bodyColumns = [...this.columns._results];
+    if (this.columns) {
+      this.bodyColumns = [...this.columns._results];
+    }
   }
 
-  //grid is rows checkable binding
-  @Input() check: boolean;
-
+  private get lastColumnResizable() {
+    return !!(this.bodyColumns && this.bodyColumns.length && this.bodyColumns[this.bodyColumns.length - 1].resizable);
+  }
+  
   @Input() items;
 
   @ContentChildren(aGridColumn) columns;
@@ -40,42 +43,39 @@ export class aGrid {
   @Input() checkedProperty: string;
   checkedPropertyDefault = "aGridChecked";
 
-  @Output() onSelectRow = new EventEmitter();
+  @Output() onRowClick = new EventEmitter();
 
-  @Output() onCheckRow = new EventEmitter();
-
-
-  @ViewChild('bodyContainer') bodyContainer: ElementRef;
+  @Output() onRowDoubleClick = new EventEmitter();
 
   private bodyHeight;
 
-  private headerHeight=0;
+  private headerHeight = 0;
 
-  private bottomHeight=0;
+  private bottomHeight = 0;
 
-  private setBodyHeight(){
-    if(this.headerHeight || this.bottomHeight){
-      this.bodyHeight=this.sanitizer.bypassSecurityTrustStyle(`calc(100% - ${this.headerHeight + this.bottomHeight}px)`);
-    }else{
-      this.bodyHeight=this.sanitizer.bypassSecurityTrustStyle("100%");
+  private setBodyHeight() {
+    if (this.headerHeight || this.bottomHeight) {
+      this.bodyHeight = this.sanitizer.bypassSecurityTrustStyle(`calc(100% - ${this.headerHeight + this.bottomHeight}px)`);
+    } else {
+      this.bodyHeight = this.sanitizer.bypassSecurityTrustStyle("100%");
     }
   }
 
-private headerHeightChanged(headerHeight){
-  if(isFinite(headerHeight)){
-    this.headerHeight=headerHeight;
-    this.setBodyHeight();
+  private headerHeightChanged(headerHeight) {
+    if (isFinite(headerHeight)) {
+      this.headerHeight = headerHeight;
+      this.setBodyHeight();
+    }
   }
-}
 
-private bottomHeightChanged(bottomHeight){
-  if(isFinite(bottomHeight)){
-    this.bottomHeight=bottomHeight;
-    this.setBodyHeight();
+  private bottomHeightChanged(bottomHeight) {
+    if (isFinite(bottomHeight)) {
+      this.bottomHeight = bottomHeight;
+      this.setBodyHeight();
+    }
   }
-}
 
-  constructor(private curEl: ElementRef, private renderer: Renderer, private sanitizer:DomSanitizer) {
+  constructor(private sanitizer: DomSanitizer) {
     this.setBodyHeight();
   }
 
@@ -83,22 +83,18 @@ private bottomHeightChanged(bottomHeight){
     this.updateColumns();
   }
 
+  ngOnChanges() {
+    this.updateColumns();
+  }
 
-  rowSelect(i) {
+  rowClick(row) {
     //selection logic is in the source
-    this.onSelectRow.next(i);
+    this.onRowClick.next(row);
   }
 
-  rowCheck([value, i]) {
+  rowDoubleClick(row) {
     //check logic is in the source
-    this.onCheckRow.next([value, i]);
-  }
-
-  //body scrolling
-  onScroll(e, header) {
-    if (e.target.scrollLeft !== header.scrollLeft) {
-      this.renderer.setElementProperty(header, "scrollLeft", e.target.scrollLeft);
-    }
+    this.onRowDoubleClick.next(row);
   }
 
 }

@@ -82,27 +82,28 @@ export class homeTableState {
 
         this._items.next(arr);
     }
-    select(index: number) {
-        let _itemsArray = this._items.getValue();
-        if (index !== this.selectedIndex && _itemsArray[index]) {
-            if (this.selectedIndex > -1) {
-                //set previous selected row propery to false
-                _itemsArray[this.selectedIndex][this.selectedProperty] = false;
-            }
-            //set current row selected property to true
-            _itemsArray[index][this.selectedProperty] = true;
-            //set current selected index
-            this._selectedIndex.next(index);
-            //save changed collection
-            this._items.next([..._itemsArray]);
+    select(row) {
+        let _itemsArray = this._items.getValue(), _index = this._selectedIndex.getValue();
+        //set current row selected property to true
+        if (_index>-1) {
+            _itemsArray[_index][this.selectedProperty] = false;
         }
+
+        _index=_itemsArray.indexOf(row);
+
+        row[this.selectedProperty] = true;
+        //set current selected index
+        this._selectedIndex.next(_index);
+        //save changed collection
+        this._items.next([..._itemsArray]);
+
     }
-    check([value, index]) {
+    checkDblClick(row) {
         let _itemsArray = this._items.getValue();
-        if (_itemsArray[index]) {
-            _itemsArray[index][this.checkedProperty] = !_itemsArray[index][this.checkedProperty];
-            this._items.next([..._itemsArray]);
-        }
+        row[this.checkedProperty] = !row[this.checkedProperty];
+
+        this._items.next([..._itemsArray]);
+
     }
     refresh() {
 

@@ -14,6 +14,8 @@ export class AppComponent {
 
     showFilters=true;
 
+    showCol2=true;
+
     showMessage(message) {
         alert(JSON.stringify(message));
     }

@@ -14,18 +14,23 @@ export class aGridBody {
     @Input() columns: Array<any>;
     @Input() checkedProperty: string;
 
-    @Output() onSelect = new EventEmitter();
-    @Output() onCheck = new EventEmitter();
+    private get lastColumnResizable() {
+        return this.columns && this.columns.length && this.columns[this.columns.length - 1].resizable;
+    }
+
+
+    @Output() onRowClick = new EventEmitter();
+    @Output() onRowDoubleClick = new EventEmitter();
 
     constructor() {
     }
 
-    rowSelect(i) {
-        this.onSelect.next(i);
+    rowClick(row) {
+        this.onRowClick.next(row);
     }
 
-    rowCheck(value, i) {
-        this.onCheck.next([value, i]);
+    rowDoubleClick(row) {
+        this.onRowDoubleClick.next(row);
     }
 
 }

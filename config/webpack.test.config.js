@@ -5,14 +5,17 @@ const helpers = require('./helpers');
 /**
  * Webpack Plugins
  */
+const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
+const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 
 /**
  * Webpack configuration
  *
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
-module.exports = function() {
+module.exports = function () {
   return {
 
     /**
@@ -68,11 +71,30 @@ module.exports = function() {
           test: /\.js$/,
           loader: 'source-map-loader',
           exclude: [
-          // these packages have problems with their sourcemaps
-          helpers.root('node_modules/rxjs'),
-          helpers.root('node_modules/@angular')
-        ]}
+            // these packages have problems with their sourcemaps
+            helpers.root('node_modules/rxjs'),
+            helpers.root('node_modules/@angular')
+          ]
+        },
 
+        {
+          test: /\.ts$/,
+          loader: 'angular2-template-loader',
+          exclude: [/node_modules\/(?!(ng2-.+))/]
+        }
+
+      ],
+
+      postLoaders: [
+        {
+          test: /\.ts$/,
+          loader: 'istanbul-instrumenter-loader',
+          include: helpers.root('src'),
+          exclude: [
+            /\.(e2e|spec)\.ts$/,
+            /node_modules/
+          ]
+        },
       ],
 
       /**
@@ -90,10 +112,14 @@ module.exports = function() {
          *
          * See: https://github.com/s-panferov/awesome-typescript-loader
          */
+
         {
           test: /\.ts$/,
           loader: 'awesome-typescript-loader',
           query: {
+            // use inline sourcemaps for "karma-remap-coverage" reporter
+            sourceMap: false,
+            inlineSourceMap: true,
             compilerOptions: {
 
               // Remove TypeScript helpers to be injected
@@ -104,6 +130,20 @@ module.exports = function() {
           },
           exclude: [/\.e2e\.ts$/]
         },
+
+        /*       {
+                 test: /\.ts$/,
+                 loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+                 exclude: [/node_modules\/(?!(ng2-.+))/]
+               },*/
+
+        /**
+         * Instruments JS files with Istanbul for subsequent code coverage reporting.
+         * Instrument only testing sources.
+         *
+         * See: https://github.com/deepsweet/istanbul-instrumenter-loader
+         */
+
 
         /**
          * Json loader support for *.json files.
@@ -135,17 +175,17 @@ module.exports = function() {
        *
        * See: http://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders
        */
-/*      postLoaders: [
-        {
-          test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader',
-          include: helpers.root('src'),
-          exclude: [
-            /\.(e2e|spec)\.ts$/,
-            /node_modules/
-          ]
-        }
-
-      ]*/
+      /*      postLoaders: [
+              {
+                test: /\.(js|ts)$/, loader: 'istanbul-instrumenter-loader',
+                include: helpers.root('src'),
+                exclude: [
+                  /\.(e2e|spec)\.ts$/,
+                  /node_modules/
+                ]
+              }
+      
+            ]*/
     },
 
     /**
