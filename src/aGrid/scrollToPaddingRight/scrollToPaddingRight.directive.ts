@@ -1,6 +1,8 @@
 import { Directive, ElementRef, Input, HostListener, Renderer } from '@angular/core';
 
-import { debounce } from 'lodash';
+import {MutationObserverService} from '../utils/mutationObserver.service';
+
+import {LodashService} from '../utils/lodash.service';
 
 const DEBOUNCE_TIME = 100;
 
@@ -12,18 +14,19 @@ export class ScrollToPaddingRight {
 
     private observer: MutationObserver;
 
-    constructor(private curElement: ElementRef, private renderer: Renderer) {
+    constructor(private curElement: ElementRef, private renderer: Renderer, 
+    private observerBuilder:MutationObserverService,private _:LodashService) {
         // configuration of the observer:
         let config = { childList: true, subtree:true }
 
         //subtree modified event
-        this.observer = new MutationObserver(() => {
+        this.observer =this.observerBuilder.getObserver(() => {
             this.calculatePadding();
         });
         // pass in the target node, as well as the observer options
         this.observer.observe(this.curElement.nativeElement, config);
 
-        this.windowResize = debounce(() => {
+        this.windowResize = this._.debounce(() => {
             this.calculatePadding();
         }, DEBOUNCE_TIME);
     }

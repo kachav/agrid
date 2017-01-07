@@ -15,15 +15,11 @@ export class aGridBody {
     @Input() checkedProperty: string;
 
     private get lastColumnResizable() {
-        return this.columns && this.columns.length && this.columns[this.columns.length - 1].resizable;
+        return !!(this.columns && this.columns.length && this.columns[this.columns.length - 1].resizable);
     }
-
 
     @Output() onRowClick = new EventEmitter();
     @Output() onRowDoubleClick = new EventEmitter();
-
-    constructor() {
-    }
 
     rowClick(row) {
         this.onRowClick.next(row);

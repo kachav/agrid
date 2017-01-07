@@ -5,8 +5,6 @@ import {
 } from '@angular/core';
 import { aGridColumn } from './aGridColumn/agridcolumn.component';
 
-import { aGridBottom } from './aGridBottom/agridbottom.component';
-
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { isFinite } from 'lodash';

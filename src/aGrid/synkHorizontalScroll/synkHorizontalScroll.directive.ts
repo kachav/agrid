@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, HostListener, Renderer } from '@angular/core';
+import { Directive, Input, HostListener, Renderer } from '@angular/core';
 
 
 @Directive({ selector: '[synkHorizontalScroll]' })

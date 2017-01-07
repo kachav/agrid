@@ -14,6 +14,8 @@ import { ScrollToPaddingRight } from './scrollToPaddingRight/scrollToPaddingRigh
 import { ContentUpdated } from './contentUpdated/contentUpdated.directive';
 import { AGridColumnResizer } from './aGridColumnResizer/aGridColumnResizer.component';
 import { SynkHorizontalScroll } from './synkHorizontalScroll/synkHorizontalScroll.directive';
+import {MutationObserverService} from './utils/mutationObserver.service';
+import {LodashService} from './utils/lodash.service';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -22,7 +24,7 @@ import { COMPILER_PROVIDERS } from '@angular/compiler';
 
 @NgModule({
     imports: [CommonModule, FormsModule],
-    providers: [COMPILER_PROVIDERS],
+    providers: [COMPILER_PROVIDERS,{ provide: Window, useValue: window}, MutationObserverService,LodashService],
     declarations: [aGrid, SynkHorizontalScroll, ScrollToPaddingRight, ContentUpdated, AGridColumnResizer, aGridBottom, aGridButton, aGridFilterLoader, aGridPager, aGridBody, aGridColumn, aGridFilter, aGridCell, aGridColumnCellLoader, aGridHeader, aGridColumnHeaderLoader],
     exports: [aGrid, ScrollToPaddingRight, aGridBottom, aGridPager, aGridButton, aGridFilterLoader, aGridBody, aGridFilter, CommonModule, FormsModule, aGridColumn, aGridCell, aGridColumnCellLoader, aGridHeader, aGridColumnHeaderLoader]
 })

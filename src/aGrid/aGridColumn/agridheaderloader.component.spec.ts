@@ -2,7 +2,7 @@ import { aGridColumnHeaderLoader } from './agridheaderloader.component';
 
 import { ViewContainerRef } from "@angular/core";
 
-import { async, inject, TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 
 class ViewContainerRefMock {
     createEmbeddedView() {

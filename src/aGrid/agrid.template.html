@@ -2,7 +2,7 @@
 	<ng-content></ng-content>
 </div>
 <div name="gridView" class="a-grid">
-	<div #headerContainer class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged($event)">
+	<div #headerContainer class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged(headerContainer.offsetHeight)">
 		<table class="a-grid__header" #headertable>
 			<thead>
 				<tr>
@@ -28,7 +28,7 @@
 		<a-grid-body [columns]="bodyColumns" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onRowClick)="rowClick($event)" (onRowDoubleClick)="rowDoubleClick($event)"></a-grid-body>
 	</div>
-	<div #bottomContainer (contentUpdated)="bottomHeightChanged($event)">
+	<div #bottomContainer (contentUpdated)="bottomHeightChanged(bottomContainer.offsetHeight)">
 		<ng-content select="a-grid-bottom"></ng-content>
 	</div>
 </div>

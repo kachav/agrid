@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ContentChild, Output, EventEmitter, HostListener, HostBinding } from "@angular/core";
+import { Component, TemplateRef, ContentChild, Output, EventEmitter, HostListener, HostBinding, Renderer } from "@angular/core";
 
 @Component({
     selector: "a-grid-column-resizer",
@@ -12,12 +12,15 @@ export class AGridColumnResizer {
     private startRight: number;
     private rightNumber:number;
 
+    constructor(private wnd:Window){
+    }
+
     @Output() columnResized=new EventEmitter();
 
     @HostBinding('style.right') right:string;
 
     @HostListener('mousedown', ['$event']) colResizerMouseDown(e) {
-        let elStyles = getComputedStyle(e.target.parentNode);//, elRight = +elStyles.right.replace(/px/, '');
+        let elStyles = this.wnd.getComputedStyle(e.target.parentNode);
         this.active = true;
         this.startRight = +elStyles.right.replace(/px/, '');
         this.rightNumber=this.startRight;
@@ -25,7 +28,7 @@ export class AGridColumnResizer {
         this.right = elStyles.right;
     }
 
-    @HostListener('document:mouseup', ['$event']) colResizerMouseUp(e) {
+    @HostListener('document:mouseup') colResizerMouseUp() {
 
         if (this.active) {
             this.active = false;

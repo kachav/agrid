@@ -1,6 +1,5 @@
 import {
-  Component, 
-  ElementRef
+  Component
 } from '@angular/core';
 
 @Component({
@@ -19,5 +18,5 @@ import {
   `]
 })
 export class aGridBottom {
-  constructor(public el: ElementRef) { }
+  constructor() { }
 }

@@ -1,19 +1,17 @@
 import { Directive, ElementRef, Output, HostListener, EventEmitter } from '@angular/core';
 
-import { debounce } from 'lodash';
-
-const DEBOUNCE_TIME = 100;
+import {MutationObserverService} from '../utils/mutationObserver.service';
 
 @Directive({ selector: '[contentUpdated]' })
 export class ContentUpdated {
     @Output('contentUpdated') contentUpdated = new EventEmitter();
 
-    constructor(private curElement: ElementRef) {
+    constructor(private curElement: ElementRef, private observerBuilder:MutationObserverService) {
         // configuration of the observer:
         let config = { attributes: true, childList: true, characterData: true, subtree:true }
 
         //subtree modified event
-        this.observer = new MutationObserver(() => {
+        this.observer = this.observerBuilder.getObserver(() => {
             this.domSubTreeModified();
         });
         // pass in the target node, as well as the observer options
@@ -31,7 +29,7 @@ export class ContentUpdated {
     }
 
     private domSubTreeModified() {
-        this.contentUpdated.next(this.curElement.nativeElement.offsetHeight);
+        this.contentUpdated.next();
     };
 
 }

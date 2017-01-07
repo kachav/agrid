@@ -18,7 +18,7 @@ function buildComponent(componentPath) {
             baseLibPath += "/" + componentPath;
         }
 
-        tsResult = gulp.src(baseSrcPath + '/*.ts')
+        tsResult = gulp.src([baseSrcPath + '/*.ts','!'+baseSrcPath + '/*.spec.ts'])
             .pipe(inlineNg2Template({ base: baseSrcPath }))
             .pipe(inlineNg2Styles({ base: baseSrcPath }))
             .pipe(tsProject());
@@ -30,7 +30,7 @@ function buildComponent(componentPath) {
     }
 }
 
-var componentBuildTasks = ['utils', 'aGridPager', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
+var componentBuildTasks = ['utils','synkHorizontalScroll','scrollToPaddingRight','contentUpdated', 'aGridPager','aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
 
 componentBuildTasks.forEach(function (item) {
     gulp.task(item, buildComponent(item));
