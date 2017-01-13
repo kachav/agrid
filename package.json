@@ -4,7 +4,7 @@
   "description": "an angular 2 data grid",
   "main": "index.js",
   "scripts": {
-    "commit":"git-cz",
+    "commit": "git-cz",
     "server": "webpack-dev-server",
     "preprepublish": "gulp cleanLib",
     "prepublish": "gulp build",
@@ -53,15 +53,16 @@
     "karma-coverage": "1.1.1",
     "karma-jasmine": "1.0.2",
     "karma-mocha-reporter": "2.0.0",
+    "karma-phantomjs-launcher": "^1.0.2",
     "karma-remap-coverage": "^0.1.4",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.8.1",
     "merge2": "1.0.2",
     "path": "0.12.7",
+    "phantomjs": "^2.1.7",
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.8",
     "semantic-release": "^6.3.2",
-    "semantic-release-cli": "^3.0.3",
     "source-map-loader": "0.1.5",
     "to-string-loader": "1.1.5",
     "ts-helpers": "1.1.2",
@@ -76,7 +77,7 @@
   },
   "config": {
     "commitizen": {
-      "path":"node_modules/cz-conventional-changelog"
+      "path": "node_modules/cz-conventional-changelog"
     }
   }
 }
