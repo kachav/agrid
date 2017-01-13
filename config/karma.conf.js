@@ -121,6 +121,7 @@ module.exports = function (config) {
     configuration.browsers = [
       'ChromeTravisCi'
     ];
+    configuration.singleRun=true;
   }
 
   config.set(configuration);

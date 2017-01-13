@@ -1,13 +1,16 @@
 {
   "name": "agrid",
-  "version": "1.0.0-beta.14",
+  "version": "0.0.0-development",
   "description": "an angular 2 data grid",
   "main": "index.js",
   "scripts": {
+    "commit":"git-cz",
     "server": "webpack-dev-server",
-    "prepub": "gulp cleanLib",
-    "pub": "gulp build",
-    "test": "karma start"
+    "preprepublish": "gulp cleanLib",
+    "prepublish": "gulp build",
+    "test": "karma start",
+    "setup": "semantic-release-cli setup",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "'Alexander <'kachesov.alexander@live.com'>",
   "license": "ISC",
@@ -34,8 +37,10 @@
     "@types/webpack": "^2.0.0",
     "angular2-template-loader": "0.6.0",
     "awesome-typescript-loader": "3.0.0-beta.17",
+    "commitizen": "^2.9.5",
     "core-js": "2.4.1",
     "css-loader": "0.26.1",
+    "cz-conventional-changelog": "^1.2.0",
     "gulp": "3.9.1",
     "gulp-inline-ng2-styles": "0.0.1",
     "gulp-inline-ng2-template": "4.0.0",
@@ -55,6 +60,8 @@
     "path": "0.12.7",
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.8",
+    "semantic-release": "^6.3.2",
+    "semantic-release-cli": "^3.0.3",
     "source-map-loader": "0.1.5",
     "to-string-loader": "1.1.5",
     "ts-helpers": "1.1.2",
@@ -62,5 +69,14 @@
     "webpack": "2.2.0-rc.3",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "2.2.0-rc.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kachav/agrid.git"
+  },
+  "config": {
+    "commitizen": {
+      "path":"node_modules/cz-conventional-changelog"
+    }
   }
 }
