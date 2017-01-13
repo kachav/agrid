@@ -7,7 +7,6 @@ notifications:
 node_js:
   - '7'
   - '6'
-  - '4'
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
