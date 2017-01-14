@@ -9,7 +9,6 @@
     "prebuild": "gulp cleanLib",
     "build": "gulp build",
     "test": "karma start",
-    "setup": "semantic-release-cli setup",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "'Alexander <'kachesov.alexander@live.com'>",
