@@ -6,8 +6,8 @@
   "scripts": {
     "commit": "git-cz",
     "server": "webpack-dev-server",
-    "preprepublish": "gulp cleanLib",
-    "prepublish": "gulp build",
+    "prebuild": "gulp cleanLib",
+    "build": "gulp build",
     "test": "karma start",
     "setup": "semantic-release-cli setup",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
