@@ -1,7 +1,7 @@
 import { Input, Component, TemplateRef, ContentChild, ElementRef, ViewContainerRef } from "@angular/core";
-import {aGridCell} from './agridcell.component';
-import {aGridHeader} from './agridheader.component';
-import {aGridFilter} from './agridfilter.component';
+import {aGridCell} from './agridcell.directive';
+import {aGridHeader} from './agridheader.directive';
+import {aGridFilter} from './agridfilter.directive';
 
 @Component({
     selector: "a-grid-column",

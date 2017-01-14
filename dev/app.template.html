@@ -8,55 +8,42 @@
 	<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
 		(onRowDoubleClick)="tableState.checkDblClick($event)">
 
+		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
+			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
+		</a-grid-column>
+
 		<a-grid-column [colName]="'check'" [resizable]="false" [width]="40">
-			<a-grid-cell>
-				<template let-index="rowIndex" let-row="rowData">
-					<input type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
-				</template>
-			</a-grid-cell>
+			<input *aGridCell="let row=rowData" type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
 		</a-grid-column>
 
 		<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
-			<a-grid-filter>
-				<template>
-					<input [(ngModel)]="tableState.aaaFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
-				</template>
-			</a-grid-filter>
+			<div *ngIf="showFilters">
+				<input [(ngModel)]="tableState.aaaFilter" *aGridFilter class="a-grid__filter-control" type="text" />
+			</div>
 		</a-grid-column>
 
 		<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
-			<a-grid-filter>
-				<template>
-					<input [(ngModel)]="tableState.dddFilter" *ngIf="showFilters" class="a-grid__filter-control" type="text" />
-				</template>
-			</a-grid-filter>
+			<div *ngIf="showFilters">
+				<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />
+			</div>
+
 		</a-grid-column>
 
 		<a-grid-column>
-			<a-grid-cell>
-				<template let-index="rowIndex" let-row="rowData">
-					{{row.aGridChecked}}
-				</template>
-			</a-grid-cell>
+			<span *aGridCell="let row=rowData">{{row.aGridChecked}}</span>
 		</a-grid-column>
 
 		<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="400">
-			<a-grid-header>
-				<template let-col="$implicit">
-					<a (click)="showMessage(col.width)">{{col.width}}</a>
-				</template>
-			</a-grid-header>
+			<a *aGridHeader="let col;" (click)="showMessage(col.width)">{{col.width}}</a>
 		</a-grid-column>
 
 		<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
 
 		<a-grid-column [resizable]="true">
-			<a-grid-cell>
-				<template let-index="rowIndex" let-row="rowData">
+			<div *aGridCell="let row=rowData; let index=rowIndex">
 					<button (click)="tableState.removeDay(index)">-</button> {{row.eee}}
 					<button (click)="tableState.addDay(index)">+</button>
-				</template>
-			</a-grid-cell>
+			</div>
 		</a-grid-column>
 
 		<a-grid-bottom>
