@@ -4,6 +4,5 @@ import {TemplateRef, Directive} from "@angular/core";
     selector: "[aGridCell]"
 })
 export class aGridCell {
-    constructor(public template:TemplateRef<any>){
-    }
+    constructor(public template:TemplateRef<any>){}
 }
