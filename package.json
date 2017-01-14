@@ -9,6 +9,7 @@
     "prebuild": "gulp cleanLib",
     "build": "gulp build",
     "test": "karma start",
+    "test:single":"karma start --single-run",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "'Alexander <'kachesov.alexander@live.com'>",
@@ -19,7 +20,7 @@
     "@angular/core": "^2.2.4",
     "lodash": "4.17.2",
     "rxjs": "^5.0.0-beta.12",
-    "zone.js": "^0.6.23"
+    "zone.js": "^0.6.26"
   },
   "devDependencies": {
     "@angular/forms": "^2.2.4",
@@ -40,6 +41,7 @@
     "core-js": "2.4.1",
     "css-loader": "0.26.1",
     "cz-conventional-changelog": "^1.2.0",
+    "ghooks": "^2.0.0",
     "gulp": "3.9.1",
     "gulp-inline-ng2-styles": "0.0.1",
     "gulp-inline-ng2-template": "4.0.0",
@@ -52,8 +54,8 @@
     "karma-coverage": "1.1.1",
     "karma-jasmine": "1.0.2",
     "karma-mocha-reporter": "2.0.0",
-    "karma-phantomjs-launcher": "^1.0.2",
-    "karma-remap-coverage": "^0.1.4",
+    "karma-phantomjs-launcher": "1.0.2",
+    "karma-remap-coverage": "0.1.4",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.8.1",
     "merge2": "1.0.2",
@@ -77,6 +79,9 @@
   "config": {
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
+    },
+    "ghooks":{
+      "pre-commit":"npm run test:single"
     }
   }
 }
