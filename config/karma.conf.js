@@ -50,14 +50,17 @@ module.exports = function (config) {
     // Webpack Config at ./webpack.test.js
     webpack: testWebpackConfig,
 
+
+
     coverageReporter: {
       type: 'in-memory'
     },
 
     remapCoverageReporter: {
       'text-summary': null,
-      json: './coverage/coverage.json',
-      html: './coverage/html'
+      'json': './.nyc_output/coverage.json',
+      html: './coverage/lcov-report',
+      'lcovonly':'./coverage/lcov.info'
     },
 
     // Webpack please don't spam the console when running in karma!

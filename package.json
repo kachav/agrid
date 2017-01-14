@@ -4,12 +4,14 @@
   "description": "an angular 2 data grid",
   "main": "index.js",
   "scripts": {
+    "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
     "commit": "git-cz",
+    "report-coverage":"cat ./coverage/lcov.info | codecov",
     "server": "webpack-dev-server",
     "prebuild": "gulp cleanLib",
     "build": "gulp build",
     "test": "karma start",
-    "test:single":"karma start --single-run",
+    "test:single": "karma start --single-run",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "'Alexander <'kachesov.alexander@live.com'>",
@@ -37,6 +39,7 @@
     "@types/webpack": "^2.0.0",
     "angular2-template-loader": "0.6.0",
     "awesome-typescript-loader": "3.0.0-beta.17",
+    "codecov.io": "^0.1.6",
     "commitizen": "^2.9.5",
     "core-js": "2.4.1",
     "css-loader": "0.26.1",
@@ -56,9 +59,11 @@
     "karma-mocha-reporter": "2.0.0",
     "karma-phantomjs-launcher": "1.0.2",
     "karma-remap-coverage": "0.1.4",
+    "karma-remap-istanbul": "^0.4.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.8.1",
     "merge2": "1.0.2",
+    "nyc": "^10.0.0",
     "path": "0.12.7",
     "phantomjs": "^2.1.7",
     "raw-loader": "0.5.1",
@@ -80,8 +85,8 @@
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     },
-    "ghooks":{
-      "pre-commit":"npm run test:single"
+    "ghooks": {
+      "pre-commit": "npm run test:single && npm run check-coverage"
     }
   }
 }
