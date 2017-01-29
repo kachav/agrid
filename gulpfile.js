@@ -30,7 +30,8 @@ function buildComponent(componentPath) {
     }
 }
 
-var componentBuildTasks = ['utils','synkHorizontalScroll','scrollToPaddingRight','contentUpdated', 'aGridPager','aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
+var componentBuildTasks = ['utils','synkHorizontalScroll','scrollToPaddingRight','contentUpdated', 
+'aGridPager', 'aGridFor','aGridForGroup','aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
 
 componentBuildTasks.forEach(function (item) {
     gulp.task(item, buildComponent(item));

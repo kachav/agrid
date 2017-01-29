@@ -1,1 +1,1 @@
-export {AgridModule} from './aGrid';
+export {AgridModule} from './agrid.module';

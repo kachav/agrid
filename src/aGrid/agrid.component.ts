@@ -5,6 +5,8 @@ import {
 } from '@angular/core';
 import { aGridColumn } from './aGridColumn/agridcolumn.component';
 
+import {aGridGroup} from './aGridGroup/aGridGroup.directive';
+
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { isFinite } from 'lodash';
@@ -20,10 +22,14 @@ import { isFinite } from 'lodash';
 export class aGrid {
 
   bodyColumns: aGridColumn[] = [];
+  bodyGroups:aGridGroup[]=[];
 
-  private updateColumns() {
+  private updateBodyBindings() {
     if (this.columns) {
       this.bodyColumns = [...this.columns._results];
+    }
+    if(this.groups){
+      this.bodyGroups=[...this.groups._results];
     }
   }
 
@@ -34,6 +40,8 @@ export class aGrid {
   @Input() items;
 
   @ContentChildren(aGridColumn) columns;
+
+  @ContentChildren(aGridGroup) groups;
 
   @Input() selectedProperty: string;
   selectedPropertyDefault = "aGridSelected";
@@ -78,11 +86,11 @@ export class aGrid {
   }
 
   ngAfterContentInit() {
-    this.updateColumns();
+    this.updateBodyBindings();
   }
 
   ngOnChanges() {
-    this.updateColumns();
+    this.updateBodyBindings();
   }
 
   rowClick(row) {

@@ -49,11 +49,37 @@ describe('agridfilterloader.component', () => {
     })
 
     it('createEmbeddedView fires with template', () => {
+        let fakeView = { aaa: 123 };
         instance.column = { filter: { template: "template" } };
-        spyOn(instance.viewContainer, 'createEmbeddedView');
+        spyOn(instance.viewContainer, 'createEmbeddedView').and.callFake(() => fakeView);
         instance.ngOnInit();
         expect(instance.viewContainer.createEmbeddedView).toHaveBeenCalledWith(instance.column.filter.template, {
-            '\$implicit': instance.column
+            '$implicit': instance.column
         });
+
+        expect(instance.view).toBe(fakeView);
     })
+
+    it('view.context updates on ngOnChanges', () => {
+        let fakeColumn = { filter: { template: "template" } };
+
+        instance.view = { context: {} };
+        instance.column = fakeColumn;
+
+        instance.ngOnChanges();
+
+        expect(instance.view.context.$implicit).toBe(fakeColumn);
+    });
+
+    it('view.context don\'t updates on ngOnChanges when view is null', () => {
+        let fakeColumn = { filter: { template: "template" } };
+
+        instance.view = null;
+        instance.column = fakeColumn;
+
+        instance.ngOnChanges();
+
+        expect(instance.view).toEqual(null);
+    });
+
 });

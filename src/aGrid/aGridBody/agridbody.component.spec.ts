@@ -56,4 +56,16 @@ describe('agridbody.component', () => {
         instance.rowDoubleClick(row);
         expect(instance.onRowDoubleClick.next).toHaveBeenCalledWith(row);
     })
+
+    it('columnsLength equal columns.length + 1 when lastColumnResizable===true', () => {
+        instance.columns = [{ resizable: true }, { resizable: true }];
+        expect(instance.lastColumnResizable).toEqual(true);
+        expect(instance.columnsLength).toEqual(instance.columns.length + 1);
+    })
+
+        it('columnsLength equal columns.length when lastColumnResizable===false', () => {
+        instance.columns = [{ resizable: true }, { resizable: false }];
+        expect(instance.lastColumnResizable).toEqual(false);
+        expect(instance.columnsLength).toEqual(instance.columns.length);
+    })
 });

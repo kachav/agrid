@@ -5,57 +5,74 @@
 <button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
 <div style="height: calc(100vh - 50px);">
-	<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
-		(onRowDoubleClick)="tableState.checkDblClick($event)">
+<a-grid [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
+	(onRowDoubleClick)="tableState.checkDblClick($event)">
 
-		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
-			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
-		</a-grid-column>
+	<div *aGridGroup="let group by 'aaa'; let groupChild=children">{{group.value + ' ('+groupChild.length+')'}}</div>
 
-		<a-grid-column [colName]="'check'" [resizable]="false" [width]="40">
-			<input *aGridCell="let row=rowData" type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
-		</a-grid-column>
+	<div style="padding-left: 20px;" *aGridGroup="let group by 'sss'; let groupChild=children">{{group.value + ' ('+groupChild.length+')'}}</div>
 
-		<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
-			<div *ngIf="showFilters">
-				<input [(ngModel)]="tableState.aaaFilter" *aGridFilter class="a-grid__filter-control" type="text" />
-			</div>
-		</a-grid-column>
+	<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
+		<span *aGridCell="let index=rowIndex">{{index+1}}</span>
+	</a-grid-column>
 
-		<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
-			<div *ngIf="showFilters">
-				<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />
-			</div>
+	<a-grid-column [colName]="'check'" [resizable]="false" [width]="40">
+		<input *aGridCell="let row" type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
+	</a-grid-column>
 
-		</a-grid-column>
+	<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
 
-		<a-grid-column>
-			<span *aGridCell="let row=rowData">{{row.aGridChecked}}</span>
-		</a-grid-column>
+		<a *aGridHeader="let col;" (click)="tableState.sortBy('aaa')">aaa</a>
 
-		<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="400">
-			<a *aGridHeader="let col;" (click)="showMessage(col.width)">{{col.width}}</a>
-		</a-grid-column>
+		<div *ngIf="showFilters">
+			<input [(ngModel)]="tableState.aaaFilter" *aGridFilter class="a-grid__filter-control" type="text" />
+		</div>
+	</a-grid-column>
 
-		<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
+	<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="110">
+		<a *aGridHeader="let col;" (click)="tableState.sortBy('sss')">sss</a>
+	</a-grid-column>
 
-		<a-grid-column [resizable]="true">
-			<div *aGridCell="let row=rowData; let index=rowIndex">
-					<button (click)="tableState.removeDay(index)">-</button> {{row.eee}}
-					<button (click)="tableState.addDay(index)">+</button>
-			</div>
-		</a-grid-column>
+	<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
+		<a *aGridHeader="let col;" (click)="tableState.sortBy('ddd')">ddd</a>
+		<div *ngIf="showFilters">
+			<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />
+		</div>
+	</a-grid-column>
 
-		<a-grid-bottom>
-			<a-grid-pager>
-				<a-grid-button (click)="showMessage(123)">
-					<<</a-grid-button>
-						<a-grid-button>
-							<</a-grid-button>
-								<span>1 of 1</span>
-								<a-grid-button>></a-grid-button>
-								<a-grid-button>>></a-grid-button>
-			</a-grid-pager>
-		</a-grid-bottom>
-	</a-grid>
+	<a-grid-column>
+		<a *aGridHeader="let col;" (click)="tableState.sortBy('aGridChecked')">checked</a>
+		<span *aGridCell="let row">{{row.aGridChecked}}</span>
+	</a-grid-column>
+
+
+
+	<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
+
+	<a-grid-column [resizable]="true">
+		<a *aGridHeader="let col;" (click)="tableState.sortBy('eee')">ddd</a>
+		<div *aGridCell="let row; let index=rowIndex">
+			<button (click)="tableState.removeDay(index)">-</button> {{row.eee}}
+			<button (click)="tableState.addDay(index)">+</button>
+		</div>
+	</a-grid-column>
+
+	<a-grid-column [colTitle]="'delete item'" [resizable]="true">
+		<div *aGridCell="let row">
+			<button (click)="tableState.removeItem(row)">-</button>
+		</div>
+	</a-grid-column>
+
+	<a-grid-bottom>
+		<a-grid-pager>
+			<a-grid-button (click)="showMessage(123)">
+				<<</a-grid-button>
+					<a-grid-button>
+						<</a-grid-button>
+							<span>1 of 1</span>
+							<a-grid-button>></a-grid-button>
+							<a-grid-button>>></a-grid-button>
+		</a-grid-pager>
+	</a-grid-bottom>
+</a-grid>
 </div>
