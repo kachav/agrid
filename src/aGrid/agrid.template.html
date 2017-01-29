@@ -1,4 +1,4 @@
-<div (contentUpdated)="updateColumns()">
+<div (contentUpdated)="updateBodyBindings()">
 	<ng-content></ng-content>
 </div>
 <div name="gridView" class="a-grid">
@@ -11,7 +11,7 @@
                             <span *ngIf="!column.header" [textContent]="column.colTitle || ''"></span>
 						<a-grid-column-header-loader *ngIf="column.header" [column]="column"></a-grid-column-header-loader>
 						</span>
-						<a-grid-column-resizer (columnResized)="column.changeWidth($event); updateColumns();" *ngIf="column.resizable"></a-grid-column-resizer>
+						<a-grid-column-resizer (columnResized)="column.changeWidth($event); updateBodyBindings();" *ngIf="column.resizable"></a-grid-column-resizer>
 					</th>
 					<th *ngIf="lastColumnResizable"></th>
 				</tr>
@@ -25,7 +25,7 @@
 		</table>
 	</div>
 	<div #bodyContainer class="a-grid__body-container" [style.height]="bodyHeight" [scrollToPaddingRight]="headertable" [synkHorizontalScroll]="headerContainer">
-		<a-grid-body [columns]="bodyColumns" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
+		<a-grid-body [columns]="bodyColumns" [groups]="bodyGroups" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onRowClick)="rowClick($event)" (onRowDoubleClick)="rowDoubleClick($event)"></a-grid-body>
 	</div>
 	<div #bottomContainer (contentUpdated)="bottomHeightChanged(bottomContainer.offsetHeight)">

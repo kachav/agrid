@@ -6,13 +6,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of items; let i = index;" class="a-grid__row" [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}"
-            (click)="rowClick(item)" (dblclick)="rowDoubleClick(item)">
-            <td *ngFor="let column of columns" class="a-grid__cell">
-                <a-grid-column-cell-loader *ngIf="column.cell" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
-                <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
+        <tr *aGridFor="let item of items groupby groups; let i = index; let groupCols=groupColumns; let groupChildren=children;" class="a-grid__row" [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}"
+            (click)="!groupCols?rowClick(item):null" (dblclick)="!groupCols?rowDoubleClick(item):null">
+            <td *ngFor="let column of groupCols || columns" [attr.colspan]="groupCols?columnsLength:1" class="a-grid__cell">
+                <a-grid-column-cell-loader *ngIf="!groupCols && column.cell" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
+                <span *ngIf="!groupCols && !column.cell" [textContent]="item[column.colName]"></span>
+                <a-grid-group-loader *ngIf="groupCols" [groupData]="item" [group]="column" [children]="groupChildren" ></a-grid-group-loader>
             </td>
-            <td *ngIf="lastColumnResizable"></td>
+
+            <td *ngIf="lastColumnResizable && !groupCols"></td>
         </tr>
     </tbody>
 </table>

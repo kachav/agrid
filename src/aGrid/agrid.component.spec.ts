@@ -93,7 +93,27 @@ describe('agrid.component', () => {
         gridInstance.setBodyHeight();
         expect(sanitizer.bypassSecurityTrustStyle).toHaveBeenCalledWith(`calc(100% - ${gridInstance.headerHeight + gridInstance.bottomHeight}px)`);
     });
-    
+
+    it('bodyGroups should takes from groups._results', () => {
+        let groups = {
+            _results: [
+                { groupName: "gr1" },
+                { groupName: "gr2" }
+            ]
+        };
+
+        gridInstance.groups = groups;
+        gridInstance.updateBodyBindings();
+        expect(gridInstance.bodyGroups).toEqual(groups._results);
+    });
+
+    it('bodyGroups do not changes when groups is not presented', () => {
+        gridInstance.groups = null;
+        expect(gridInstance.bodyGroups).toEqual([]);
+        gridInstance.updateBodyBindings();
+        expect(gridInstance.bodyGroups).toEqual([]);
+    });
+
     it('bodyColumns should takes from columns._results', () => {
         let cols = {
             _results: [
@@ -103,13 +123,14 @@ describe('agrid.component', () => {
         };
 
         gridInstance.columns = cols;
-        gridInstance.updateColumns();
+        gridInstance.updateBodyBindings();
         expect(gridInstance.bodyColumns).toEqual(cols._results);
     });
 
     it('bodyColumns do not changes when columns is not presented', () => {
         gridInstance.columns = null;
-        gridInstance.updateColumns();
+        expect(gridInstance.bodyColumns).toEqual([]);
+        gridInstance.updateBodyBindings();
         expect(gridInstance.bodyColumns).toEqual([]);
     });
 
@@ -120,7 +141,7 @@ describe('agrid.component', () => {
         };
 
         gridInstance.columns = cols;
-        gridInstance.updateColumns();
+        gridInstance.updateBodyBindings();
         expect(gridInstance.lastColumnResizable).toEqual(false);
     });
 
@@ -133,7 +154,7 @@ describe('agrid.component', () => {
         };
 
         gridInstance.columns = cols;
-        gridInstance.updateColumns();
+        gridInstance.updateBodyBindings();
         expect(gridInstance.lastColumnResizable).toEqual(false);
     });
 
@@ -146,22 +167,22 @@ describe('agrid.component', () => {
         };
 
         gridInstance.columns = cols;
-        gridInstance.updateColumns();
+        gridInstance.updateBodyBindings();
         expect(gridInstance.lastColumnResizable).toEqual(true);
     });
 
-    it('updateColumns fires on ngAfterContentInit', () => {
-        spyOn(gridInstance, 'updateColumns');
+    it('updateBodyBindings fires on ngAfterContentInit', () => {
+        spyOn(gridInstance, 'updateBodyBindings');
 
         gridInstance.ngAfterContentInit();
-        expect(gridInstance.updateColumns).toHaveBeenCalled();
+        expect(gridInstance.updateBodyBindings).toHaveBeenCalled();
     });
 
-    it('updateColumns fires on ngOnChanges', () => {
-        spyOn(gridInstance, 'updateColumns');
+    it('updateBodyBindings fires on ngOnChanges', () => {
+        spyOn(gridInstance, 'updateBodyBindings');
 
         gridInstance.ngOnChanges();
-        expect(gridInstance.updateColumns).toHaveBeenCalled();
+        expect(gridInstance.updateBodyBindings).toHaveBeenCalled();
     });
 
     it('onRowClick.next fires on rowClick', () => {

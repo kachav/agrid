@@ -45,6 +45,10 @@ export class homeTableState {
         this.modifyDays(index, -1);
     }
 
+    removeItem(row) {
+        this._items.next(this._items.getValue().filter(item => item._ouid !== row._ouid));
+    }
+
     public aaaFilter: string;
 
     public dddFilter: string;
@@ -64,20 +68,45 @@ export class homeTableState {
         this.dddFilter = "";
     }
 
-    count = 10;
+    count = 0;
 
     addItem() {
-        let arr = [...this._items.getValue()];
-        arr.push({ _ouid: this.count, aaa: `aaa-value ${this.count}`, sss: `sss-value ${this.count}`, ddd: `ddd-value ${this.count}`, eee: 1 });
-        this.count++;
-
+        let item = this._newItem();
+        let arr = [...this._items.getValue(), this._newItem()];
         this._items.next(arr);
+    }
+
+    sortBy(fieldName) {
+        let arr = this._items.getValue();
+        arr=arr.sort((a, b) => {
+            let aval=a[fieldName] || 0, bval = b[fieldName] || 0;
+            if (aval < bval)
+                return -1;
+            if (aval > bval)
+                return 1;
+            return 0;
+        });
+        this._items.next([...arr]);
+    }
+
+    _newItem() {
+        let aaaValues = ["Иванов", "Петров", "Сидоров", "Бананов", "Пустозвонов", "Бонд", "Смит"];
+        let dddValues = ["Иванович", "Петрович", "Аристархович", "Николаевич", "Васильевич", "Олегович"];
+        let sssValues = ["Иван", "Петр", "Василий", "Евлампий", "Дмитрий", "Николай"]
+
+        let getRandomItem = (array) => array[Math.floor(Math.random() * array.length)];
+        this.count++;
+        return {
+            _ouid: this.count, aaa: getRandomItem(aaaValues),
+            sss: getRandomItem(sssValues), ddd: getRandomItem(dddValues), eee: 1
+        }
+
     }
 
     load() {
         let arr = [];
-        for (let i = 1; i < this.count; i++) {
-            arr.push({ _ouid: i, aaa: `aaa-value ${i}`, sss: `sss-value ${i}`, ddd: `ddd-value ${i}`, eee: 1 });
+        for (let i = 1; i < 100; i++) {
+            arr.push(this._newItem());
         }
 
         this._items.next(arr);
@@ -85,11 +114,11 @@ export class homeTableState {
     select(row) {
         let _itemsArray = this._items.getValue(), _index = this._selectedIndex.getValue();
         //set current row selected property to true
-        if (_index>-1) {
+        if (_index > -1) {
             _itemsArray[_index][this.selectedProperty] = false;
         }
 
-        _index=_itemsArray.indexOf(row);
+        _index = _itemsArray.indexOf(row);
 
         row[this.selectedProperty] = true;
         //set current selected index

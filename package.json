@@ -6,7 +6,7 @@
   "scripts": {
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
     "commit": "git-cz",
-    "report-coverage":"cat ./coverage/lcov.info | codecov",
+    "report-coverage": "cat ./coverage/lcov.info | codecov",
     "server": "webpack-dev-server",
     "prebuild": "gulp cleanLib",
     "build": "gulp build",
@@ -21,7 +21,7 @@
     "@angular/compiler": "^2.2.4",
     "@angular/core": "^2.2.4",
     "lodash": "4.17.2",
-    "rxjs": "^5.0.0-beta.12",
+    "rxjs": "^5.0.3",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {

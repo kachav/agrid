@@ -1,37 +1,37 @@
-import {aGridCell} from './agridcell.directive';
+import { aGridGroup } from './aGridGroup.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
 import { async, inject, TestBed } from '@angular/core/testing';
 
 @Component({
-    template: '<div *aGridCell></div>',
+    template: '<div *aGridGroup="let group by \'grName\'"></div>',
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(aGridCell) public targetDirective;
+    @ViewChild(aGridGroup) public targetDirective;
 }
 
 
-describe('agridcell.directive', () => {
-    let instance;
+describe('aGridGroup.component', () => {
+    let templatRefMock = {}, instance;
 
     beforeEach(async(() => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridCell, testContainer
+                aGridGroup, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;
         });
     }));
 
-    it('aGridCell is a constructor',()=>{
+    it('aGridGroup is a constructor', () => {
         expect(typeof instance).toEqual('object');
     });
 
-    it('aGridCell.template should be instance of TemplateRef',()=>{
+    it('aGridGroup.template should be instance of TemplateRef', () => {
         let result = instance.template instanceof TemplateRef;
 
         expect(result).toEqual(true);
