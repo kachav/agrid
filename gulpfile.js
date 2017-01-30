@@ -7,15 +7,15 @@ var gulp = require('gulp'),
 
 
 //билд компонентов по папкам
-function buildComponent(componentPath) {
+function buildComponent(componentPath, subPath) {
     return function () {
-        var baseSrcPath = "./src/aGrid", baseLibPath = "./lib/aGrid";
+        var baseSrcPath = "./src"+(subPath || ''), baseLibPath = "./lib"+(subPath || '');
 
         var tsProject = ts.createProject('tsconfig.json', { declaration: true });
 
         if (componentPath) {
-            baseSrcPath += "/" + componentPath;
-            baseLibPath += "/" + componentPath;
+            baseSrcPath += "/" + (componentPath || '');
+            baseLibPath += "/" + (componentPath || '');
         }
 
         tsResult = gulp.src([baseSrcPath + '/*.ts','!'+baseSrcPath + '/*.spec.ts'])
@@ -31,13 +31,15 @@ function buildComponent(componentPath) {
 }
 
 var componentBuildTasks = ['utils','synkHorizontalScroll','scrollToPaddingRight','contentUpdated', 
-'aGridPager', 'aGridFor','aGridForGroup','aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
+'aGridPager', 'aGridFor','aGridGroup','aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
 
 componentBuildTasks.forEach(function (item) {
-    gulp.task(item, buildComponent(item));
+    gulp.task(item, buildComponent(item, '/aGrid'));
 });
 
 gulp.task("buildRoot",componentBuildTasks,  buildComponent());
+
+gulp.task("brTest",  buildComponent());
 
 gulp.task('cleanLib', function () {
     return gulp.src('./lib')
