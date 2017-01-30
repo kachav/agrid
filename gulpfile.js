@@ -37,9 +37,9 @@ componentBuildTasks.forEach(function (item) {
     gulp.task(item, buildComponent(item, '/aGrid'));
 });
 
-gulp.task("buildRoot",componentBuildTasks,  buildComponent());
+gulp.task('buildAgrid', componentBuildTasks,buildComponent('aGrid'));
 
-gulp.task("brTest",  buildComponent());
+gulp.task("buildRoot",['buildAgrid'],  buildComponent());
 
 gulp.task('cleanLib', function () {
     return gulp.src('./lib')
