@@ -4,7 +4,7 @@
   "description": "an angular 2 data grid",
   "main": "lib/index.js",
   "scripts": {
-    "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
+    "check-coverage": "nyc check-coverage --statements 90 --branches 90 --functions 100 --lines 100",
     "commit": "git-cz",
     "report-coverage": "cat ./coverage/lcov.info | codecov",
     "server": "webpack-dev-server",

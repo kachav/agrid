@@ -7,17 +7,26 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { AGridForGroup } from './AGridForGroup';
 
 @Component({
-    template: '<div *aGridFor="let item of items"></div>',
+    template: `
+        <div *aGridFor="let item of items groupby groups; let groupCols=groupColumns; let i=index;">{{groupCols?'group '+item.value:i+' '+item.field1+' '+item.field2+' '+item.field3+' '+item.field4}}</div>
+        `,
     selector: 'test-container'
 })
 class testContainer {
     @ViewChild(AGridFor) public targetDirective;
 
-    items = []
+    groups = [{ groupName: "field1" }, { groupName: "field2" }]
+
+    items: Array<any> = [
+        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1" },
+        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1" },
+        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1" },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1" },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1" }]
 }
 
 describe('AGridFor.directive', () => {
-    let instance;
+    let instance, fixture;
 
     beforeEach(async(() => {
         return TestBed.configureTestingModule({
@@ -26,567 +35,260 @@ describe('AGridFor.directive', () => {
                 AGridFor, testContainer
             ]
         }).compileComponents().then(() => {
-            let component = TestBed.createComponent(testContainer);
-            instance = component.componentInstance.targetDirective;
+            fixture = TestBed.createComponent(testContainer);
+            fixture.detectChanges();
+            instance = fixture.componentInstance.targetDirective;
         });
     }));
 
-    it('aGridForGroupby setting _groups property', () => {
-        let groups = [{ aaa: 123 }];
+    it('initial groupping on component create works', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(10);
 
-        instance.aGridForGroupby = groups;
-        expect(instance._groups).toBe(groups);
-    })
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-    it('_rowDiffer setting when aGridForOf is present and _rowDiffer is not present', () => {
-        let changes = { aGridForOf: { currentValue: [{ aaa: 123 }, { aaa: 334 }] } };
+        //group f2v2
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        let findResult = { create() { } };
+        //group f1v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2');
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3');
 
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._rowDiffer).toBe(differMock);
-
-        expect(instance._differs.find).toHaveBeenCalledWith(changes.aGridForOf.currentValue);
-
-        expect(findResult.create).toHaveBeenCalledWith(instance._cdr);
-    })
-
-    it('_rowDiffer is not set when _rowDiffer is present', () => {
-        let changes = { aGridForOf: { currentValue: [{ aaa: 123 }, { aaa: 334 }] } };
-
-        let findResult = { create() { } };
-
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance._rowDiffer = {};
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._rowDiffer).not.toBe(differMock);
-
-        expect(instance._differs.find).not.toHaveBeenCalled();
-
-        expect(findResult.create).not.toHaveBeenCalled();
-    })
-
-    it('_rowDiffer is not set when aGridForOf is no present in changes', () => {
-        let changes = {};
-
-        let findResult = { create() { } };
-
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance._rowDiffer = {};
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._rowDiffer).not.toBe(differMock);
-
-        expect(instance._differs.find).not.toHaveBeenCalled();
-
-        expect(findResult.create).not.toHaveBeenCalled();
-    })
-
-    it('_groupDiffer setting when aGridForGroupby is present and _groupDiffer is not present', () => {
-        let changes = { aGridForGroupby: { currentValue: [{ aaa: 123 }, { aaa: 334 }] } };
-
-        let findResult = { create() { } };
-
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._groupDiffer).toBe(differMock);
-
-        expect(instance._differs.find).toHaveBeenCalledWith(changes.aGridForGroupby.currentValue);
-
-        expect(findResult.create).toHaveBeenCalledWith(instance._cdr);
-    })
-
-    it('_groupDiffer is not set when _groupDiffer is present', () => {
-        let changes = { aGridForGroupby: { currentValue: [{ aaa: 123 }, { aaa: 334 }] } };
-
-        let findResult = { create() { } };
-
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance._groupDiffer = {};
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._groupDiffer).not.toBe(differMock);
-
-        expect(instance._differs.find).not.toHaveBeenCalled();
-
-        expect(findResult.create).not.toHaveBeenCalled();
-    })
-
-    it('_groupDiffer is not set when aGridForGroupby is not present in changes', () => {
-        let changes = {};
-
-        let findResult = { create() { } };
-
-        let differMock = {};
-
-        spyOn(instance._differs, 'find').and.callFake(() => findResult);
-
-        spyOn(findResult, 'create').and.callFake(() => differMock);
-
-        instance.ngOnChanges(changes);
-
-        expect(instance._groupDiffer).not.toBe(differMock);
-
-        expect(instance._differs.find).not.toHaveBeenCalled();
-
-        expect(findResult.create).not.toHaveBeenCalled();
-    })
-
-    it('ngDoCheck takes diffs when _rowDiffer is present', () => {
-        let differMock = { diff() { } }, agForOfFake = [{ aaa: 234 }];
-
-        spyOn(differMock, 'diff');
-
-        instance._rowDiffer = differMock;
-        instance.aGridForOf = agForOfFake;
-
-        instance.ngDoCheck();
-
-        expect(differMock.diff).toHaveBeenCalledWith(agForOfFake);
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
 
-    it('ngDoCheck fires _applyChanges when rowDiffs is present', () => {
-        let differMock = { diff() { return diffMock } }, diffMock = { aaa: 123 }, agForOfFake = [];
+    it('new item should be in the first level groups', () => {
+        fixture.componentInstance.items.push({ field1: "f1v1", field2: "f2v1", field3: "f3v6", field4: "f4v1" })
+        fixture.detectChanges();
 
-        spyOn(instance, '_applyChanges');
+        expect(fixture.nativeElement.children.length).toEqual(11);
 
-        instance._rowDiffer = differMock;
-        instance.aGridForOf = agForOfFake;
-
-        instance.ngDoCheck();
-
-        expect(instance._applyChanges).toHaveBeenCalledWith(diffMock, undefined);
+        expect(fixture.nativeElement.children[4].innerText).toEqual('5 f1v1 f2v1 f3v6 f4v1');
     })
 
-    it('ngDoCheck takes diffs of groups when _groupDiffer is present', () => {
-        let differMock = { diff() { } }, aGridForGroupbyFake = [{ aaa: 234 }];
+    it('removing last item should remove parent group', () => {
+        (fixture.componentInstance.items as Array<any>).splice(1, 1);
+        fixture.detectChanges();
+        //should delete second item and second level group
+        expect(fixture.nativeElement.children.length).toEqual(8);
 
-        spyOn(differMock, 'diff');
-
-        instance._groupDiffer = differMock;
-        instance._groups = aGridForGroupbyFake;
-
-        instance.ngDoCheck();
-
-        expect(differMock.diff).toHaveBeenCalledWith(instance._groups);
+        (fixture.componentInstance.items as Array<any>).splice(0);
+        fixture.detectChanges();
+        //should delete the rest of items and groups
+        expect(fixture.nativeElement.children.length).toEqual(0);
     })
 
-    it('ngDoCheck fires _applyChanges when groupDiffs is present', () => {
-        let differMock = { diff() { return diffMock } }, diffMock = { aaa: 123 }, agForOfFake = [];
+    it('items inside groups should be sort like in original collection', () => {
+        let arr: Array<any> = fixture.componentInstance.items, item, secItem;
 
-        spyOn(instance, '_applyChanges');
+        item = arr[2];
+        secItem = arr[0];
 
-        instance._groupDiffer = differMock;
-        instance._groups = agForOfFake;
-
-        instance.ngDoCheck();
-
-        expect(instance._applyChanges).toHaveBeenCalledWith(undefined, diffMock);
+        fixture.componentInstance.items = arr =
+            [
+                item,
+                secItem,
+                ...arr.filter(filterItem => filterItem !== item && filterItem !== secItem)
+            ];
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('1 f1v1 f2v1 f3v1 f4v1');
     })
 
-    it('_getRowGroup finds existing instance of group for row if it exists', () => {
-        //fake groups
-        let groups = [{ groupName: "field1" }, { groupName: "field2" }],
+    it('removing group should remove all instances of it\'s group from dom', () => {
+        (fixture.componentInstance.groups as Array<any>).splice(0, 1);
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children.length).toEqual(8);
 
-            //fake groupsCollection (array of instances) of created groups 
-            group1 = { $implicit: { value: 'value2' }, groupInstance: { groupName: 'field1' }, children: [] },
-            group2 = { $implicit: { value: 'value1' }, groupInstance: { groupName: 'field2' }, children: [] },
-            group3 = { $implicit: { value: 'value3' }, groupInstance: { groupName: 'field2' }, children: [] },
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-            fakeGroupsCollection = [
-                group1,
-                group2,
-                group3];
+        expect(fixture.nativeElement.children[3].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        group1.children = [group2, group3];
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[6].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[7].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
 
-        instance._groups = groups;
-        instance._groupsCollection = [...fakeGroupsCollection];
+        //clear all groups
+        (fixture.componentInstance.groups as Array<any>).splice(0);
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children.length).toEqual(5);
 
-        let row = { field1: 'value2', field2: 'value1' };
-
-        let groupInstance = instance._getRowGroup(row);
-
-        expect(groupInstance.$implicit.value).toEqual('value1');
-
-        expect(fakeGroupsCollection.indexOf(groupInstance)).toBeGreaterThan(-1);
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
-    it('_getRowGroup creates new instance of group for row if it\'s not exist', () => {
-        //fake groups
-        let groups = [{ groupName: "field1" }, { groupName: "field2" }],
+    it('adding group in the center should regroup every lower level children', () => {
+        let arr: Array<any> = fixture.componentInstance.groups;
 
-            //fake groupsCollection (array of instances) of created groups 
-            group1 = { $implicit: { value: 'value2' }, groupInstance: { groupName: 'field1' }, children: [], view:{aaa:123} },
-            group2 = { $implicit: { value: 'value1' }, groupInstance: { groupName: 'field2' }, children: [] },
-            group3 = { $implicit: { value: 'value3' }, groupInstance: { groupName: 'field2' }, children: [] },
+        arr = [arr[0], { groupName: "field4" }, arr[1]];
 
-            fakeGroupsCollection = [
-                group1,
-                group2,
-                group3];
+        fixture.componentInstance.groups = arr;
+        fixture.detectChanges();
 
-        group1.children = [group2, group3];
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(12);
 
-        instance._groups = groups;
-        instance._groupsCollection = [...fakeGroupsCollection];
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f4v1');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1');
+        //group items
+        expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-        let row = { field1: 'value2', field2: 'value4' };
+        //group f2v2
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        //group item
+        expect(fixture.nativeElement.children[6].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        let viewContainerIndex = 4;
+        //group f1v2
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2');
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f4v1');
+        //group f2v3
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3');
 
-        spyOn(instance._viewContainer,'indexOf').and.callFake(()=>viewContainerIndex);
-
-        instance.template={aaa:123};
-
-        let groupInstance = instance._getRowGroup(row);
-
-        expect(groupInstance.$implicit.value).toEqual('value4');
-
-        expect(fakeGroupsCollection.indexOf(groupInstance)).toEqual(-1);
-
-        expect(groupInstance.parent).toBe(group1);
-
-        expect(instance._viewContainer.indexOf).toHaveBeenCalledWith(group1.view);
+        //group items
+        expect(fixture.nativeElement.children[10].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[11].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
-    it('_getRowGroup creates new instance of group for row and it\'s parent if it\'s not exist when _groupsCollection is empty', () => {
-        //fake groups
-        let groups = [{ groupName: "field1" }, { groupName: "field2" }];
+    it('adding group in the start should regroup every lower level children', () => {
+        let arr: Array<any> = fixture.componentInstance.groups;
 
-        instance._groups = groups;
-        instance._groupsCollection = [];
+        arr = [{ groupName: "field4" }, ...arr];
 
-        let row = { field1: 'value5', field2: 'value4' };
+        fixture.componentInstance.groups = arr;
+        fixture.detectChanges();
 
-        let viewContainerIndex = 4;
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(11);
 
-        spyOn(instance._viewContainer,'indexOf').and.callFake(()=>viewContainerIndex);
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f4v1');
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f1v1');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1');
+        //group items
+        expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-        instance.template={aaa:123};
+        //group f2v2
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        //group item
+        expect(fixture.nativeElement.children[6].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        let groupInstance = instance._getRowGroup(row);
+        //group f1v2
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2');
+        //group f2v3
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f2v3');
 
-        expect(groupInstance.$implicit.value).toEqual('value4');
-
-        expect(groupInstance.parent.$implicit.value).toEqual('value5');
+        //group items
+        expect(fixture.nativeElement.children[9].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[10].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
-it('_getRowGroup creates new instance of group for row and it\'s parent if it\'s not exist', () => {
-        //fake groups
-        let groups = [{ groupName: "field1" }, { groupName: "field2" }],
+    it('adding group in the end should add new group level', () => {
+        let arr: Array<any> = fixture.componentInstance.groups;
 
-            //fake groupsCollection (array of instances) of created groups 
-            group1 = { $implicit: { value: 'value2' }, groupInstance: { groupName: 'field1' }, children: [], view:{aaa:123} },
-            group2 = { $implicit: { value: 'value1' }, groupInstance: { groupName: 'field2' }, children: [] },
-            group3 = { $implicit: { value: 'value3' }, groupInstance: { groupName: 'field2' }, children: [] },
+        arr = [...arr, { groupName: "field4" }];
 
-            fakeGroupsCollection = [
-                group1,
-                group2,
-                group3];
+        fixture.componentInstance.groups = arr;
+        fixture.detectChanges();
 
-        group1.children = [group2, group3];
+        expect(fixture.nativeElement.children.length).toEqual(13);
 
-        instance._groups = groups;
-        instance._groupsCollection = [...fakeGroupsCollection];
 
-        let row = { field1: 'value5', field2: 'value4' };
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1');
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f4v1');
+        //group items
+        expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-        let viewContainerIndex = 4;
+        //group f2v2
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f4v1');
+        //group item
+        expect(fixture.nativeElement.children[7].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        spyOn(instance._viewContainer,'indexOf').and.callFake(()=>viewContainerIndex);
+        //group f1v2
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f1v2');
+        //group f2v3
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3');
+        //field 4 group f4v1
+        expect(fixture.nativeElement.children[10].innerText).toEqual('group f4v1');
 
-        instance.template={aaa:123};
-
-        let groupInstance = instance._getRowGroup(row);
-
-        expect(groupInstance.$implicit.value).toEqual('value4');
-
-        expect(fakeGroupsCollection.indexOf(groupInstance)).toEqual(-1);
-
-        expect(groupInstance.parent.$implicit.value).toEqual('value5');
-
-        expect(fakeGroupsCollection.indexOf(groupInstance.parent)).toEqual(-1);
+        //group items
+        expect(fixture.nativeElement.children[11].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[12].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
     })
 
-    it('_insertNewGrouppedItem takes parent group by calling _getRowGroup', () => {
-        spyOn(instance, '_getRowGroup');
-        let fakeItem = { aaa: 123 };
-        instance._insertNewGrouppedItem(fakeItem);
 
-        expect(instance._getRowGroup).toHaveBeenCalledWith(fakeItem);
+    it('when we change value in the item, dom element changes', () => {
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+
+        fixture.componentInstance.items[0].field3 = 'field3test';
+
+        fixture.componentInstance.items = [...fixture.componentInstance.items]
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 field3test f4v1');
+    });
+
+    it('items without groups should be sort like in original collection', () => {
+        fixture.componentInstance.groups = [];
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+        let items:Array<any>=fixture.componentInstance.items;
+
+        fixture.componentInstance.items=[items[items.length-1],...items.slice(0,items.length-1)];
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v2 f2v3 f3v5 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v4 f4v1');
     })
 
-    it('_insertNewGrouppedItem creating instance of AGridForRow with parent from _getRowGroup', () => {
-        let fakeGroup = { children: [], view: {} };
-        let fakeIndex = 4;
-        spyOn(instance, '_getRowGroup').and.callFake(() => fakeGroup);
-        spyOn(instance._viewContainer, 'indexOf').and.callFake(() => fakeIndex);
-        let fakeItem = { aaa: 123 };
-        let row = instance._insertNewGrouppedItem(fakeItem);
+    it('should regroup when groups order changes', () => {
+        let arr = fixture.componentInstance.groups;
 
-        expect(row.parent).toBe(fakeGroup);
+        fixture.componentInstance.groups = [arr[1],arr[0]];
+        fixture.detectChanges();
 
-        expect(fakeGroup.children).toContain(row);
-
-        expect(instance._viewContainer.indexOf).toHaveBeenCalledWith(fakeGroup.view);
-    })
-
-    it('_removeItem removes all parent\'s chain', () => {
-        let row: any = {}, groupParent: any = new AGridForGroup('aaa1', null, 1, 3), groupParent2: any = new AGridForGroup('aaa', null, 1, 3), item = {};
-
-        row.parent = groupParent;
-
-        row.view = {};
-        groupParent.view = {};
-        groupParent2.view = {};
-
-        groupParent.parent = groupParent2;
-
-        groupParent.children = [row];
-
-        instance._groupsCollection = [groupParent, groupParent2];
-
-        groupParent2.children = [groupParent, {}];
-
-        spyOn(instance._itemsMap, 'get').and.callFake(() => row);
-
-        let index = 4;
-
-        spyOn(instance._viewContainer, 'indexOf').and.callFake(() => index);
-        spyOn(instance._viewContainer, 'remove');
-
-        spyOn(instance._itemsMap, 'delete');
-
-        instance._removeItem(item);
-
-        expect(instance._itemsMap.get).toHaveBeenCalledWith(item);
-
-        expect(instance._viewContainer.indexOf).toHaveBeenCalledWith(row.view);
-        expect(instance._viewContainer.indexOf).toHaveBeenCalledWith(groupParent.view);
-        expect(instance._viewContainer.indexOf).toHaveBeenCalledWith(groupParent2.view);
-
-        expect(instance._itemsMap.delete).toHaveBeenCalledWith(row);
-        expect(instance._itemsMap.delete).toHaveBeenCalledWith(groupParent);
-        expect(instance._itemsMap.delete).not.toHaveBeenCalledWith(groupParent2);
-
-        expect(groupParent2.children).not.toContain(groupParent);
-    })
-
-    it('_removeItem removes top level item if it don\'t have a childrens', () => {
-        let row: any = {}, groupParent: any = new AGridForGroup('aaa1', null, 1, 3), groupParent2: any = new AGridForGroup('aaa', null, 1, 3), item = {};
-
-        row.parent = groupParent;
-
-        row.view = {};
-        groupParent.view = {};
-        groupParent2.view = {};
-
-        groupParent.parent = groupParent2;
-
-        groupParent.children = [row];
-
-        instance._groupsCollection = [groupParent, groupParent2];
-
-        groupParent2.children = [groupParent];
-
-        spyOn(instance._itemsMap, 'get').and.callFake(() => row);
-
-        let index = 4;
-
-        spyOn(instance._viewContainer, 'indexOf').and.callFake(() => index);
-        spyOn(instance._viewContainer, 'remove');
-
-        spyOn(instance._itemsMap, 'delete');
-
-        instance._removeItem(item);
-
-        expect(instance._itemsMap.delete).toHaveBeenCalledWith(groupParent2);
-    })
-
-    it('_removeItem do not do anything if do not find a starting row', () => {
-        let row: any = {}, groupParent: any = new AGridForGroup('aaa1', null, 1, 3), groupParent2: any = new AGridForGroup('aaa', null, 1, 3), item = {};
-
-        row.parent = groupParent;
-
-        row.view = {};
-        groupParent.view = {};
-        groupParent2.view = {};
-
-        groupParent.parent = groupParent2;
-
-        groupParent.children = [row];
-
-        instance._groupsCollection = [groupParent, groupParent2];
-
-        groupParent2.children = [groupParent];
-
-        spyOn(instance._itemsMap, 'get').and.callFake(() => null);
-
-        let index = 4;
-
-        spyOn(instance._viewContainer, 'indexOf').and.callFake(() => index);
-        spyOn(instance._viewContainer, 'remove');
-
-        spyOn(instance._itemsMap, 'delete');
-
-        instance._removeItem(item);
-
-        expect(instance._itemsMap.get).toHaveBeenCalledWith(item);
-
-        expect(instance._viewContainer.indexOf).not.toHaveBeenCalled();
-
-        expect(instance._itemsMap.delete).not.toHaveBeenCalled();
-    })
-
-    it('_actualizeGrouppedIndex moves groupped items correctly',()=>{
-        instance._groups=[
-            {groupName:"field1"},
-            {groupName:"field2"}
-        ];
-
-        let item = {field1:"f1v1",field2:"f2v2", field3:"3434,"};
-
-        instance.aGridForOf=[
-            {field1:"f1v1", field2:"f2v2", field3:"aaa,123"},
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            item,
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            {field1:"f1v1", field2:"f2v2", field3:"534534"}
-        ];
-
-        let fakeRow = {view:{},parent:{view:{}}};
-
-        spyOn(instance._itemsMap,'get').and.callFake(()=>fakeRow);
-
-        let fakeIndex=4;
-
-        spyOn(instance._viewContainer,'indexOf').and.callFake(()=>fakeIndex);
-
-        spyOn(instance._viewContainer,'move')
-
-
-        let moveInstance = instance._actualizeGrouppedIndex(item);
-
-        expect(moveInstance).toBe(fakeRow);
-
-        expect(instance._viewContainer.move).toHaveBeenCalledWith(fakeRow.view,6)
-
-    })
-
-        it('_actualizeGrouppedIndex moves non groupped items correctly',()=>{
-        instance._groups=null;
-
-        let item = {field1:"f1v1",field2:"f2v2", field3:"3434,"};
-
-        instance.aGridForOf=[
-            {field1:"f1v1", field2:"f2v2", field3:"aaa,123"},
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            item,
-            {field1:"aaa", field2:"sss", field3:"aaa,123"},
-            {field1:"f1v1", field2:"f2v2", field3:"534534"}
-        ];
-
-        let fakeRow = {view:{}};
-
-        spyOn(instance._itemsMap,'get').and.callFake(()=>fakeRow);
-
-        let fakeIndex=4;
-
-        spyOn(instance._viewContainer,'indexOf').and.callFake(()=>fakeIndex);
-
-        spyOn(instance._viewContainer,'move')
-
-
-        let moveInstance = instance._actualizeGrouppedIndex(item);
-
-        expect(moveInstance).toBe(fakeRow);
-
-        expect(instance._viewContainer.move).toHaveBeenCalledWith(fakeRow.view,3)
-
-    })
-
-    it('_applyChanges fires forEachOperation on rowChanges',()=>{
-        let fakeRowChanges = {forEachOperation(){},forEachIdentityChange(){}}, 
-        fakeAddItem = {aaa:123}, fakeRemoveItem={aaa:334}, fakeMovedItem = {aaa:445}, fakeRow:any={view:{context:{$implicit:234}}};
-
-        instance.aGridForOf=[];
-
-        spyOn(instance,'_insertNewGrouppedItem').and.callFake(()=>fakeRow);
-
-        spyOn(instance,'_actualizeGrouppedIndex').and.callFake(()=>fakeRow);
-
-        spyOn(instance,'_removeItem');
-
-        spyOn(fakeRowChanges,'forEachOperation').and.callFake((handler)=>{
-            handler({previousIndex:null, item:fakeAddItem}, null, 1);
-
-            handler({previousIndex:1, item:fakeRemoveItem}, null, null);
-
-            handler({previousIndex:1, item:fakeMovedItem}, null, 3);
-        })
-
-        let fakeItem = {aaa:4343};
-        spyOn(fakeRowChanges, 'forEachIdentityChange').and.callFake((handler)=>{
-            handler({item:fakeItem});
-        })
-
-        spyOn(instance._itemsMap,'get').and.callFake(()=>fakeRow);
-
-        instance.aGridForOf=[{}];
-
-        instance._applyChanges(fakeRowChanges);
-
-        expect(instance._insertNewGrouppedItem).toHaveBeenCalledWith(fakeAddItem);
-
-        expect(instance._removeItem).toHaveBeenCalledWith(fakeRemoveItem);
-
-        expect(instance._actualizeGrouppedIndex).toHaveBeenCalledWith(fakeMovedItem);
-
-        expect(fakeRow.view.context.index).toEqual(0);
-        
-        expect(fakeRow.view.context.count).toEqual(1);
-
-        expect(fakeRow.view.context.$implicit).toBe(fakeItem);
-
-
-        instance._applyChanges();
-    })
+    });
 
 });
