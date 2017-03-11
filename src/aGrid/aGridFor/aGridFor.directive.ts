@@ -62,13 +62,17 @@ export class AGridFor implements DoCheck, OnChanges {
 
     private _itemsMap: Map<any, AGridForRow> = new Map<any, AGridForRow>();
 
-    private _groupsCollection: Array<AGridForGroup> = [];
-
-
+    private _groupsMap: Map<any, Array<AGridForGroup>> = new Map<any, Array<AGridForGroup>>();
 
     private _getRowGroup(row) {
+        //get array instance of root level group
+        let topLevelGroups = this._groupsMap.get(this._groups[0]);
+        if (!topLevelGroups) {
+            topLevelGroups = [];
+            this._groupsMap.set(this._groups[0], topLevelGroups);
+        }
 
-        let groups = this._groupsCollection, groupInstance: AGridForGroup;
+        let groups = topLevelGroups, groupInstance: AGridForGroup;
         this._groups.forEach(group => {
             let groupInstanceNew = groups.find(gr => gr.$implicit.value === row[group.groupName]
                 && gr.groupInstance.groupName === group.groupName);
@@ -92,13 +96,14 @@ export class AGridFor implements DoCheck, OnChanges {
                 groupInstanceNew.parent = groupInstance;
 
 
+
                 let index = 0;
                 if (groupInstanceNew.parent) {
                     index = this._viewContainer.indexOf(groupInstanceNew.parent.view);
                     index += allSubChildLength(groupInstanceNew.parent) + 1;
-                } else if (!groupInstanceNew.parent && this._groupsCollection.length) {
-                    index = this._viewContainer.indexOf(this._groupsCollection[this._groupsCollection.length - 1].view);
-                    index += allSubChildLength(this._groupsCollection[this._groupsCollection.length - 1]) + 1;
+                } else if (!groupInstanceNew.parent && topLevelGroups.length) {
+                    index = this._viewContainer.indexOf(topLevelGroups[topLevelGroups.length - 1].view);
+                    index += allSubChildLength(topLevelGroups[topLevelGroups.length - 1]) + 1;
                 }
 
                 //insert new group into current view
@@ -106,6 +111,12 @@ export class AGridFor implements DoCheck, OnChanges {
                     this._template, groupInstanceNew, index);
                 groups.push(groupInstanceNew);
                 groupInstanceNew.view = view;
+
+                let instanceArray = this._groupsMap.get(group) || [];
+                if (instanceArray.indexOf(groupInstanceNew) === -1) {
+                    instanceArray.push(groupInstanceNew);
+                }
+                this._groupsMap.set(group, instanceArray);
             }
             groupInstance = groupInstanceNew;
             groups = groupInstanceNew.children;
@@ -118,20 +129,23 @@ export class AGridFor implements DoCheck, OnChanges {
         row = new AGridForRow(item, null, null);
         if (group) {
             index = this._viewContainer.indexOf(group.view) + group.children.length + 1;
-            group.children.push(row);
-            row.parent = group;
+            group.addChild(row);
         }
+
         const view = this._viewContainer.createEmbeddedView(
             this._template, row, index);
+
         row.view = view;
         this._itemsMap.set(item, row);
         return row;
     }
 
+    //removes item and it's parents if they do not have any other childs
     private _removeItem(item) {
         let row: any = this._itemsMap.get(item);
         if (row) {
             do {
+                //remove all parents if they do not have any children
                 let index = this._viewContainer.indexOf(row.view);
                 if (index > -1 && (!row.children || !row.children.length)) {
 
@@ -140,9 +154,14 @@ export class AGridFor implements DoCheck, OnChanges {
                     }
 
                     this._viewContainer.remove(index);
-                    this._itemsMap.delete(row);
+
+                    //if row is group we should delete it from this group's array of group instances
                     if (row instanceof AGridForGroup) {
-                        this._groupsCollection = this._groupsCollection.filter(gr => gr !== row);
+                        let groupArray = this._groupsMap.get(row.groupInstance);
+                        groupArray.splice(groupArray.indexOf(row), 1);
+                    } else {
+                        //else it's an item and we should delete it from items map
+                        this._itemsMap.delete(row.$implicit);
                     }
                     row = row.parent;
                 } else {
@@ -152,14 +171,49 @@ export class AGridFor implements DoCheck, OnChanges {
         }
     }
 
+    //removes all instances of the group from view
+    _removeGroup(group) {
+        let groupRows = this._groupsMap.get(group) || [];
+
+        groupRows.forEach(groupRow => {
+            let index = this._viewContainer.indexOf(groupRow.view);
+            this._viewContainer.remove(index);
+
+            //remove parent from all children of current deleting group instance
+            if (groupRow.children) {
+                groupRow.children.forEach(rowChild => {
+                    groupRow.removeChild(rowChild);
+                })
+                groupRow.children = [];
+            }
+
+            //remove this instance from it's parents children
+            if (groupRow.parent) {
+                groupRow.parent.removeChild(groupRow);
+            }
+
+        });
+
+        this._groupsMap.delete(group);
+    }
+
     _actualizeGrouppedIndex(item) {
         let row = this._itemsMap.get(item);
 
+        //if row.parent is presented, it was not deleted, but added
+
+        //find actual parent group for current row
+        let group: AGridForGroup = this._getRowGroup(row.$implicit);
+        if (group) {
+            group.addChild(row);
+        }
         let grouppedItems = this.aGridForOf;
         if (this._groups) {
+            //find list of items from the same groups
             grouppedItems = grouppedItems.filter(filterItem => {
                 let result = false, groupEqualCounter = 0;
 
+                //the groupped fields of all items must be equal to the fields of current item
                 this._groups.forEach(gr => {
                     if (filterItem[gr.groupName] === item[gr.groupName])
                         groupEqualCounter++;
@@ -168,20 +222,102 @@ export class AGridFor implements DoCheck, OnChanges {
 
                 return result;
             });
+
         }
         let index = grouppedItems.indexOf(item);
         if (row.parent) {
-            index += this._viewContainer.indexOf(row.parent.view) + 1;
+            let parentIndex = this._viewContainer.indexOf(row.parent.view) + 1;
+            index += parentIndex;
         }
+
         this._viewContainer.move(row.view, index);
         return row;
     }
 
+    //reattaches an item to the view, adding item to the end of the group
+    _reattachItem(item) {
+        let row = this._itemsMap.get(item), index = this.aGridForOf.indexOf(item);
+
+        //if row.parent is presented, it was not deleted, but added
+        let isItemParentNew = !!row.parent;
+
+        //find actual parent group for current row
+        let group: AGridForGroup = this._getRowGroup(row.$implicit);
+        if (group) {
+            if (row.parent) {
+                row.parent.removeChild(this);
+            }
+            index = this._viewContainer.indexOf(group.view) + group.children.length + 1;
+            group.addChild(row);
+        }
+        this._viewContainer.move(row.view, index);
+    }
+
     private _applyChanges(rowChanges: DefaultIterableDiffer, groupChanges: DefaultIterableDiffer) {
+        const insertTuples: RecordViewTuple[] = [];
+        if (groupChanges) {
+            let groupsToDelete = [], pushGroup = (group) => {
+                if (groupsToDelete.indexOf(group) === -1) {
+                    groupsToDelete.push(group);
+                }
+            }, setMinIndex = (val) => {
+                minIndex = Math.min(minIndex, val);
+                if (minIndex < 0) {
+                    minIndex = 0;
+                }
+            },
+                delFrom = (index) => {
+                    for (let i = index; i < this._groups.length; i++) {
+                        pushGroup(this._groups[i]);
+                    }
+                }, minIndex = -1;
+            groupChanges.forEachOperation(
+                (group: CollectionChangeRecord, adjustedPreviousIndex: number, currentIndex: number) => {
 
+                    pushGroup(group.item);
+                    if (group.previousIndex == null) {
+
+                        setMinIndex(currentIndex);
+                    } else if (currentIndex == null) {
+                        pushGroup(group.item);
+                        setMinIndex(group.previousIndex);
+                    } else {
+                        pushGroup(group.item);
+                        setMinIndex(group.previousIndex);
+                        setMinIndex(currentIndex);
+                    }
+                }
+            );
+
+            if (minIndex > -1) {
+                delFrom(minIndex);
+            }
+
+            groupsToDelete.forEach(group => {
+                this._removeGroup(group);
+            });
+
+            //for all items we should clear parent's childs for preventing groups/items position collisions
+            this.aGridForOf.forEach((item) => {
+                let row: any = this._itemsMap.get(item);
+                if (row && row.parent) {
+                    row.parent.clearChilds();
+                }
+            });
+
+            //then we should reattach all items, it will create groups that items needed
+            this.aGridForOf.forEach((item) => {
+                let row: any = this._itemsMap.get(item);
+                if (row) {
+                    this._reattachItem(item);
+                    let tuple = new RecordViewTuple(item, row.view);
+                    insertTuples.push(tuple);
+                }
+            });
+        }
+
+        //processing changes of rows
         if (rowChanges) {
-
-            const insertTuples: RecordViewTuple[] = [];
             rowChanges.forEachOperation(
                 (item: CollectionChangeRecord, adjustedPreviousIndex: number, currentIndex: number) => {
                     let row;
@@ -194,7 +330,7 @@ export class AGridFor implements DoCheck, OnChanges {
                     }
 
                     if (row) {
-                        let tuple = new RecordViewTuple(item, row.view);
+                        let tuple = new RecordViewTuple(item.item, row.view);
                         insertTuples.push(tuple);
                     }
                 });
@@ -210,21 +346,14 @@ export class AGridFor implements DoCheck, OnChanges {
                 let viewRef = <EmbeddedViewRef<any>>row.view;
                 viewRef.context.index = i;
                 viewRef.context.count = ilen;
-
             }
-
-            rowChanges.forEachIdentityChange((record: any) => {
-                let row = this._itemsMap.get(record.item);
-
-                let viewRef = <EmbeddedViewRef<AGridForRow>>row.view;
-                viewRef.context.$implicit = record.item;
-
-            });
         }
+
+
     }
 
     private _perViewChange(view: EmbeddedViewRef<AGridForRow>, record: CollectionChangeRecord) {
-        view.context.$implicit = record.item;
+        view.context.$implicit = record;
     }
 }
 
