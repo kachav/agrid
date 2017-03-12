@@ -1,1 +1,1 @@
-export * from './lib';
+export {AgridModule} from './lib';
