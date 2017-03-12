@@ -7,4 +7,6 @@
 npm-debug.log
 /coverage
 /.nyc_output
+/index.js
+/index.d.ts
 coverage-final.json
