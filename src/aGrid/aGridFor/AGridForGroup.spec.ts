@@ -30,27 +30,19 @@ describe('aGridForGroup', () => {
     }));
 
     it('constructor creates $implicit field with value', () => {
-        let testValue = "test value", instance = new AGridForGroup(testValue, groupInstance, 0, 5);
+        let testValue = "test value", instance = new AGridForGroup(testValue, groupInstance,0);
 
         expect(instance.$implicit.value).toEqual(testValue);
     });
 
     it('children is empty array by default', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5);
+        let instance = new AGridForGroup("test", groupInstance,0);
 
         expect(instance.children).toEqual([]);
     });
 
-    it('groupColumns is array with one element = groupInstance', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5);
-
-        expect(instance.groupColumns.length).toEqual(1);
-
-        expect(instance.groupColumns[0]).toBe(groupInstance);
-    });
-
     it('addChild removes current item from it\'s parent', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5),
+        let instance = new AGridForGroup("test", groupInstance,0),
             parent = { removeChild(value) { } }, item: any = { aa: 22 };
 
         spyOn(parent, 'removeChild');
@@ -65,7 +57,7 @@ describe('aGridForGroup', () => {
     });
 
     it('addChild adding item to it\'s children if children do not contains item', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5), item = { aa: 22 }, item2 = { aa: 33 };
+        let instance = new AGridForGroup("test", groupInstance,0), item = { aa: 22 }, item2 = { aa: 33 };
 
         instance.addChild(item);
 
@@ -77,7 +69,7 @@ describe('aGridForGroup', () => {
     });
 
     it('removeChild removes an item from children array', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5), item: any = { aa: 22 };
+        let instance = new AGridForGroup("test", groupInstance,0), item: any = { aa: 22 };
 
         instance.addChild(item);
 
@@ -93,7 +85,7 @@ describe('aGridForGroup', () => {
     });
 
     it('removeChild do not removes not existing childs', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5), item: any = { aa: 22, parent: null };
+        let instance = new AGridForGroup("test", groupInstance,0), item: any = { aa: 22, parent: null };
 
         expect(item.parent).toBeNull();
 
@@ -107,7 +99,7 @@ describe('aGridForGroup', () => {
     });
 
     it('clearChilds fires removeChild on each child element', () => {
-        let instance = new AGridForGroup("test", groupInstance, 0, 5), testChilds=[{aa:11},{aa:22},{aa:33},{aa:44}];
+        let instance = new AGridForGroup("test", groupInstance,0), testChilds=[{aa:11},{aa:22},{aa:33},{aa:44}];
 
         spyOn(instance,'removeChild');
 

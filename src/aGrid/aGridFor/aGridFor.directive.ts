@@ -92,7 +92,7 @@ export class AGridFor implements DoCheck, OnChanges {
             }
 
             if (!groupInstanceNew) {
-                groupInstanceNew = new AGridForGroup(row[group.groupName], group, null, null);
+                groupInstanceNew = new AGridForGroup(row[group.groupName], group, this._groups.indexOf(group));
                 groupInstanceNew.parent = groupInstance;
 
 
