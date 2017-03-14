@@ -8,7 +8,7 @@ import { AGridForGroup } from './AGridForGroup';
 
 @Component({
     template: `
-        <div *aGridFor="let item of items groupby groups; let groupCols=groupColumns; let i=index;">{{groupCols?'group '+item.value:i+' '+item.field1+' '+item.field2+' '+item.field3+' '+item.field4}}</div>
+        <div *aGridFor="let item of items groupby groups; let group=groupInstance; let i=index;let grLevel=groupLevel">{{group?'group '+item.value+' level '+grLevel:i+' '+item.field1+' '+item.field2+' '+item.field3+' '+item.field4}}</div>
         `,
     selector: 'test-container'
 })
@@ -46,22 +46,22 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children.length).toEqual(10);
 
         //field1 group f1v1
-        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
         //field2 group f2v1
-        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
         //group items
         expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
         //group f2v2
-        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 1');
         //group item
         expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
         //group f1v2
-        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2');
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2 level 0');
         //group f2v3
-        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 1');
 
         //group items
         expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
@@ -112,14 +112,14 @@ describe('AGridFor.directive', () => {
         fixture.detectChanges();
         expect(fixture.nativeElement.children.length).toEqual(8);
 
-        expect(fixture.nativeElement.children[0].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f2v1 level 0');
         expect(fixture.nativeElement.children[1].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
-        expect(fixture.nativeElement.children[3].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('group f2v2 level 0');
         expect(fixture.nativeElement.children[4].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
-        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v3 level 0');
         expect(fixture.nativeElement.children[6].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
         expect(fixture.nativeElement.children[7].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
 
@@ -147,26 +147,26 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children.length).toEqual(12);
 
         //field1 group f1v1
-        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[1].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f4v1 level 1');
         //field2 group f2v1
-        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1 level 2');
         //group items
         expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
         //group f2v2
-        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2 level 2');
         //group item
         expect(fixture.nativeElement.children[6].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
         //group f1v2
-        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2');
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2 level 0');
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[8].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f4v1 level 1');
         //group f2v3
-        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3 level 2');
 
         //group items
         expect(fixture.nativeElement.children[10].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
@@ -185,24 +185,24 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children.length).toEqual(11);
 
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[0].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f4v1 level 0');
         //field1 group f1v1
-        expect(fixture.nativeElement.children[1].innerText).toEqual('group f1v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f1v1 level 1');
         //field2 group f2v1
-        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f2v1 level 2');
         //group items
         expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
         //group f2v2
-        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2 level 2');
         //group item
         expect(fixture.nativeElement.children[6].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
         //group f1v2
-        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2');
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f1v2 level 1');
         //group f2v3
-        expect(fixture.nativeElement.children[8].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f2v3 level 2');
 
         //group items
         expect(fixture.nativeElement.children[9].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
@@ -221,28 +221,28 @@ describe('AGridFor.directive', () => {
 
 
         //field1 group f1v1
-        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1');
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
         //field2 group f2v1
-        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[2].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('group f4v1 level 2');
         //group items
         expect(fixture.nativeElement.children[3].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[4].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
         //group f2v2
-        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2');
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2 level 1');
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[6].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f4v1 level 2');
         //group item
         expect(fixture.nativeElement.children[7].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
 
         //group f1v2
-        expect(fixture.nativeElement.children[8].innerText).toEqual('group f1v2');
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f1v2 level 0');
         //group f2v3
-        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3 level 1');
         //field 4 group f4v1
-        expect(fixture.nativeElement.children[10].innerText).toEqual('group f4v1');
+        expect(fixture.nativeElement.children[10].innerText).toEqual('group f4v1 level 2');
 
         //group items
         expect(fixture.nativeElement.children[11].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
@@ -288,6 +288,34 @@ describe('AGridFor.directive', () => {
 
         fixture.componentInstance.groups = [arr[1],arr[0]];
         fixture.detectChanges();
+
+        expect(fixture.nativeElement.children.length).toEqual(11);
+
+
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f2v1 level 0');
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f1v1 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+                expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 0');
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f1v1 level 1');
+        //group item
+        expect(fixture.nativeElement.children[6].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 0');
+        //group f1v2
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f1v2 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[9].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[10].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
 
     });
 

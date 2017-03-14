@@ -3,7 +3,7 @@ import { ViewRef } from '@angular/core';
 import { aGridGroup } from '../aGridGroup/aGridGroup.directive';
 
 export class AGridForGroup {
-    constructor(public value: string, public groupInstance: aGridGroup, public index: number, public count: number) {
+    constructor(public value: string, public groupInstance: aGridGroup, public groupLevel:number) {
         this.$implicit = {
             value
         }
@@ -40,6 +40,4 @@ export class AGridForGroup {
     public parent: AGridForGroup;
     public children: Array<any> = [];
     public view: ViewRef;
-
-    get groupColumns(): Array<any> { return [this.groupInstance] };
 }

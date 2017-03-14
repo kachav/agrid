@@ -12,6 +12,8 @@ export class aGridGroupLoader implements OnChanges {
 
     @Input() children:Array<any>;
 
+    @Input() groupLevel:number;
+
     view:EmbeddedViewRef<any>
 
     constructor(private viewContainer: ViewContainerRef) { }
@@ -21,7 +23,8 @@ export class aGridGroupLoader implements OnChanges {
                 {
                     '$implicit': this.groupData,
                     'group': this.groupData,
-                    'children':this.children
+                    'children':this.children,
+                    'groupLevel':this.groupLevel
                 });
         }
     }

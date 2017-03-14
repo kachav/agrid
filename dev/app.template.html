@@ -15,14 +15,14 @@
 		(onRowDoubleClick)="tableState.checkDblClick($event)">
 
 		<div *ngIf="showGroup1">
-			<div *aGridGroup="let group by 'aaa'; let groupChild=children">{{group.value + ' ('+groupChild.length+')'}}</div>
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'aaa'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
 		</div>
 		<div *ngIf="showGroup2">
-			<div style="padding-left: 20px;" *aGridGroup="let group by 'sss'; let groupChild=children">{{group.value + ' ('+groupChild.length+')'}}</div>
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'sss'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
 		</div>
 
 		<div *ngIf="showGroup3">
-			<div style="padding-left: 40px;" *aGridGroup="let group by 'ddd'; let groupChild=children">{{group.value + ' ('+groupChild.length+')'}}</div>
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'ddd'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
 		</div>
 
 		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
