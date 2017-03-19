@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ContentChild, Output, EventEmitter, HostListener, HostBinding, Renderer } from "@angular/core";
+import { Component, TemplateRef, ContentChild, Output, EventEmitter, HostListener, HostBinding, Renderer, Inject } from "@angular/core";
 
 @Component({
     selector: "a-grid-column-resizer",
@@ -12,7 +12,7 @@ export class AGridColumnResizer {
     private startRight: number;
     private rightNumber:number;
 
-    constructor(private wnd:Window){
+    constructor(@Inject(Window) private wnd:Window){
     }
 
     @Output() columnResized=new EventEmitter();
