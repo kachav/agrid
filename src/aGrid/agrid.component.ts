@@ -49,6 +49,8 @@ export class aGrid {
   @Input() checkedProperty: string;
   checkedPropertyDefault = "aGridChecked";
 
+  @Input() showHeader=true;
+
   @Output() onRowClick = new EventEmitter();
 
   @Output() onRowDoubleClick = new EventEmitter();

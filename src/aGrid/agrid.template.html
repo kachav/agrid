@@ -3,7 +3,7 @@
 </div>
 <div name="gridView" class="a-grid">
 	<div #headerContainer class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged(headerContainer.offsetHeight)">
-		<table class="a-grid__header" #headertable>
+		<table *ngIf="showHeader" class="a-grid__header" #headertable>
 			<thead>
 				<tr>
 					<th class="a-grid__column a-grid__column_sortable" *ngFor="let column of columns; let i = index; let l = last;" [style.width]="!l || lastColumnResizable?column.width+'px':null">

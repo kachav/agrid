@@ -12,15 +12,17 @@ import { homeTableState } from './app.table.state';
 export class AppComponent {
     constructor(private tableState: homeTableState) { }
 
-    showFilters=true;
+    showFilters = true;
 
-    showCol2=true;
+    showCol2 = true;
 
-        showGroup1=true;
+    showGroup1 = true;
 
-    showGroup2=true;
+    showGroup2 = true;
 
-        showGroup3=true;
+    showGroup3 = true;
+
+    showHeader = true;
 
     showMessage(message) {
         alert(JSON.stringify(message));
