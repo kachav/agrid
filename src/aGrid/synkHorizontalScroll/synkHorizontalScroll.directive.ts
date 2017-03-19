@@ -11,7 +11,7 @@ export class SynkHorizontalScroll {
 
 
     @HostListener('scroll', ['$event']) onScroll(e) {
-        if (e.target.scrollLeft !== this.targetElement.scrollLeft) {
+        if (this.targetElement && e.target.scrollLeft !== this.targetElement.scrollLeft) {
             this.renderer.setElementProperty(this.targetElement, "scrollLeft", e.target.scrollLeft);
         }
     };

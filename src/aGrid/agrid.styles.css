@@ -23,7 +23,7 @@ a-grid::before{
 
 .a-grid__header-container {
     background-color: #fafafa;
-    border-top: 1px solid #808080;
+
     width:100%;
     overflow: hidden;
 }
@@ -36,6 +36,7 @@ a-grid::before{
     font-size: 11px;
     line-height: 20px;
     width:100%;
+    border-top: 1px solid #808080;
 }
 
 
