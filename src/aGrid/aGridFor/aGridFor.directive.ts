@@ -1,7 +1,7 @@
 import {
-    ChangeDetectorRef, CollectionChangeRecord, DefaultIterableDiffer,
+    IterableChanges,IterableChangeRecord,
     Directive, DoCheck, EmbeddedViewRef, Input, IterableDiffer, IterableDiffers,
-    OnChanges, SimpleChanges, TemplateRef, TrackByFn, ViewContainerRef, isDevMode, ViewRef
+    OnChanges, SimpleChanges, TemplateRef, TrackByFn, ViewContainerRef, isDevMode, ViewRef, TrackByFunction
 } from '@angular/core';
 
 import { aGridGroup } from '../aGridGroup/aGridGroup.directive';
@@ -12,21 +12,26 @@ import { AGridForRow } from './AGridForRow';
 
 
 @Directive({ selector: '[aGridFor][aGridForOf]' })
-export class AGridFor implements DoCheck, OnChanges {
+export class AGridFor<T> implements DoCheck, OnChanges {
     @Input() aGridForOf: any;
 
-    private _rowDiffer: IterableDiffer = null;
-    private _groupDiffer: IterableDiffer = null;
+    private _rowDiffer: IterableDiffer<T> = null;
+    private _groupDiffer: IterableDiffer<T> = null;
 
 
-    private _groups: Array<aGridGroup>;
+    private _groups: any;
     @Input() set aGridForGroupby(groups: Array<aGridGroup>) {
         this._groups = groups;
     }
 
+    @Input()
+    aGridForTrackBy: TrackByFunction<T>;
+
+    private _groupTrackByFn: TrackByFunction<T>;
+
     constructor(
         private _viewContainer: ViewContainerRef, private _template: TemplateRef<any>,
-        private _differs: IterableDiffers, private _cdr: ChangeDetectorRef) { }
+        private _differs: IterableDiffers) { }
 
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -34,13 +39,13 @@ export class AGridFor implements DoCheck, OnChanges {
             // React on aGridForOf changes only once all inputs have been initialized
             let value = changes['aGridForOf'].currentValue;
             if (!this._rowDiffer && value) {
-                this._rowDiffer = this._differs.find(value).create(this._cdr);
+                this._rowDiffer = this._differs.find(value).create(this.aGridForTrackBy);
             }
         }
         if ('aGridForGroupby' in changes) {
             let value = changes['aGridForGroupby'].currentValue;
             if (!this._groupDiffer && value) {
-                this._groupDiffer = this._differs.find(value).create(this._cdr);
+                this._groupDiffer = this._differs.find(value).create(this._groupTrackByFn);
             }
         }
     }
@@ -253,7 +258,7 @@ export class AGridFor implements DoCheck, OnChanges {
         this._viewContainer.move(row.view, index);
     }
 
-    private _applyChanges(rowChanges: DefaultIterableDiffer, groupChanges: DefaultIterableDiffer) {
+    private _applyChanges(rowChanges: IterableChanges<T>, groupChanges: IterableChanges<T>) {
         const insertTuples: RecordViewTuple[] = [];
         if (groupChanges) {
             let groupsToDelete = [], pushGroup = (group) => {
@@ -272,7 +277,7 @@ export class AGridFor implements DoCheck, OnChanges {
                     }
                 }, minIndex = -1;
             groupChanges.forEachOperation(
-                (group: CollectionChangeRecord, adjustedPreviousIndex: number, currentIndex: number) => {
+                (group: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
 
                     pushGroup(group.item);
                     if (group.previousIndex == null) {
@@ -319,7 +324,7 @@ export class AGridFor implements DoCheck, OnChanges {
         //processing changes of rows
         if (rowChanges) {
             rowChanges.forEachOperation(
-                (item: CollectionChangeRecord, adjustedPreviousIndex: number, currentIndex: number) => {
+                (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
                     let row;
                     if (item.previousIndex == null) {
                         row = this._insertNewGrouppedItem(item.item);
@@ -352,7 +357,7 @@ export class AGridFor implements DoCheck, OnChanges {
 
     }
 
-    private _perViewChange(view: EmbeddedViewRef<AGridForRow>, record: CollectionChangeRecord) {
+    private _perViewChange(view: EmbeddedViewRef<AGridForRow>, record: IterableChangeRecord<any>) {
         view.context.$implicit = record;
     }
 }

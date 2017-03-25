@@ -8,7 +8,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strictNullChecks": false,
-    "baseUrl": "./dev"
+    "baseUrl": "./dev",
+    "lib": ["es6", "dom"]
   },
   "exclude": [
     "node_modules"

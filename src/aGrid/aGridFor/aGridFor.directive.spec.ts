@@ -8,7 +8,7 @@ import { AGridForGroup } from './AGridForGroup';
 
 @Component({
     template: `
-        <div *aGridFor="let item of items groupby groups; let group=groupInstance; let i=index;let grLevel=groupLevel">{{group?'group '+item.value+' level '+grLevel:i+' '+item.field1+' '+item.field2+' '+item.field3+' '+item.field4}}</div>
+        <div *aGridFor="let item of items groupby groups;trackBy:item?.id; let group=groupInstance; let i=index;let grLevel=groupLevel">{{group?'group '+item.value+' level '+grLevel:i+' '+item.field1+' '+item.field2+' '+item.field3+' '+item.field4}}</div>
         `,
     selector: 'test-container'
 })
@@ -18,11 +18,11 @@ class testContainer {
     groups = [{ groupName: "field1" }, { groupName: "field2" }]
 
     items: Array<any> = [
-        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1" },
-        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1" },
-        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1" },
-        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1" },
-        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1" }]
+        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1",id:1 },
+        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1" ,id:2},
+        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1" ,id:3},
+        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1" ,id:4},
+        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1" ,id:5}]
 }
 
 describe('AGridFor.directive', () => {
@@ -70,7 +70,7 @@ describe('AGridFor.directive', () => {
 
 
     it('new item should be in the first level groups', () => {
-        fixture.componentInstance.items.push({ field1: "f1v1", field2: "f2v1", field3: "f3v6", field4: "f4v1" })
+        fixture.componentInstance.items.push({ field1: "f1v1", field2: "f2v1", field3: "f3v6", field4: "f4v1" ,id:6})
         fixture.detectChanges();
 
         expect(fixture.nativeElement.children.length).toEqual(11);
@@ -302,7 +302,7 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
 
         //group f2v2
-                expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 0');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 0');
         //field1 group f1v1
         expect(fixture.nativeElement.children[5].innerText).toEqual('group f1v1 level 1');
         //group item
