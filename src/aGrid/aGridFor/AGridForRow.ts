@@ -3,11 +3,11 @@ import {ViewRef} from '@angular/core';
 import {AGridForGroup} from './AGridForGroup';
 
 export class AGridForRow {
-    constructor(public $implicit: any, public index: number, public count: number) { }
-
     public parent: AGridForGroup;
 
     public view: ViewRef;
+
+    constructor(public $implicit: any, public index: number, public count: number) { }
 
     get first(): boolean { return this.index === 0; }
 

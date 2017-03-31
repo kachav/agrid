@@ -1,4 +1,4 @@
-import { AGridFor } from './aGridFor.directive';
+import { AGridForDirective } from './aGridFor.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
@@ -13,7 +13,7 @@ import { AGridForGroup } from './AGridForGroup';
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(AGridFor) public targetDirective;
+    @ViewChild(AGridForDirective) public targetDirective;
 
     groups = [{ groupName: "field1" }, { groupName: "field2" }]
 
@@ -32,7 +32,7 @@ describe('AGridFor.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                AGridFor, testContainer
+                AGridForDirective, testContainer
             ]
         }).compileComponents().then(() => {
             fixture = TestBed.createComponent(testContainer);

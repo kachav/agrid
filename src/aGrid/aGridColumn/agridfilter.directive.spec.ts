@@ -1,4 +1,4 @@
-import {aGridFilter} from './agridfilter.directive';
+import {AGridFilterDirective} from './agridfilter.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
@@ -10,7 +10,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(aGridFilter) public targetDirective;
+    @ViewChild(AGridFilterDirective) public targetDirective;
 }
 
 
@@ -21,7 +21,7 @@ describe('aGridFilter.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridFilter, testContainer
+                AGridFilterDirective, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;

@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'listFilter' })
+@Pipe({ name: 'myListFilter' })
 export class FilterPipe implements PipeTransform {
-    transform(list, args) {
+    public transform(list, args) {
         let filterArray = [];
         if (Array.isArray(args)) {
             for (let i = 0; i < args.length; i += 2) {
@@ -11,13 +11,13 @@ export class FilterPipe implements PipeTransform {
                 }
             }
         }
-        return list.filter(item => {
+        return list.filter((item) => {
             let result = true;
-            filterArray.forEach(filter => {
+            filterArray.forEach((filter) => {
                 if (item[filter.field].toLowerCase().indexOf(filter.value.toLowerCase()) === -1) {
                     result = false;
-                }else{
-                    console.log(item[filter.field])
+                } else {
+                    console.log(item[filter.field]);
                 }
             });
             return result;

@@ -1,10 +1,10 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-    template: `<button class="a-grid__button"><ng-content></ng-content></button>`,
+    template: `<button class='a-grid__button'><ng-content></ng-content></button>`,
     selector: 'a-grid-button',
     styleUrls: ['./agridbutton.styles.css']
 })
-export class aGridButton {
 
+export class AGridButtonComponent {
 }

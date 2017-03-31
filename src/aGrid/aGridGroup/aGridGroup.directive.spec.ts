@@ -1,4 +1,4 @@
-import { aGridGroup } from './aGridGroup.directive';
+import { AGridGroupDirective } from './aGridGroup.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
@@ -9,7 +9,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(aGridGroup) public targetDirective;
+    @ViewChild(AGridGroupDirective) public targetDirective;
 }
 
 
@@ -20,7 +20,7 @@ describe('aGridGroup.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridGroup, testContainer
+                AGridGroupDirective, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;

@@ -13,7 +13,7 @@
 <button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
 <div style="height: calc(100vh - 50px);">
-	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | listFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
+	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
 		(onRowDoubleClick)="tableState.checkDblClick($event)">
 
 		<div *ngIf="showGroup1">

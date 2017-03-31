@@ -1,10 +1,10 @@
-import { aGridColumn } from './agridcolumn.component';
+import { AGridColumnComponent } from './agridcolumn.component';
 
 describe('agridcolumn.component', () => {
-    let colInstance: aGridColumn;
+    let colInstance: AGridColumnComponent;
 
     beforeEach(() => {
-        colInstance = new aGridColumn();
+        colInstance = new AGridColumnComponent();
     });
 
     it('resizable true by default', () => {

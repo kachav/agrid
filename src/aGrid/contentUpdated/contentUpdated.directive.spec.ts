@@ -1,6 +1,6 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 
-import { ContentUpdated } from './contentUpdated.directive';
+import { ContentUpdatedDirective } from './contentUpdated.directive';
 
 import { ElementRef, Component, ViewChild } from '@angular/core';
 
@@ -24,7 +24,7 @@ class MutationObserverServiceMock {
 })
 class testContainer {
 
-    @ViewChild(ContentUpdated) public targetDirective;
+    @ViewChild(ContentUpdatedDirective) public targetDirective;
 
     public handleContentUpdated() {
 
@@ -50,7 +50,7 @@ describe('contentUpdated.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                ContentUpdated, testContainer
+                ContentUpdatedDirective, testContainer
             ],
             providers: [
                 { provide: MutationObserverService, useValue: fakeObserverService }
