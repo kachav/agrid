@@ -1,4 +1,4 @@
-import { aGridColumnHeaderLoader } from './agridheaderloader.component';
+import { AGridColumnHeaderLoaderComponent } from './agridheaderloader.component';
 
 import { ViewContainerRef } from "@angular/core";
 
@@ -17,13 +17,13 @@ describe('agridheaderloader.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridColumnHeaderLoader
+                AGridColumnHeaderLoaderComponent
             ],
             providers: [
                 { provide: ViewContainerRef, useClass: ViewContainerRefMock }
             ]
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(aGridColumnHeaderLoader).componentInstance;
+            instance = TestBed.createComponent(AGridColumnHeaderLoaderComponent).componentInstance;
         });
     }));
 

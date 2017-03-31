@@ -1,38 +1,38 @@
-import { Input, Component, ViewContainerRef, EmbeddedViewRef, OnChanges } from "@angular/core";
-import {aGridColumn} from './agridcolumn.component';
+import { Input, Component, ViewContainerRef, EmbeddedViewRef, OnChanges } from '@angular/core';
+import { AGridColumnComponent } from './agridcolumn.component';
 
 @Component({
-    selector: "a-grid-column-cell-loader",
+    selector: 'a-grid-column-cell-loader',
     template: ''
 })
-export class aGridColumnCellLoader implements OnChanges {
-    @Input() column: aGridColumn;
+export class AGridColumnCellLoaderComponent implements OnChanges {
+    @Input() public column: AGridColumnComponent;
 
-    @Input() rowData: any;
+    @Input() public rowData: any;
 
-    @Input() rowIndex: number;
+    @Input() public rowIndex: number;
 
-    view:EmbeddedViewRef<any>
+    private view: EmbeddedViewRef<any>;
 
     constructor(private viewContainer: ViewContainerRef) { }
-    ngOnInit() {
+    public ngOnInit() {
         if (this.column && this.column.cell && this.column.cell.template) {
             this.view = this.viewContainer.createEmbeddedView(this.column.cell.template,
                 {
-                    '$implicit': this.rowData,
-                    'rowData':this.rowData,
-                    'rowColumn': this.column,
-                    'rowIndex': this.rowIndex
+                    $implicit: this.rowData,
+                    rowData: this.rowData,
+                    rowColumn: this.column,
+                    rowIndex: this.rowIndex
                 });
         }
     }
 
-    ngOnChanges(){
-        if(this.view){
-            this.view.context.$implicit=this.rowData;
-            this.view.context.rowData=this.rowData;
-            this.view.context.rowColumn=this.column;
-            this.view.context.rowIndex=this.rowIndex;
+    public ngOnChanges() {
+        if (this.view) {
+            this.view.context.$implicit = this.rowData;
+            this.view.context.rowData = this.rowData;
+            this.view.context.rowColumn = this.column;
+            this.view.context.rowIndex = this.rowIndex;
         }
     }
 }

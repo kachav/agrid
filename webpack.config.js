@@ -38,8 +38,14 @@ module.exports = {
             // Support for .ts files.
             {
                 test: /\.ts$/,
-                use: ['awesome-typescript-loader', 'angular2-template-loader'],
-                exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/,'./index.ts']
+                use: ['awesome-typescript-loader', 'angular2-template-loader', 
+                {
+                    loader: 'tslint-loader',
+                    options: {
+                        configFile: 'tslint.json'
+                    }
+                }],
+                exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/, './index.ts']
             }
         ]
     }

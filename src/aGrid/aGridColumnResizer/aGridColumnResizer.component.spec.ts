@@ -1,4 +1,4 @@
-import { AGridColumnResizer } from './aGridColumnResizer.component';
+import { AGridColumnResizerComponent } from './aGridColumnResizer.component';
 import { async, inject, TestBed } from '@angular/core/testing';
 
 let fakeStyle = { right: "12px" };
@@ -19,13 +19,13 @@ describe('aGridColumnResizer.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                AGridColumnResizer
+                AGridColumnResizerComponent
             ],
             providers: [
                 { provide: Window, useClass: MockWindow }
             ]
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(AGridColumnResizer).componentInstance;
+            instance = TestBed.createComponent(AGridColumnResizerComponent).componentInstance;
         });
     }));
 

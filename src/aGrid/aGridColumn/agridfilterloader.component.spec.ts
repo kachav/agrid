@@ -1,4 +1,4 @@
-import { aGridFilterLoader } from './agridfilterloader.component';
+import { AGridFilterLoaderComponent } from './agridfilterloader.component';
 
 import { ViewContainerRef } from "@angular/core";
 
@@ -17,13 +17,13 @@ describe('agridfilterloader.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridFilterLoader
+                AGridFilterLoaderComponent
             ],
             providers: [
                 { provide: ViewContainerRef, useClass: ViewContainerRefMock }
             ]
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(aGridFilterLoader).componentInstance;
+            instance = TestBed.createComponent(AGridFilterLoaderComponent).componentInstance;
         });
     }));
 

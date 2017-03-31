@@ -1,16 +1,18 @@
 import { Directive, ElementRef, Output, HostListener, EventEmitter } from '@angular/core';
 
-import {MutationObserverService} from '../utils/mutationObserver.service';
+import { MutationObserverService } from '../utils/mutationObserver.service';
 
 @Directive({ selector: '[contentUpdated]' })
-export class ContentUpdated {
-    @Output('contentUpdated') contentUpdated = new EventEmitter();
+export class ContentUpdatedDirective {
+    @Output('contentUpdated') public contentUpdated = new EventEmitter();
 
-    constructor(private curElement: ElementRef, private observerBuilder:MutationObserverService) {
+    private observer: MutationObserver;
+
+    constructor(private curElement: ElementRef, private observerBuilder: MutationObserverService) {
         // configuration of the observer:
-        let config = { attributes: true, childList: true, characterData: true, subtree:true }
+        let config = { attributes: true, childList: true, characterData: true, subtree: true };
 
-        //subtree modified event
+        // subtree modified event
         this.observer = this.observerBuilder.getObserver(() => {
             this.domSubTreeModified();
         });
@@ -18,13 +20,11 @@ export class ContentUpdated {
         this.observer.observe(this.curElement.nativeElement, config);
     }
 
-    private observer:MutationObserver;
-
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this.domSubTreeModified();
     }
 
-    ngOnDestroy(){
+    public ngOnDestroy() {
         this.observer.disconnect();
     }
 

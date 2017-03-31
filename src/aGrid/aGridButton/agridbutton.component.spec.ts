@@ -1,8 +1,8 @@
-import {aGridButton} from './agridbutton.component';
+import {AGridButtonComponent} from './agridbutton.component';
 
 describe('agridbutton.component', () => {
     it('aGridButton is a constructor',()=>{
-        let instance = new aGridButton();
+        let instance = new AGridButtonComponent();
 
         expect(typeof instance).toEqual('object');
     });

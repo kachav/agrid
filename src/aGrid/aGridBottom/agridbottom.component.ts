@@ -4,7 +4,7 @@ import {
 
 @Component({
   selector: `a-grid-bottom`,
-  template: `<div class="a-grid__bottom-container"><ng-content></ng-content></div>`,
+  template: `<div class='a-grid__bottom-container'><ng-content></ng-content></div>`,
   styles: [`
   :host{
     display:block;
@@ -17,6 +17,5 @@ import {
   }
   `]
 })
-export class aGridBottom {
-  constructor() { }
+export class AGridBottomComponent {
 }

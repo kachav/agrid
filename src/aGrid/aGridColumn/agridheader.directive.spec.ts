@@ -1,4 +1,4 @@
-import {aGridHeader} from './agridheader.directive';
+import {AGridHeaderDirective} from './agridheader.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
@@ -9,7 +9,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(aGridHeader) public targetDirective;
+    @ViewChild(AGridHeaderDirective) public targetDirective;
 }
 
 
@@ -20,7 +20,7 @@ describe('aGridHeader.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridHeader, testContainer
+                AGridHeaderDirective, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;

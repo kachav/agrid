@@ -1,4 +1,4 @@
-import { aGridGroupLoader } from './aGridGroupLoader.component';
+import { AGridGroupLoaderComponent } from './aGridGroupLoader.component';
 
 import { ViewContainerRef } from "@angular/core";
 
@@ -17,13 +17,13 @@ describe('aGridGroupLoader.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridGroupLoader
+                AGridGroupLoaderComponent
             ],
             providers: [
                 { provide: ViewContainerRef, useClass: ViewContainerRefMock }
             ]
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(aGridGroupLoader).componentInstance;
+            instance = TestBed.createComponent(AGridGroupLoaderComponent).componentInstance;
         });
     }));
 

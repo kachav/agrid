@@ -1,8 +1,8 @@
-import {TemplateRef, Directive} from "@angular/core";
+import { TemplateRef, Directive } from '@angular/core';
 
 @Directive({
-    selector: "[aGridHeader]"
+    selector: '[aGridHeader]'
 })
-export class aGridHeader {
-    constructor(public template:TemplateRef<any>){}
+export class AGridHeaderDirective {
+    constructor(public template: TemplateRef<any>) { }
 }

@@ -1,4 +1,4 @@
-import { Input, Component } from "@angular/core";
+import { Input, Component } from '@angular/core';
 
 @Component({
     templateUrl: './agridpager.template.html',
@@ -6,4 +6,4 @@ import { Input, Component } from "@angular/core";
     selector: 'a-grid-pager',
 
 })
-export class aGridPager {}
+export class AGridPagerComponent { }

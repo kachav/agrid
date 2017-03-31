@@ -1,4 +1,4 @@
-import { SynkHorizontalScroll } from './synkHorizontalScroll.directive';
+import { SynkHorizontalScrollDirective } from './synkHorizontalScroll.directive';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ElementRef, Component, ViewChild } from '@angular/core';
@@ -9,7 +9,7 @@ import { ElementRef, Component, ViewChild } from '@angular/core';
 })
 class testContainer {
 
-    @ViewChild(SynkHorizontalScroll) public targetDirective;
+    @ViewChild(SynkHorizontalScrollDirective) public targetDirective;
 
     public handleContentUpdated() {
 
@@ -25,7 +25,7 @@ describe('synkHorizontalScroll.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                SynkHorizontalScroll, testContainer
+                SynkHorizontalScrollDirective, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;
