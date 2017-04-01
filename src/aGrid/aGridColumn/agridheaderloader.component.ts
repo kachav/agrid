@@ -1,27 +1,26 @@
-import { Input, Component, ViewContainerRef, OnChanges, EmbeddedViewRef } from "@angular/core";
-import { aGridColumn } from './agridcolumn.component';
-
+import { Input, Component, ViewContainerRef, OnChanges, EmbeddedViewRef } from '@angular/core';
+import { AGridColumnComponent } from './agridcolumn.component';
 
 @Component({
-    selector: "a-grid-column-header-loader",
+    selector: 'a-grid-column-header-loader',
     template: ''
 })
-export class aGridColumnHeaderLoader implements OnChanges {
-    @Input() column: aGridColumn;
+export class AGridColumnHeaderLoaderComponent implements OnChanges {
+    @Input() public column: AGridColumnComponent;
 
-    view: EmbeddedViewRef<any>
+    private view: EmbeddedViewRef<any>;
 
     constructor(private viewContainer: ViewContainerRef) { }
-    ngOnInit() {
+    public ngOnInit() {
         if (this.column && this.column.header && this.column.header.template) {
             this.view = this.viewContainer.createEmbeddedView(this.column.header.template,
                 {
-                    '$implicit': this.column
+                    $implicit: this.column
                 });
         }
     }
 
-    ngOnChanges() {
+    public ngOnChanges() {
         if (this.view) {
             this.view.context.$implicit = this.column;
         }

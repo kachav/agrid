@@ -1,32 +1,39 @@
 import { ViewRef } from '@angular/core';
 
-import { aGridGroup } from '../aGridGroup/aGridGroup.directive';
+import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
 
 export class AGridForGroup {
-    constructor(public value: string, public groupInstance: aGridGroup, public groupLevel:number) {
+
+    public $implicit;
+    public parent: AGridForGroup;
+    public children: any[] = [];
+    public view: ViewRef;
+    constructor(public value: string,
+                public groupInstance: AGridGroupDirective,
+                public groupLevel: number) {
         this.$implicit = {
             value
+        };
+    }
+
+    public removeChild(item) {
+        let index = this.children.indexOf(item);
+        if (index > -1) {
+            item.parent = null;
+            this.children.splice(index, 1);
         }
     }
 
-    removeChild(item){
-        let index=this.children.indexOf(item);
-        if(index>-1){
-            item.parent=null;
-            this.children.splice(index,1);
-        }
-    }
+    public clearChilds() {
+        let childArray = [...this.children];
 
-    clearChilds(){
-        let childArray=[...this.children];
-
-        childArray.forEach(child=>{
+        childArray.forEach((child) => {
             this.removeChild(child);
-        })
+        });
     }
 
-    addChild(item) {
-        if(item.parent){
+    public addChild(item) {
+        if (item.parent) {
             item.parent.removeChild(item);
         }
 
@@ -35,9 +42,4 @@ export class AGridForGroup {
             this.children.push(item);
         }
     }
-
-    public $implicit;
-    public parent: AGridForGroup;
-    public children: Array<any> = [];
-    public view: ViewRef;
 }

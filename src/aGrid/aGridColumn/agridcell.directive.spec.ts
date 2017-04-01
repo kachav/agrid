@@ -1,4 +1,4 @@
-import {aGridCell} from './agridcell.directive';
+import {AGridCellDirective} from './agridcell.directive';
 
 import { Component, ViewChild, TemplateRef } from "@angular/core";
 
@@ -9,7 +9,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
     selector: 'test-container'
 })
 class testContainer {
-    @ViewChild(aGridCell) public targetDirective;
+    @ViewChild(AGridCellDirective) public targetDirective;
 }
 
 
@@ -20,7 +20,7 @@ describe('agridcell.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridCell, testContainer
+                AGridCellDirective, testContainer
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;

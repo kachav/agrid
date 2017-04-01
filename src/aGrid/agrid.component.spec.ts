@@ -1,6 +1,6 @@
 import { inject } from '@angular/core/testing';
 
-import { aGrid } from './agrid.component';
+import { AGridComponent } from './agrid.component';
 
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -10,7 +10,7 @@ describe('agrid.component', () => {
     beforeEach(inject([DomSanitizer], (_sanitizer) => {
         sanitizer = _sanitizer;
         spyOn(sanitizer, 'bypassSecurityTrustStyle');
-        gridInstance = new aGrid(sanitizer);
+        gridInstance = new AGridComponent(sanitizer);
     }));
 
     it('headerHeightChanged sets headerHeight when argument is presented', () => {

@@ -6,8 +6,7 @@ import {
 
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import {aGridGroup} from '../aGridGroup/aGridGroup.directive';
-
+import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
 
 @Component({
     selector: 'a-grid-body',
@@ -15,30 +14,29 @@ import {aGridGroup} from '../aGridGroup/aGridGroup.directive';
     styleUrls: ['./agridbody.styles.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class aGridBody {
-    @Input() items: Array<any>;
-    @Input() selectedProperty: string;
-    @Input() columns: Array<any>;
-    @Input() checkedProperty: string;
-    @Input() groups:Array<aGridGroup>;
+export class AGridBodyComponent {
+    @Input() public items: any[];
+    @Input() public selectedProperty: string;
+    @Input() public columns: any[];
+    @Input() public checkedProperty: string;
+    @Input() public groups: AGridGroupDirective[];
 
-
-    get columnsLength(){
-        return this.lastColumnResizable?this.columns.length+1:this.columns.length;
+    public get columnsLength() {
+        return this.lastColumnResizable ? this.columns.length + 1 : this.columns.length;
     }
+
+    @Output() public onRowClick = new EventEmitter();
+    @Output() public onRowDoubleClick = new EventEmitter();
 
     private get lastColumnResizable() {
-        return !!(this.columns && this.columns.length && this.columns[this.columns.length - 1].resizable);
+        return !!(this.columns && this.columns.length
+            && this.columns[this.columns.length - 1].resizable);
     }
-
-    @Output() onRowClick = new EventEmitter();
-    @Output() onRowDoubleClick = new EventEmitter();
-
-    rowClick(row) {
+    public rowClick(row) {
         this.onRowClick.next(row);
     }
 
-    rowDoubleClick(row) {
+    public rowDoubleClick(row) {
         this.onRowDoubleClick.next(row);
     }
 }

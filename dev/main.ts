@@ -1,9 +1,8 @@
 import './polifills';
 
-import { AppModule } from './app.module';
+import {AppModule} from './app.module';
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 /*
  * Bootstrap our Angular app with a top level NgModule
@@ -11,8 +10,3 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule);
-
-/*export function main(): Promise<any> {
-  return platformBrowserDynamic()
-    .bootstrapModule(AppModule);
-}*/

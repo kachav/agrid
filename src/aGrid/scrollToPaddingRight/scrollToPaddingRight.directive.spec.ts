@@ -1,4 +1,4 @@
-import { ScrollToPaddingRight } from './scrollToPaddingRight.directive';
+import { ScrollToPaddingRightDirective } from './scrollToPaddingRight.directive';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 
@@ -27,7 +27,7 @@ class MutationObserverServiceMock {
 })
 class testContainer {
 
-    @ViewChild(ScrollToPaddingRight) public targetDirective;
+    @ViewChild(ScrollToPaddingRightDirective) public targetDirective;
 
     public handleContentUpdated() {
 
@@ -64,7 +64,7 @@ describe('scrollToPaddingRight.directive', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                ScrollToPaddingRight, testContainer
+                ScrollToPaddingRightDirective, testContainer
             ],
             providers: [
                 { provide: MutationObserverService, useValue: fakeObserverService },

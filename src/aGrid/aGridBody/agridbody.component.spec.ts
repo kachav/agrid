@@ -1,4 +1,4 @@
-import { aGridBody } from './agridbody.component';
+import { AGridBodyComponent } from './agridbody.component';
 
 import { async, inject, TestBed } from '@angular/core/testing';
 
@@ -10,14 +10,14 @@ describe('agridbody.component', () => {
         return TestBed.configureTestingModule({
 
             declarations: [
-                aGridBody
+                AGridBodyComponent
             ]
-        }).overrideComponent(aGridBody, {
+        }).overrideComponent(AGridBodyComponent, {
             set: {
                 template: "<div></div>"
             }
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(aGridBody).componentInstance;
+            instance = TestBed.createComponent(AGridBodyComponent).componentInstance;
         });
 
 

@@ -1,30 +1,30 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { homeTableState } from './app.table.state';
+import { HomeTableState } from './app.table.state';
 
 @Component({
     templateUrl: './app.template.html',
-    selector: "app",
+    selector: 'app',
     providers: [
-        homeTableState
+        HomeTableState
     ]
 })
 export class AppComponent {
-    constructor(private tableState: homeTableState) { }
+        public showFilters = true;
 
-    showFilters = true;
+    public showCol2 = true;
 
-    showCol2 = true;
+    public showGroup1 = true;
 
-    showGroup1 = true;
+    public showGroup2 = true;
 
-    showGroup2 = true;
+    public showGroup3 = true;
 
-    showGroup3 = true;
+    public showHeader = true;
 
-    showHeader = true;
+    constructor(private tableState: HomeTableState) { }
 
-    showMessage(message) {
+    public showMessage(message) {
         alert(JSON.stringify(message));
     }
 

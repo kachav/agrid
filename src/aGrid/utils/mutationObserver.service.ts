@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class MutationObserverService{
-    getObserver(delegate:MutationCallback){
+export class MutationObserverService {
+    public getObserver(delegate: MutationCallback) {
         return new MutationObserver(delegate);
     }
 }
