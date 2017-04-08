@@ -6,21 +6,23 @@
         </tr>
     </thead>
     <tbody>
-        <tr *aGridFor="let item of items groupby groups; let i = index; let group=groupInstance; let groupChildren=children; let grLevel=groupLevel;" class="a-grid__row"
-            [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}" (click)="!group?rowClick(item):null"
-            (dblclick)="!group?rowDoubleClick(item):null">
-            <ng-container *ngIf="group">
-                <td [attr.colspan]="columnsLength">
-                    <a-grid-group-loader [groupLevel]="grLevel" [groupData]="item" [group]="group" [children]="groupChildren"></a-grid-group-loader>
-                </td>
-            </ng-container>
-            <ng-container *ngIf="!group">
-                <td *ngFor="let column of columns"  class="a-grid__cell">
-                    <a-grid-column-cell-loader *ngIf="column.cell" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
-                    <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
-                </td>
-            </ng-container>
-            <td *ngIf="lastColumnResizable && !group"></td>
-            </tr>
+        <ng-container *aGridFor="let item of items groupby groups; let i = index; let group=groupInstance; let groupChildren=children; let grLevel=groupLevel; let par=parent; let groupCollapsed=collapsed;">
+            <tr *ngIf="!(par && par.collapsed)"
+                class="a-grid__row" [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}"
+                (click)="!group?rowClick(item):null" (dblclick)="!group?rowDoubleClick(item):null">
+                <ng-container *ngIf="group">
+                    <td [attr.colspan]="columnsLength">
+                        <a-grid-group-loader [collapsed]="groupCollapsed" [groupLevel]="grLevel" [groupData]="item" [group]="group" [children]="groupChildren"></a-grid-group-loader>
+                    </td>
+                </ng-container>
+                <ng-container *ngIf="!group">
+                    <td *ngFor="let column of columns" class="a-grid__cell">
+                        <a-grid-column-cell-loader *ngIf="column.cell" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
+                        <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
+                    </td>
+                </ng-container>
+                <td *ngIf="lastColumnResizable && !group"></td>
+                </tr>
+        </ng-container>
     </tbody>
 </table>

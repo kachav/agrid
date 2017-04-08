@@ -14,7 +14,7 @@ class testContainer {
 
 
 describe('aGridGroup.component', () => {
-    let templatRefMock = {}, instance;
+    let templatRefMock = {}, instance: AGridGroupDirective;
 
     beforeEach(async(() => {
         return TestBed.configureTestingModule({
@@ -36,4 +36,57 @@ describe('aGridGroup.component', () => {
 
         expect(result).toEqual(true);
     });
+
+    it('Can collapse', () => {
+        let key = { aaa: 123 };
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+
+        instance.collapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+    });
+
+    it('Can expand', () => {
+        let key = { aaa: 123 };
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+
+        instance.collapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+
+        instance.expand(key);
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+    });
+
+    it('Can toggle collapse', () => {
+        let key = { aaa: 123 };
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+
+        instance.toggleCollapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+
+        instance.toggleCollapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+    });
+
+    it('Can delete collapse', () => {
+        let key = { aaa: 123 };
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+
+        instance.collapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+
+        instance.deleteCollapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+    });
+
 })

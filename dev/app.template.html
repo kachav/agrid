@@ -13,19 +13,26 @@
 <button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
 <div style="height: calc(100vh - 50px);">
-	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]" (onRowClick)="tableState.select($event)"
-		(onRowDoubleClick)="tableState.checkDblClick($event)">
+	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
+		(onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
-		<div *ngIf="showGroup1">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'aaa'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
-		</div>
-		<div *ngIf="showGroup2">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'sss'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
-		</div>
+		<ng-container *ngIf="showGroup1">
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'aaa'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
+				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
+				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}
+			</div>
+		</ng-container>
+		<ng-container *ngIf="showGroup2">
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'sss'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
+				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
+				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
+		</ng-container>
 
-		<div *ngIf="showGroup3">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'ddd'; let groupChild=children;let grLevel=groupLevel;">{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
-		</div>
+		<ng-container *ngIf="showGroup3">
+			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'ddd'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
+				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
+				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
+		</ng-container>
 
 		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
 			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
