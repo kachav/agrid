@@ -14,8 +14,6 @@ export class AGridColumnResizerComponent {
 
     @Output() public columnResized = new EventEmitter();
 
-    @HostBinding('style.right') public right: string;
-
     private active = false;
     private xPrev: number;
 
@@ -31,14 +29,12 @@ export class AGridColumnResizerComponent {
         this.startRight = +elStyles.right.replace(/px/, '');
         this.rightNumber = this.startRight;
         this.xPrev = e.pageX;
-        this.right = elStyles.right;
     }
 
     @HostListener('document:mouseup') public colResizerMouseUp() {
 
         if (this.active) {
             this.active = false;
-            this.right = '';
 
             this.columnResized.next(this.startRight - this.rightNumber);
         }
@@ -46,10 +42,12 @@ export class AGridColumnResizerComponent {
 
     @HostListener('document:mousemove', ['$event']) public colResizerMouseMove(e) {
         if (this.xPrev && this.active) {
+            this.startRight = this.rightNumber;
             this.rightNumber -= (e.pageX - this.xPrev);
-            this.right = `${this.rightNumber}px`;
             // save current coordinate as previous coordinate
             this.xPrev = e.pageX;
+
+            this.columnResized.next(this.startRight - this.rightNumber);
         }
     }
 }
