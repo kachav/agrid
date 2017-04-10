@@ -121,7 +121,7 @@ export class HomeTableState {
 
     }
 
-    public bodyScroll(e){
+    public bodyScroll(e) {
         console.log(e.target.scrollTop);
     }
 

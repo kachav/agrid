@@ -14,7 +14,7 @@ export class AGridGroupLoaderComponent implements OnChanges {
 
     @Input() public groupLevel: number;
 
-    @Input() public collapsed:boolean;
+    @Input() public collapsed: boolean;
 
     private view: EmbeddedViewRef<any>;
 
@@ -27,7 +27,7 @@ export class AGridGroupLoaderComponent implements OnChanges {
                     group: this.groupData,
                     children: this.children,
                     groupLevel: this.groupLevel,
-                    collapsed:this.collapsed
+                    collapsed: this.collapsed
                 });
         }
     }
