@@ -29,57 +29,19 @@ describe('aGridColumnResizer.component', () => {
         });
     }));
 
-    it('mouseDown sets active to true', () => {
+    it('mouseDown sets active to true and save startRight, rightNumber and xPrev', () => {
         let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
         fakeStyle.right = `${right}px`;
 
         instance.colResizerMouseDown(e);
 
         expect(instance.active).toEqual(true);
-    });
-
-    it('mouseDown fires getComputedStyle with e.target.parentNode', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
-
-        instance.colResizerMouseDown(e);
-
-        expect(instance.wnd.getComputedStyle).toHaveBeenCalledWith(e.target.parentNode);
-    });
-
-    it('mouseDown takes startRight from right', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
-
-        instance.colResizerMouseDown(e);
 
         expect(instance.startRight).toEqual(right);
-    });
-
-    it('mouseDown takes rightNumber from right', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
-
-        instance.colResizerMouseDown(e);
 
         expect(instance.rightNumber).toEqual(right);
-    });
 
-    it('mouseDown takes xPrev from e.pageX', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
-
-        instance.colResizerMouseDown(e);
-
-        expect(instance.xPrev).toEqual(e.pageX);
-    });
-
-    it('mouseDown takes right from fakeStyle.right', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
-
-        instance.colResizerMouseDown(e);
-        expect(instance.right).toEqual(fakeStyle.right);
+        expect(instance.xPrev).toEqual(123);
     });
 
     it('columnResized.next should fire on colResizerMouseUp when active === true', () => {
@@ -92,7 +54,6 @@ describe('aGridColumnResizer.component', () => {
         instance.colResizerMouseUp();
 
         expect(instance.active).toEqual(false);
-        expect(instance.right).toEqual('');
         expect(instance.columnResized.next).toHaveBeenCalledWith(instance.startRight - instance.rightNumber);
     });
 
@@ -105,46 +66,35 @@ describe('aGridColumnResizer.component', () => {
     });
 
 
-    it('mouseMove changes right and rightNumber when active and xPrev is set', () => {
-        let rightNumber = 30, e = { pageX: 15 };
+    it('mouseMove fires columnResized.next when active', () => {
+        let startRight = 30, e = { pageX: 15 };
+
+        let rightNumber = startRight - (e.pageX - instance.xPrev);
+
+        spyOn(instance.columnResized, 'next');
+
         instance.active = true;
         instance.xPrev = 12;
-        instance.rightNumber = rightNumber;
+        instance.startRight = startRight;
 
-
-        rightNumber -= (e.pageX - instance.xPrev);
         instance.colResizerMouseMove(e);
 
-        expect(instance.rightNumber).toEqual(rightNumber);
-        expect(instance.xPrev).toEqual(e.pageX);
-        expect(instance.right).toEqual(`${rightNumber}px`);
+        expect(instance.columnResized.next).toHaveBeenCalledWith(startRight - rightNumber);
     });
 
+    it('mouseMove do not fires columnResized.next when active is false', () => {
+        let startRight = 30, e = { pageX: 15 };
 
-    it('mouseMove changes right and rightNumber when active and xPrev is set', () => {
-        let e = { pageX: 15 }, rightValue = "rightValue";
-        instance.active = false;
-        instance.xPrev = 0;
-        instance.right = rightValue;
+        let rightNumber = startRight - (e.pageX - instance.xPrev);
 
-        instance.colResizerMouseMove(e);
-        expect(instance.right).toEqual(rightValue);
-
-
+        spyOn(instance.columnResized, 'next');
         instance.active = false;
         instance.xPrev = 12;
-        instance.right = rightValue;
+        instance.startRight = startRight;
 
         instance.colResizerMouseMove(e);
-        expect(instance.right).toEqual(rightValue);
 
-        instance.active = true;
-        instance.xPrev = 0;
-        instance.right = rightValue;
-
-        instance.colResizerMouseMove(e);
-        expect(instance.right).toEqual(rightValue);
-
+        expect(instance.columnResized.next).not.toHaveBeenCalled();
     });
 
 });
