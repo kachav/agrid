@@ -46,13 +46,15 @@ describe('aGridGroupLoader.component', () => {
         instance.groupData={aaa:123};
         instance.children=[{aaa:333},{sss:434}];
         instance.groupLevel=2;
+        instance.collapsed=false;
         spyOn(instance.viewContainer, 'createEmbeddedView');
         instance.ngOnInit();
         expect(instance.viewContainer.createEmbeddedView).toHaveBeenCalledWith(instance.group.template, {
             '$implicit': instance.groupData,
             'group':instance.groupData,
             'children':instance.children,
-            'groupLevel':2
+            'groupLevel':2,
+            'collapsed':false
         });
     })
 

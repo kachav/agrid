@@ -24,7 +24,7 @@
 			</thead>
 		</table>
 	</div>
-	<div #bodyContainer class="a-grid__body-container" [style.height]="bodyHeight" [scrollToPaddingRight]="headertable" [synkHorizontalScroll]="headerContainer">
+	<div #bodyContainer class="a-grid__body-container" (scroll)="onBodyScroll.next($event)" [style.height]="bodyHeight" [scrollToPaddingRight]="headertable" [synkHorizontalScroll]="headerContainer">
 		<a-grid-body [columns]="bodyColumns" [groups]="bodyGroups" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onRowClick)="rowClick($event)" (onRowDoubleClick)="rowDoubleClick($event)"></a-grid-body>
 	</div>

@@ -8,11 +8,28 @@ export class AGridForGroup {
     public parent: AGridForGroup;
     public children: any[] = [];
     public view: ViewRef;
+
+    // show - collapsed this group instance or not
+    public get collapsed() {
+        let parentCollapsed = this.parent ? this.parent.collapsed : false;
+
+        return !!this.groupInstance.isCollapsed(this.$implicit) || parentCollapsed;
+    }
+
     constructor(public value: string,
-                public groupInstance: AGridGroupDirective,
-                public groupLevel: number) {
+        public groupInstance: AGridGroupDirective,
+        public groupLevel: number) {
         this.$implicit = {
-            value
+            value,
+            toggleCollapse: () => {
+                this.groupInstance.toggleCollapse(this.$implicit);
+            },
+            collapse: () => {
+                this.groupInstance.collapse(this.$implicit);
+            },
+            expand: () => {
+                this.groupInstance.expand(this.$implicit);
+            }
         };
     }
 
@@ -38,8 +55,7 @@ export class AGridForGroup {
         }
 
         item.parent = this;
-        if (this.children.indexOf(item) === -1) {
-            this.children.push(item);
-        }
+        this.children.push(item);
+
     }
 }

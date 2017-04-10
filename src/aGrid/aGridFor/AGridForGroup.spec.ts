@@ -16,7 +16,7 @@ class testContainer {
 
 
 describe('aGridForGroup', () => {
-    let groupInstance;
+    let groupInstance: AGridGroupDirective;
 
     beforeEach(async(() => {
         return TestBed.configureTestingModule({
@@ -29,20 +29,66 @@ describe('aGridForGroup', () => {
         });
     }));
 
+    it('collapsed when parent collapsed', () => {
+        let testValue = "test value", instance: any = new AGridForGroup(testValue, groupInstance, 0), isParentCollapsed = true;
+
+        instance.parent = { get collapsed() { return isParentCollapsed } };
+
+        expect(instance.collapsed).toEqual(true);
+
+        isParentCollapsed = false;
+
+        expect(instance.collapsed).toEqual(false);
+    });
+
+    it('collapsed when groupInstance isCollapsed', () => {
+        let testValue = "test value", instance: any = new AGridForGroup(testValue, groupInstance, 0), isInstanceCollapsed = true;
+
+
+        instance.groupInstance = { isCollapsed: jasmine.createSpy('isCollapsed').and.callFake(() => isInstanceCollapsed) };
+
+        expect(instance.collapsed).toEqual(true);
+
+        isInstanceCollapsed = false;
+
+        expect(instance.collapsed).toEqual(false);
+
+        instance.parent = { collapsed: true };
+
+        expect(instance.collapsed).toEqual(true);
+    });
+
+    it('$implicit wraps groupInstance methods', () => {
+        let testValue = "test value", instance = new AGridForGroup(testValue, groupInstance, 0), isInstanceCollapsed = true;
+
+        spyOn(groupInstance, 'collapse');
+        spyOn(groupInstance, 'expand');
+        spyOn(groupInstance, 'toggleCollapse');
+
+        instance.$implicit.collapse();
+        expect(groupInstance.collapse).toHaveBeenCalledWith(instance.$implicit);
+
+        instance.$implicit.expand();
+        expect(groupInstance.expand).toHaveBeenCalledWith(instance.$implicit);
+
+        instance.$implicit.toggleCollapse();
+        expect(groupInstance.toggleCollapse).toHaveBeenCalledWith(instance.$implicit);
+    });
+
     it('constructor creates $implicit field with value', () => {
-        let testValue = "test value", instance = new AGridForGroup(testValue, groupInstance,0);
+        let testValue = "test value", instance = new AGridForGroup(testValue, groupInstance, 0);
 
         expect(instance.$implicit.value).toEqual(testValue);
     });
 
     it('children is empty array by default', () => {
-        let instance = new AGridForGroup("test", groupInstance,0);
+        let instance = new AGridForGroup("test", groupInstance, 0);
 
         expect(instance.children).toEqual([]);
     });
 
     it('addChild removes current item from it\'s parent', () => {
-        let instance = new AGridForGroup("test", groupInstance,0),
+        let instance = new AGridForGroup("test", groupInstance, 0),
             parent = { removeChild(value) { } }, item: any = { aa: 22 };
 
         spyOn(parent, 'removeChild');
@@ -57,7 +103,11 @@ describe('aGridForGroup', () => {
     });
 
     it('addChild adding item to it\'s children if children do not contains item', () => {
-        let instance = new AGridForGroup("test", groupInstance,0), item = { aa: 22 }, item2 = { aa: 33 };
+        let instance = new AGridForGroup("test", groupInstance, 0), item = { aa: 22 }, item2 = { aa: 33 };
+
+        instance.addChild(item);
+
+        expect(instance.children).toContain(item);
 
         instance.addChild(item);
 
@@ -69,7 +119,7 @@ describe('aGridForGroup', () => {
     });
 
     it('removeChild removes an item from children array', () => {
-        let instance = new AGridForGroup("test", groupInstance,0), item: any = { aa: 22 };
+        let instance = new AGridForGroup("test", groupInstance, 0), item: any = { aa: 22 };
 
         instance.addChild(item);
 
@@ -85,7 +135,7 @@ describe('aGridForGroup', () => {
     });
 
     it('removeChild do not removes not existing childs', () => {
-        let instance = new AGridForGroup("test", groupInstance,0), item: any = { aa: 22, parent: null };
+        let instance = new AGridForGroup("test", groupInstance, 0), item: any = { aa: 22, parent: null };
 
         expect(item.parent).toBeNull();
 
@@ -99,15 +149,15 @@ describe('aGridForGroup', () => {
     });
 
     it('clearChilds fires removeChild on each child element', () => {
-        let instance = new AGridForGroup("test", groupInstance,0), testChilds=[{aa:11},{aa:22},{aa:33},{aa:44}];
+        let instance = new AGridForGroup("test", groupInstance, 0), testChilds = [{ aa: 11 }, { aa: 22 }, { aa: 33 }, { aa: 44 }];
 
-        spyOn(instance,'removeChild');
+        spyOn(instance, 'removeChild');
 
-        instance.children=testChilds;
+        instance.children = testChilds;
 
         instance.clearChilds();
 
-        testChilds.forEach((item)=>{
+        testChilds.forEach((item) => {
             expect(instance.removeChild).toHaveBeenCalledWith(item);
         });
     });

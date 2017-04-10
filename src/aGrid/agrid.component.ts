@@ -29,6 +29,8 @@ export class AGridComponent {
 
   @Output() public onRowDoubleClick = new EventEmitter();
 
+  @Output() public onBodyScroll = new EventEmitter();
+
   @Input() public selectedProperty: string;
 
   @Input() public checkedProperty: string;
