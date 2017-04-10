@@ -1,7 +1,7 @@
 import {
     Component, Input, Output,
     EventEmitter, ViewChild, HostListener,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy, ViewEncapsulation
 } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -12,7 +12,8 @@ import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
     selector: 'a-grid-body',
     templateUrl: './agridbody.template.html',
     styleUrls: ['./agridbody.styles.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class AGridBodyComponent {
     @Input() public items: any[];
