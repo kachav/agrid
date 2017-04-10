@@ -1,14 +1,15 @@
 import {
     Component, TemplateRef, ContentChild,
     Output, EventEmitter, HostListener,
-    HostBinding, Renderer, Inject
+    HostBinding, Renderer, Inject, ViewEncapsulation
 } from '@angular/core';
 
 @Component({
     selector: 'a-grid-column-resizer',
     template: `<div class='a-grid__column-resizer' 
             [ngClass]='{"a-grid__column-resizer_active":active}'></div>`,
-    styleUrls: ['./aGridColumnResizer.styles.css']
+    styleUrls: ['./aGridColumnResizer.styles.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AGridColumnResizerComponent {
 

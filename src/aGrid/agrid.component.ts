@@ -1,6 +1,6 @@
 import {
   Component, Input, Output, EventEmitter,
-  ElementRef, ViewChild,
+  ElementRef, ViewChild, ViewEncapsulation,
   ContentChildren
 } from '@angular/core';
 import { AGridColumnComponent } from './aGridColumn/agridcolumn.component';
@@ -17,7 +17,8 @@ import { isFinite } from 'lodash';
   selector: 'a-grid',
 
   templateUrl: './agrid.template.html',
-  styleUrls: ['./agrid.styles.css']
+  styleUrls: ['./agrid.styles.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AGridComponent {
 
