@@ -120,6 +120,11 @@ export class HomeTableState {
         this._items.next([..._itemsArray]);
 
     }
+
+    public bodyScroll(e){
+        console.log(e.target.scrollTop);
+    }
+
     public checkDblClick(row) {
         let _itemsArray = this._items.getValue();
         row[this.checkedProperty] = !row[this.checkedProperty];
