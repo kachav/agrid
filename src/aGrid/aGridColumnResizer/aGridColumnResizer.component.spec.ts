@@ -1,16 +1,6 @@
 import { AGridColumnResizerComponent } from './aGridColumnResizer.component';
 import { async, inject, TestBed } from '@angular/core/testing';
 
-let fakeStyle = { right: "12px" };
-
-class MockWindow {
-    constructor() {
-        spyOn(this, 'getComputedStyle').and.callFake(() => fakeStyle);
-    }
-    getComputedStyle() {
-    }
-}
-
 describe('aGridColumnResizer.component', () => {
     let instance;
 
@@ -20,9 +10,6 @@ describe('aGridColumnResizer.component', () => {
 
             declarations: [
                 AGridColumnResizerComponent
-            ],
-            providers: [
-                { provide: Window, useClass: MockWindow }
             ]
         }).compileComponents().then(() => {
             instance = TestBed.createComponent(AGridColumnResizerComponent).componentInstance;
@@ -30,16 +17,15 @@ describe('aGridColumnResizer.component', () => {
     }));
 
     it('mouseDown sets active to true and save startRight, rightNumber and xPrev', () => {
-        let right = 23, e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
-        fakeStyle.right = `${right}px`;
+        let e = { pageX: 123, target: { parentNode: { aaa: 123 } } };
 
         instance.colResizerMouseDown(e);
 
         expect(instance.active).toEqual(true);
 
-        expect(instance.startRight).toEqual(right);
+        expect(instance.startRight).toEqual(0);
 
-        expect(instance.rightNumber).toEqual(right);
+        expect(instance.rightNumber).toEqual(0);
 
         expect(instance.xPrev).toEqual(123);
     });

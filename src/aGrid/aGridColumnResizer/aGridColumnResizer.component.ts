@@ -21,13 +21,12 @@ export class AGridColumnResizerComponent {
     private startRight: number;
     private rightNumber: number;
 
-    constructor( @Inject(Window) private wnd: Window) {
+    constructor() {
     }
 
     @HostListener('mousedown', ['$event']) public colResizerMouseDown(e) {
-        let elStyles = this.wnd.getComputedStyle(e.target.parentNode);
         this.active = true;
-        this.startRight = +elStyles.right.replace(/px/, '');
+        this.startRight = 0;
         this.rightNumber = this.startRight;
         this.xPrev = e.pageX;
     }
