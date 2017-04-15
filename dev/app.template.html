@@ -1,4 +1,4 @@
-<label><input type="checkbox" [(ngModel)]="showFilters" />hide controls</label>
+<label><input type="checkbox" [(ngModel)]="showFilters" />show controls</label>
 
 <label><input type="checkbox" [(ngModel)]="showCol2" />show col 2</label>
 
@@ -85,7 +85,7 @@
 			</div>
 		</a-grid-column>
 
-		<a-grid-bottom>
+		<a-grid-bottom *ngIf="showFilters">
 			<a-grid-pager>
 				<a-grid-button (click)="showMessage(123)">
 					<<</a-grid-button>

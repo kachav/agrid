@@ -2,11 +2,11 @@
 	<ng-content></ng-content>
 </div>
 <div name="gridView" class="a-grid">
-	<div #headerContainer class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged(headerContainer.offsetHeight)">
-		<table *ngIf="showHeader" class="a-grid__header" #headertable>
-			<thead>
+	<div #headerContainer [ngClass]="{'a-grid__header-container_hidden':!showHeader}" class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged(headerContainer.offsetHeight)">
+		<table class="a-grid__header" #headertable>
+			<thead *ngIf="showHeader">
 				<tr>
-					<th class="a-grid__column a-grid__column_sortable" *ngFor="let column of columns; let i = index; let l = last;" [style.width]="!l || lastColumnResizable?column.width+'px':null">
+					<th class="a-grid__column" *ngFor="let column of columns; let i = index; let l = last;" [style.width]="!l || lastColumnResizable?column.width+'px':null">
 						<span class="a-grid__column-title">
                             <span *ngIf="!column.header" [textContent]="column.colTitle || ''"></span>
 						<a-grid-column-header-loader *ngIf="column.header" [column]="column"></a-grid-column-header-loader>
