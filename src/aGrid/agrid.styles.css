@@ -28,6 +28,10 @@ a-grid::before{
     overflow: hidden;
 }
 
+.a-grid__header-container_hidden {
+    display: none;
+}
+
 .a-grid__header {
     box-sizing: border-box;
     border-spacing: 0;
@@ -37,6 +41,7 @@ a-grid::before{
     line-height: 20px;
     width:100%;
     border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;
 }
 
 
@@ -45,23 +50,6 @@ a-grid::before{
     box-sizing: border-box;
     position: relative;
 }
-
-.a-grid__column_check {
-    width: 20px;
-}
-
-.a-grid__column:hover{
-    background-color: #d3dbe0;
-}
-
-.a-grid__column_sortable{
-    cursor: pointer;
-}
-
-.a-grid__column_sortable:active{
-    background-color: #bac4ce;
-}
-
 
 .a-grid__column-title {
     overflow: hidden;
@@ -89,7 +77,6 @@ a-grid::before{
 }
 
 .a-grid__body-container {
-    border-top: 1px solid #808080;
     overflow: auto;
     width:100%;
 }
