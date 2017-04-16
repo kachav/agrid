@@ -21,9 +21,6 @@ export class AGridColumnResizerComponent {
     private startRight: number;
     private rightNumber: number;
 
-    constructor() {
-    }
-
     @HostListener('mousedown', ['$event']) public colResizerMouseDown(e) {
         this.active = true;
         this.startRight = 0;
