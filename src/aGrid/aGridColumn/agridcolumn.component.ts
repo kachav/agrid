@@ -21,7 +21,9 @@ export class AGridColumnComponent {
     @ContentChild(AGridFilterDirective) public filter;
 
     public setWidth(_width: number) {
-        this.width = _width;
+        if (_width > 35) {
+            this.width = _width;
+        }
     }
 
     public changeWidth(_change: number) {

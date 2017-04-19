@@ -16,16 +16,23 @@ describe('agridcolumn.component', () => {
     });
 
     it('setWidth sets column width', () => {
-        let modificator=137;
+        let modificator = 137;
         expect(colInstance.width).toEqual(100);
         colInstance.setWidth(modificator);
         expect(colInstance.width).toEqual(modificator);
     });
 
+    it('can\'t set column width less then 36px', () => {
+        let modificator = 35;
+        expect(colInstance.width).toEqual(100);
+        colInstance.setWidth(modificator);
+        expect(colInstance.width).toEqual(100);
+    });
+
     it('changeWidth fires setWidth with argument + width', () => {
-        let width = colInstance.width, modificator=137;
-        spyOn(colInstance,'setWidth');
+        let width = colInstance.width, modificator = 137;
+        spyOn(colInstance, 'setWidth');
         colInstance.changeWidth(modificator);
-        expect(colInstance.setWidth).toHaveBeenCalledWith(width+modificator);
+        expect(colInstance.setWidth).toHaveBeenCalledWith(width + modificator);
     });
 });
