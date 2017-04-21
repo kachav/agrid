@@ -49,28 +49,32 @@ describe('agridcellloader.component', () => {
     })
 
     it('createEmbeddedView fires with template', () => {
-        let fakeView = { aaa: 123 };
+        let fakeView = { aaa: 123 }, fakeElement={aa:12};
 
         instance.column = { cell: { template: "template" } };
         instance.rowData = { data: 123 };
         instance.rowIndex = 2;
+        instance.rowElement=fakeElement;
         spyOn(instance.viewContainer, 'createEmbeddedView').and.callFake(() => fakeView);
         instance.ngOnInit();
         expect(instance.viewContainer.createEmbeddedView).toHaveBeenCalledWith(instance.column.cell.template, {
-            '$implicit': instance.rowData,
-            'rowData': instance.rowData,
-            'rowColumn': instance.column,
-            'rowIndex': instance.rowIndex
+            $implicit: instance.rowData,
+            rowData: instance.rowData,
+            rowColumn: instance.column,
+            rowIndex: instance.rowIndex,
+            rowElement:instance.rowElement
+
         });
         expect(instance.view).toBe(fakeView);
     })
 
     it('view.context updates on ngOnChanges', () => {
-        let fakeColumn = { cell: { template: "template" } }, fakeRow = { sss: 333 }, fakeIndex = 3;
+        let fakeColumn = { cell: { template: "template" } }, fakeRow = { sss: 333 }, fakeIndex = 3, fakeElement={aa:12};
 
         instance.column = fakeColumn;
         instance.rowData = fakeRow;
         instance.rowIndex = fakeIndex;
+        instance.rowElement=fakeElement;
 
         instance.view = { context: {} };
 
@@ -82,14 +86,16 @@ describe('agridcellloader.component', () => {
         expect(instance.view.context.rowColumn).toBe(fakeColumn);
 
         expect(instance.view.context.rowIndex).toEqual(fakeIndex);
+        expect(instance.view.context.rowElement).toEqual(fakeElement);
     })
 
     it('view.context don\'t updates on ngOnChanges, when view is not presented', () => {
-        let fakeColumn = { cell: { template: "template" } }, fakeRow = { sss: 333 }, fakeIndex = 3;
+        let fakeColumn = { cell: { template: "template" } }, fakeRow = { sss: 333 }, fakeIndex = 3, fakeElement={aa:12};
 
         instance.column = fakeColumn;
         instance.rowData = fakeRow;
         instance.rowIndex = fakeIndex;
+        instance.rowElement=fakeElement;
 
         instance.view = null;
 

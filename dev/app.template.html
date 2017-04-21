@@ -80,8 +80,8 @@
 		</a-grid-column>
 
 		<a-grid-column [colTitle]="'delete item'" [resizable]="true">
-			<div *aGridCell="let row">
-				<button (click)="tableState.removeItem(row)">-</button>
+			<div *aGridCell="let row; let tr=rowElement">
+				<button (mouseenter)="tableState.deleteMouseOver(tr)" (mouseleave)="tableState.deleteMouseLeave(tr)" (click)="tableState.removeItem(row)">-</button>
 			</div>
 		</a-grid-column>
 
