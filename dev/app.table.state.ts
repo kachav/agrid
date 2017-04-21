@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, Renderer } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class HomeTableState {
 
     private count = 0;
 
-    constructor() {
+    constructor(private renderer:Renderer) {
         this._items = new BehaviorSubject<any[]>([]);
         this._selectedIndex = new BehaviorSubject<number>(-1);
 
@@ -131,6 +131,16 @@ export class HomeTableState {
 
         this._items.next([..._itemsArray]);
 
+    }
+
+    deleteMouseOver(row){
+        this.renderer.setElementClass(row,'row-delete',true);
+        console.log(row);
+    }
+
+    deleteMouseLeave(row){
+        this.renderer.setElementClass(row,'row-delete',false);
+        console.log(row);
     }
 
     private _newItem() {

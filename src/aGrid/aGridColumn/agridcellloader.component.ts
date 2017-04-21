@@ -12,6 +12,8 @@ export class AGridColumnCellLoaderComponent implements OnChanges {
 
     @Input() public rowIndex: number;
 
+    @Input() public rowElement:any;
+
     private view: EmbeddedViewRef<any>;
 
     constructor(private viewContainer: ViewContainerRef) { }
@@ -22,7 +24,8 @@ export class AGridColumnCellLoaderComponent implements OnChanges {
                     $implicit: this.rowData,
                     rowData: this.rowData,
                     rowColumn: this.column,
-                    rowIndex: this.rowIndex
+                    rowIndex: this.rowIndex,
+                    rowElement:this.rowElement
                 });
         }
     }
@@ -33,6 +36,7 @@ export class AGridColumnCellLoaderComponent implements OnChanges {
             this.view.context.rowData = this.rowData;
             this.view.context.rowColumn = this.column;
             this.view.context.rowIndex = this.rowIndex;
+            this.view.context.rowElement = this.rowElement;
         }
     }
 }

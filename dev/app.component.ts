@@ -7,7 +7,9 @@ import { HomeTableState } from './app.table.state';
     selector: 'app',
     providers: [
         HomeTableState
-    ]
+    ],
+    styles:[`a-grid .row-delete:hover{background-color:#f5b8b8;}`],
+    encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
         public showFilters = true;
