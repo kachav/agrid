@@ -67,11 +67,12 @@ describe('agrid.component', () => {
     });
 
 
-    it('setBodyHeight fires bypassSecurityTrustStyle with "100%" on when headerHeight and bodyHeight === 0', () => {
+    it('setBodyHeight makes bodyHeight == null when headerHeight and bodyHeight === 0', () => {
         gridInstance.headerHeight = 0;
         gridInstance.bottomHeight = 0;
         gridInstance.setBodyHeight();
-        expect(sanitizer.bypassSecurityTrustStyle).toHaveBeenCalledWith("100%");
+        expect(sanitizer.bypassSecurityTrustStyle).not.toHaveBeenCalled();
+        expect(gridInstance.bodyHeight).toEqual(null);
     });
 
     it('setBodyHeight fires bypassSecurityTrustStyle with calc on when headerHeight and bodyHeight !== 0', () => {

@@ -133,14 +133,16 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         return groupInstance;
     }
 
-    private _insertNewGrouppedItem(item) {
+    private _insertNewGrouppedItem(item,itemIndex) {
         let group: AGridForGroup = this._getRowGroup(item);
         let index = this._viewContainer.length;
         let row: AGridForRow;
         row = new AGridForRow(item, null, null);
         if (group) {
-            index = this._viewContainer.indexOf(group.view) + group.children.length + 1;
             group.addChild(row);
+            index = this._findItemIndex(item, group);
+        }else{
+            index=itemIndex;
         }
 
         const view = this._viewContainer.createEmbeddedView(
@@ -209,16 +211,7 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         this._groupsMap.delete(group);
     }
 
-    private _actualizeGrouppedIndex(item) {
-        let row = this._itemsMap.get(item);
-
-        // if row.parent is presented, it was not deleted, but added
-
-        // find actual parent group for current row
-        let group: AGridForGroup = this._getRowGroup(row.$implicit);
-        if (group) {
-            group.addChild(row);
-        }
+    private _findItemIndex(item:any,group?: AGridForGroup){
         let grouppedItems = this.aGridForOf;
         if (this._groups) {
             // find list of items from the same groups
@@ -239,10 +232,25 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
 
         }
         let index = grouppedItems.indexOf(item);
-        if (row.parent) {
-            let parentIndex = this._viewContainer.indexOf(row.parent.view) + 1;
+        if (group) {
+            let parentIndex = this._viewContainer.indexOf(group.view) + 1;
             index += parentIndex;
         }
+        return index;
+    }
+
+    private _actualizeGrouppedIndex(item) {
+        let row = this._itemsMap.get(item);
+
+        // if row.parent is presented, it was not deleted, but added
+
+        // find actual parent group for current row
+        let group: AGridForGroup = this._getRowGroup(row.$implicit);
+        if (group) {
+            group.addChild(row);
+        }
+
+        let index = this._findItemIndex(item,group);
 
         this._viewContainer.move(row.view, index);
         return row;
@@ -346,7 +354,7 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
 
                     let row;
                     if (item.previousIndex == null) {
-                        row = this._insertNewGrouppedItem(item.item);
+                        row = this._insertNewGrouppedItem(item.item,currentIndex);
                     } else if (currentIndex == null) {
                         this._removeItem(item.item);
                     } else {
