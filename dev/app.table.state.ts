@@ -16,9 +16,13 @@ export class HomeTableState {
 
     private _selectedIndex: BehaviorSubject<number>;
 
+    public expandedRows = [];
+
+    public editableRow = null;
+
     private count = 0;
 
-    constructor(private renderer:Renderer) {
+    constructor(private renderer: Renderer) {
         this._items = new BehaviorSubject<any[]>([]);
         this._selectedIndex = new BehaviorSubject<number>(-1);
 
@@ -59,6 +63,30 @@ export class HomeTableState {
             items[index].eee = items[index].eee + value;
             this._items.next([...items]);
         }
+    }
+
+    public toggleRow(row) {
+        if (this.expandedRows.indexOf(row) === -1) {
+            this.expandedRows = [row];
+            this.editableRow = { ...row };
+        } else {
+            this.expandedRows = [];
+            this.editableRow = null;
+        }
+    }
+
+    public saveEditedRow(index: number) {
+        let leftPart = [], rightPart = [], items = this._items.getValue();
+
+        if (index > 0) {
+            leftPart = items.slice(0, index);
+        }
+
+        if (index < items.length - 1) {
+            rightPart = items.slice(index + 1);
+        }
+
+        this._items.next([...leftPart, this.editableRow, ...rightPart]);
     }
 
     public addDay(index: number) {
@@ -133,13 +161,13 @@ export class HomeTableState {
 
     }
 
-    deleteMouseOver(row){
-        this.renderer.setElementClass(row,'row-delete',true);
+    deleteMouseOver(row) {
+        this.renderer.setElementClass(row, 'row-delete', true);
         console.log(row);
     }
 
-    deleteMouseLeave(row){
-        this.renderer.setElementClass(row,'row-delete',false);
+    deleteMouseLeave(row) {
+        this.renderer.setElementClass(row, 'row-delete', false);
         console.log(row);
     }
 
