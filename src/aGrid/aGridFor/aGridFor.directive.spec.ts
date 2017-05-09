@@ -18,11 +18,11 @@ class testContainer {
     groups = [{ groupName: "field1" }, { groupName: "field2" }]
 
     items: Array<any> = [
-        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1",id:1 },
-        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1" ,id:2},
-        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1" ,id:3},
-        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1" ,id:4},
-        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1" ,id:5}]
+        { field1: "f1v1", field2: "f2v1", field3: "f3v1", field4: "f4v1", id: 1 },
+        { field1: "f1v1", field2: "f2v2", field3: "f3v2", field4: "f4v1", id: 2 },
+        { field1: "f1v1", field2: "f2v1", field3: "f3v3", field4: "f4v1", id: 3 },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v4", field4: "f4v1", id: 4 },
+        { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "f4v1", id: 5 }]
 }
 
 describe('AGridFor.directive', () => {
@@ -70,7 +70,7 @@ describe('AGridFor.directive', () => {
 
 
     it('new item should be in the first level groups', () => {
-        fixture.componentInstance.items.push({ field1: "f1v1", field2: "f2v1", field3: "f3v6", field4: "f4v1" ,id:6})
+        fixture.componentInstance.items.push({ field1: "f1v1", field2: "f2v1", field3: "f3v6", field4: "f4v1", id: 6 })
         fixture.detectChanges();
 
         expect(fixture.nativeElement.children.length).toEqual(11);
@@ -272,9 +272,9 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
         expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
         expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
-        let items:Array<any>=fixture.componentInstance.items;
+        let items: Array<any> = fixture.componentInstance.items;
 
-        fixture.componentInstance.items=[items[items.length-1],...items.slice(0,items.length-1)];
+        fixture.componentInstance.items = [items[items.length - 1], ...items.slice(0, items.length - 1)];
         fixture.detectChanges();
         expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v2 f2v3 f3v5 f4v1');
         expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v1 f3v1 f4v1');
@@ -283,10 +283,36 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v4 f4v1');
     })
 
+    it('inserting should insert item in the right position', () => {
+        let newItem={ field1: "f1test", field2: "f2test", field3: "f3test", field4: "f4test", id: 6 };
+        fixture.componentInstance.groups = []; 
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+        let items: Array<any> = fixture.componentInstance.items;
+
+        let rightPart = items.slice(2), leftPart = items.slice(0,2);
+
+        fixture.componentInstance.items = [...leftPart,newItem, ...rightPart];
+        fixture.detectChanges();
+        expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+        expect(fixture.nativeElement.children[2].innerText).toEqual('2 f1test f2test f3test f4test');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v1 f2v1 f3v3 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[5].innerText).toEqual('5 f1v2 f2v3 f3v5 f4v1');
+    })
+
+
     it('should regroup when groups order changes', () => {
         let arr = fixture.componentInstance.groups;
 
-        fixture.componentInstance.groups = [arr[1],arr[0]];
+        fixture.componentInstance.groups = [arr[1], arr[0]];
         fixture.detectChanges();
 
         expect(fixture.nativeElement.children.length).toEqual(11);

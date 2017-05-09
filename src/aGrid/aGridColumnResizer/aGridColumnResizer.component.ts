@@ -6,8 +6,7 @@ import {
 
 @Component({
     selector: 'a-grid-column-resizer',
-    template: `<div class='a-grid__column-resizer' 
-            [ngClass]='{"a-grid__column-resizer_active":active}'></div>`,
+    template: `<div class='a-grid__column-resizer'></div>`,
     styleUrls: ['./aGridColumnResizer.styles.css'],
     encapsulation: ViewEncapsulation.None
 })

@@ -9,7 +9,8 @@
         <ng-container *aGridFor="let item of items groupby groups; let i = index; let group=groupInstance; let groupChildren=children; let grLevel=groupLevel; let par=parent; let groupCollapsed=collapsed;">
             <tr *ngIf="!(par && par.collapsed)"
                 #row
-                class="a-grid__row" [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty]}"
+                class="a-grid__row"
+                [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty], 'a-grid__group':group}"
                 (click)="!group?rowClick(item):null" (dblclick)="!group?rowDoubleClick(item):null">
                 <ng-container *ngIf="group">
                     <td [attr.colspan]="columnsLength">
@@ -23,7 +24,12 @@
                     </td>
                 </ng-container>
                 <td *ngIf="lastColumnResizable && !group"></td>
-                </tr>
+            </tr>
+            <tr *ngIf="!(par && par.collapsed) && !group && detail && detail.expandedRows && detail.expandedRows.indexOf(item)>-1">
+                <td [attr.colspan]="columnsLength">
+                    <a-grid-detail-loader [detail]="detail" [rowData]="item" [rowIndex]="i"></a-grid-detail-loader>
+                </td>
+            </tr>
         </ng-container>
     </tbody>
 </table>
