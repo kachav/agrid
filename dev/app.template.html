@@ -70,7 +70,7 @@
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('sss')">sss</a>
 		</a-grid-column>
 
-		<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
+		<a-grid-column colName="ddd" colTitle="dddTitle">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('ddd')">ddd</a>
 			<div *ngIf="showFilters">
 				<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />
