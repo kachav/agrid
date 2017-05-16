@@ -16,6 +16,14 @@
 	<a-grid (onBodyScroll)="tableState.bodyScroll($event)" [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
 		(onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
+		<div *aGridDetail="let index=rowIndex expandedrows tableState.expandedRows;">
+			<input type="text" [(ngModel)]="tableState.editableRow.aaa" placeholder="aaa" />
+			<input type="text" [(ngModel)]="tableState.editableRow.sss" placeholder="sss" />
+			<input type="text" [(ngModel)]="tableState.editableRow.ddd" placeholder="ddd" />
+			<input type="text" [(ngModel)]="tableState.editableRow.eee" placeholder="eee" />
+			<button (click)="tableState.saveEditedRow(index)">save</button>
+		</div>
+
 		<ng-container *ngIf="showGroup1">
 			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'aaa'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
 				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
@@ -42,6 +50,13 @@
 			<input *aGridCell="let row" type="checkbox" [(ngModel)]="row[tableState.checkedProperty]" />
 		</a-grid-column>
 
+
+		<a-grid-column [colName]="'toggle'" [resizable]="false" [width]="40">
+			<button *aGridCell="let row" (click)="tableState.toggleRow(row)">
+				{{tableState.expandedRows.indexOf(row)===-1?'+':'–'}}
+			</button>
+		</a-grid-column>
+
 		<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
 
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('aaa')">aaa</a>
@@ -55,7 +70,7 @@
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('sss')">sss</a>
 		</a-grid-column>
 
-		<a-grid-column [colName]="'ddd'" [colTitle]="'dddTitle'">
+		<a-grid-column colName="ddd" colTitle="dddTitle">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('ddd')">ddd</a>
 			<div *ngIf="showFilters">
 				<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />

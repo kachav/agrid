@@ -7,13 +7,23 @@
     z-index: 999;
 }
 
-.a-grid__column-resizer{
+
+.a-grid__column-resizer {
     width: 7px;
     height: 20px;
+    position: absolute;
+    right: 0;
+    top:0;
+    cursor: e-resize;
 }
 
-
-.a-grid__column-resizer_active{
-    background-color: #868686;
-    opacity: 0.5;
+.a-grid__column-resizer::before{
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 1px;
+    height: 16px;
+    background-color: #808080;
+    top: 5px;
+    left: 3px;
 }
