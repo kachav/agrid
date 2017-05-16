@@ -7,6 +7,7 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
+import { AGridDetailDirective } from "../aGridDetail/aGridDetail.directive";
 
 @Component({
     selector: 'a-grid-body',
@@ -21,6 +22,7 @@ export class AGridBodyComponent {
     @Input() public columns: any[];
     @Input() public checkedProperty: string;
     @Input() public groups: AGridGroupDirective[];
+    @Input() public detail: AGridDetailDirective;
 
     public get columnsLength() {
         return this.lastColumnResizable ? this.columns.length + 1 : this.columns.length;

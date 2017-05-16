@@ -31,6 +31,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { COMPILER_PROVIDERS } from '@angular/compiler';
+import { AGridDetailDirective } from "./aGrid/aGridDetail/aGridDetail.directive";
+import { AGridDetailLoaderComponent } from "./aGrid/aGridDetail/aGridDetailLoader.component";
 
 @NgModule({
     imports: [CommonModule, FormsModule],
@@ -47,14 +49,15 @@ import { COMPILER_PROVIDERS } from '@angular/compiler';
         AGridBodyComponent, AGridColumnComponent,
         AGridFilterDirective, AGridCellDirective,
         AGridColumnCellLoaderComponent, AGridHeaderDirective,
-        AGridColumnHeaderLoaderComponent
+        AGridColumnHeaderLoaderComponent, AGridDetailDirective, AGridDetailLoaderComponent
     ],
     exports: [
         AGridComponent, AGridGroupDirective, ScrollToPaddingRightDirective,
         AGridBottomComponent, AGridPagerComponent, AGridButtonComponent, AGridFilterLoaderComponent,
         AGridBodyComponent, AGridFilterDirective, CommonModule, FormsModule,
         AGridColumnComponent, AGridCellDirective,
-        AGridColumnCellLoaderComponent, AGridHeaderDirective, AGridColumnHeaderLoaderComponent
+        AGridColumnCellLoaderComponent, AGridHeaderDirective, AGridColumnHeaderLoaderComponent,
+        AGridDetailDirective, AGridDetailLoaderComponent
     ]
 })
 export class AgridModule { }

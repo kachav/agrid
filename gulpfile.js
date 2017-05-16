@@ -57,7 +57,7 @@ function buildComponent(componentPath, subPath) {
     }
 }
 
-var componentBuildTasks = ['utils', 'synkHorizontalScroll', 'scrollToPaddingRight', 'contentUpdated',
+var componentBuildTasks = ['utils', 'synkHorizontalScroll', 'scrollToPaddingRight', 'contentUpdated', 'aGridDetail',
     'aGridPager', 'aGridFor', 'aGridGroup', 'aGridColumnResizer', 'aGridColumn', 'aGridButton', 'aGridBody', 'aGridBottom'];
 
 componentBuildTasks.forEach(function (item) {
