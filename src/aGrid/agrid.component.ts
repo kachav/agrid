@@ -1,7 +1,7 @@
 import {
   Component, Input, Output, EventEmitter,
   ElementRef, ViewChild, ViewEncapsulation,
-  ContentChildren
+  ContentChildren, ContentChild
 } from '@angular/core';
 import { AGridColumnComponent } from './aGridColumn/agridcolumn.component';
 
@@ -10,12 +10,10 @@ import { AGridGroupDirective } from './aGridGroup/aGridGroup.directive';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { isFinite } from 'lodash';
+import { AGridDetailDirective } from "./aGridDetail/aGridDetail.directive";
 
 @Component({
-  // The selector is what angular internally uses
-  // for `document.querySelectorAll(selector)` in our index.html
   selector: 'a-grid',
-
   templateUrl: './agrid.template.html',
   styleUrls: ['./agrid.styles.css'],
   encapsulation: ViewEncapsulation.None
@@ -39,6 +37,8 @@ export class AGridComponent {
   @ContentChildren(AGridColumnComponent) private columns;
 
   @ContentChildren(AGridGroupDirective) private groups;
+
+  @ContentChild(AGridDetailDirective) private detail;
 
   private selectedPropertyDefault = 'aGridSelected';
 
@@ -81,7 +81,7 @@ export class AGridComponent {
       this.bodyHeight = this.sanitizer
         .bypassSecurityTrustStyle(`calc(100% - ${this.headerHeight + this.bottomHeight}px)`);
     } else {
-      this.bodyHeight = this.sanitizer.bypassSecurityTrustStyle('100%');
+      this.bodyHeight = null;
     }
   }
 

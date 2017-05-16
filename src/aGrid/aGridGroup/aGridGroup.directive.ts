@@ -5,11 +5,18 @@ import { TemplateRef, Directive, Input } from '@angular/core';
 })
 export class AGridGroupDirective {
     @Input('aGridGroupBy') public groupName;
+
+    @Input('aGridGroupCollapsed') public collapsedDefault;
+
     public collapsedGroups: Map<any, boolean> = new Map<any, boolean>();
     constructor(public template: TemplateRef<any>) { }
 
     public isCollapsed(key: any) {
-        return !!this.collapsedGroups.get(key);
+        if (this.collapsedGroups.has(key)) {
+            return !!this.collapsedGroups.get(key);
+        }
+
+        return this.collapsedDefault===true;
     }
 
     public collapse(key: any) {
@@ -21,7 +28,10 @@ export class AGridGroupDirective {
     }
 
     public toggleCollapse(key: any) {
-        let value = this.collapsedGroups.get(key);
+        let value = this.collapsedDefault;
+        if(this.collapsedGroups.has(key)){
+            value = this.collapsedGroups.get(key);
+        }
         this.collapsedGroups.set(key, !value);
     }
 

@@ -46,7 +46,7 @@ a-grid::before{
 
 
 .a-grid__column {
-    padding: 0 7px;
+    padding: 3px 7px;
     box-sizing: border-box;
     position: relative;
 }
@@ -59,21 +59,6 @@ a-grid::before{
     vertical-align: top;
     text-align: left;
     text-overflow: ellipsis;
-}
-
-
-.a-grid__column-resizer {
-    width: 7px;
-    height: 20px;
-    position: absolute;
-    right: 0;
-    top:0;
-    cursor: e-resize;
-}
-
-.a-grid__column-resizer_active{
-    background-color: #868686;
-    opacity: 0.5;
 }
 
 .a-grid__body-container {

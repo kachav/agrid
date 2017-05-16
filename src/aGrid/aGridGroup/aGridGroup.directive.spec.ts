@@ -37,6 +37,31 @@ describe('aGridGroup.component', () => {
         expect(result).toEqual(true);
     });
 
+
+    it('collapsed when collapsedDefault', () => {
+        let key = { aaa: 123 };
+
+        instance.collapsedDefault = true;
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+
+        instance.toggleCollapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+    });
+
+    it('!collapsed when !collapsedDefault', () => {
+        let key = { aaa: 123 };
+
+        instance.collapsedDefault = false;
+
+        expect(instance.isCollapsed(key)).toEqual(false);
+
+        instance.toggleCollapse(key);
+
+        expect(instance.isCollapsed(key)).toEqual(true);
+    });
+
     it('Can collapse', () => {
         let key = { aaa: 123 };
 
