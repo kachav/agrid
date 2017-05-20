@@ -98,6 +98,7 @@ export class HomeTableState {
     }
 
     public removeItem(row) {
+        console.log(JSON.stringify(this._items.getValue()));
         this._items.next(this._items.getValue().filter((item) => item._ouid !== row._ouid));
     }
 
@@ -150,7 +151,6 @@ export class HomeTableState {
     }
 
     public bodyScroll(e) {
-        console.log(e.target.scrollTop);
     }
 
     public checkDblClick(row) {
@@ -163,20 +163,22 @@ export class HomeTableState {
 
     deleteMouseOver(row) {
         this.renderer.setElementClass(row, 'row-delete', true);
-        console.log(row);
     }
 
     deleteMouseLeave(row) {
         this.renderer.setElementClass(row, 'row-delete', false);
-        console.log(row);
     }
 
     private _newItem() {
-        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
+/*        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
         let dddValues = [
             'Иванович', 'Петрович', 'Аристархович',
             'Николаевич', 'Васильевич', 'Олегович'];
-        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];
+        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];*/
+                let aaaValues = ['Иванов', 'Петров', 'Сидоров'];
+        let dddValues = [
+            'Иванович', 'Петрович', 'Аристархович'];
+        let sssValues = ['Иван', 'Петр', 'Василий'];
 
         let getRandomItem = (array) => array[Math.floor(Math.random() * array.length)];
         this.count++;

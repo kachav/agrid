@@ -284,8 +284,8 @@ describe('AGridFor.directive', () => {
     })
 
     it('inserting should insert item in the right position', () => {
-        let newItem={ field1: "f1test", field2: "f2test", field3: "f3test", field4: "f4test", id: 6 };
-        fixture.componentInstance.groups = []; 
+        let newItem = { field1: "f1test", field2: "f2test", field3: "f3test", field4: "f4test", id: 6 };
+        fixture.componentInstance.groups = [];
 
         fixture.detectChanges();
 
@@ -296,9 +296,9 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[4].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
         let items: Array<any> = fixture.componentInstance.items;
 
-        let rightPart = items.slice(2), leftPart = items.slice(0,2);
+        let rightPart = items.slice(2), leftPart = items.slice(0, 2);
 
-        fixture.componentInstance.items = [...leftPart,newItem, ...rightPart];
+        fixture.componentInstance.items = [...leftPart, newItem, ...rightPart];
         fixture.detectChanges();
         expect(fixture.nativeElement.children[0].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
         expect(fixture.nativeElement.children[1].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
@@ -343,6 +343,238 @@ describe('AGridFor.directive', () => {
         expect(fixture.nativeElement.children[9].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
         expect(fixture.nativeElement.children[10].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
 
+    });
+
+    it('adding item as first moves it\'s group to the top', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(10);
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+
+        fixture.componentInstance.items = [
+            { field1: "f1v2", field2: "f2v3", field3: "f3v5", field4: "test first item", id: 6 }, ...fixture.componentInstance.items];
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children.length).toEqual(11);
+
+        //group f1v2
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v2 f2v3 f3v5 test first item');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('4 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[4].innerText).toEqual('5 f1v2 f2v3 f3v5 f4v1');
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[7].innerText).toEqual('1 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[10].innerText).toEqual('2 f1v1 f2v2 f3v2 f4v1');
+    })
+
+    it('deleting first item in group moves it\'s group down', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(10);
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+
+        fixture.componentInstance.items = fixture.componentInstance.items.slice(1);
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children.length).toEqual(9);
+
+                //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v2 f3v2 f4v1');
+
+                //field2 group f2v1
+        expect(fixture.nativeElement.children[3].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[4].innerText).toEqual('1 f1v1 f2v1 f3v3 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[7].innerText).toEqual('2 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v5 f4v1');
+    })
+
+    it('reordering items reorder a groups', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(10);
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+
+        let arr = fixture.componentInstance.items;
+
+        fixture.componentInstance.items = [arr[3],arr[4],arr[1],arr[0], arr[2]];
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children.length).toEqual(10);
+
+        //group f1v2
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('1 f1v2 f2v3 f3v5 f4v1');
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f1v1 level 0');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[5].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[6].innerText).toEqual('2 f1v1 f2v2 f3v2 f4v1');
+
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v1 f2v1 f3v3 f4v1');
+    });
+
+    it('adding new item adds new group to the right place', () => {
+        //directive hsould create 5 elements (2 actual items and 3 groups)
+        expect(fixture.nativeElement.children.length).toEqual(10);
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('2 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2v2 f3v2 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[7].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[8].innerText).toEqual('3 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[9].innerText).toEqual('4 f1v2 f2v3 f3v5 f4v1');
+
+        let arr = fixture.componentInstance.items;
+
+        fixture.componentInstance.items = [arr[0], { field1: "f1v1", field2: "f2vtest", field3: "f3v2", field4: "f4v1", id: 6 },arr[1],arr[2],arr[3], arr[4]];
+
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.children.length).toEqual(12);
+
+        //field1 group f1v1
+        expect(fixture.nativeElement.children[0].innerText).toEqual('group f1v1 level 0');
+        //field2 group f2v1
+        expect(fixture.nativeElement.children[1].innerText).toEqual('group f2v1 level 1');
+        //group items
+        expect(fixture.nativeElement.children[2].innerText).toEqual('0 f1v1 f2v1 f3v1 f4v1');
+        expect(fixture.nativeElement.children[3].innerText).toEqual('3 f1v1 f2v1 f3v3 f4v1');
+
+        //group f2vtest
+        expect(fixture.nativeElement.children[4].innerText).toEqual('group f2vtest level 1');
+        //group item
+        expect(fixture.nativeElement.children[5].innerText).toEqual('1 f1v1 f2vtest f3v2 f4v1');
+
+        //group f2v2
+        expect(fixture.nativeElement.children[6].innerText).toEqual('group f2v2 level 1');
+        //group item
+        expect(fixture.nativeElement.children[7].innerText).toEqual('2 f1v1 f2v2 f3v2 f4v1');
+
+        //group f1v2
+        expect(fixture.nativeElement.children[8].innerText).toEqual('group f1v2 level 0');
+        //group f2v3
+        expect(fixture.nativeElement.children[9].innerText).toEqual('group f2v3 level 1');
+
+        //group items
+        expect(fixture.nativeElement.children[10].innerText).toEqual('4 f1v2 f2v3 f3v4 f4v1');
+        expect(fixture.nativeElement.children[11].innerText).toEqual('5 f1v2 f2v3 f3v5 f4v1');
     });
 
 });

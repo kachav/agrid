@@ -16,7 +16,7 @@ export class AGridGroupDirective {
             return !!this.collapsedGroups.get(key);
         }
 
-        return this.collapsedDefault===true;
+        return this.collapsedDefault === true;
     }
 
     public collapse(key: any) {
@@ -29,7 +29,7 @@ export class AGridGroupDirective {
 
     public toggleCollapse(key: any) {
         let value = this.collapsedDefault;
-        if(this.collapsedGroups.has(key)){
+        if (this.collapsedGroups.has(key)) {
             value = this.collapsedGroups.get(key);
         }
         this.collapsedGroups.set(key, !value);

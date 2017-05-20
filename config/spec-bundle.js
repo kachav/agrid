@@ -35,7 +35,6 @@ testing.TestBed.initTestEnvironment(
  * we say do this recursively
  */
 var testContext = require.context('../src/aGrid', true, /\.ts/);
-//var testContext = require.context('../src/aGrid', true, /aGridFor\.directive\.spec\.ts/);
 
 /*
  * get all the files, for each file, call the context function

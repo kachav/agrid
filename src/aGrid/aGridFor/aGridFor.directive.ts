@@ -5,7 +5,7 @@ import {
     isDevMode, ViewRef, TrackByFunction
 } from '@angular/core';
 
-import {RecordViewTuple} from './recordViewTuple';
+import { RecordViewTuple } from './recordViewTuple';
 
 import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
 
@@ -68,7 +68,99 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         if (rowChanges || groupChanges) {
             this._applyChanges(rowChanges, groupChanges);
         }
+    }
 
+    private _getGroupIndex(group: AGridForGroup) {
+        let index = 0;
+        let parentBranchItems = this.aGridForOf as any[];
+
+        // getting distinct items of current group level
+        parentBranchItems = parentBranchItems.reduce((items, item) => {
+            let filterGroup = group.parent;
+            let shouldBeAdded = true;
+            // get only instances of current group's branch
+            while (filterGroup) {
+                if (item[filterGroup.groupInstance.groupName] !== filterGroup.value) {
+                    shouldBeAdded = false;
+                }
+
+                filterGroup = filterGroup.parent;
+            }
+
+            // get items with current group's value
+            let curLevelDistinctArray = items
+                .filter(distinctItem =>
+                    distinctItem[group.groupInstance.groupName] === item[group.groupInstance.groupName]);
+
+            // if item with current group's value is presented we won't add current item
+            if (curLevelDistinctArray.length) {
+                shouldBeAdded = false;
+            }
+
+            if (shouldBeAdded) {
+                items.push(item);
+            }
+
+            return items;
+        }, []);
+
+        // get all current level groups
+        let curLevelGroups = this._groupsMap.get(this._groups[0]);
+        if (group.parent) {
+            curLevelGroups = group.parent.children;
+            index = this._viewContainer.indexOf(group.parent.view) + 1;
+        }
+
+        let currentGroupItem = parentBranchItems.filter(branchItem => branchItem[group.groupInstance.groupName] === group.value)[0];
+
+        let currentItemIndex = parentBranchItems.indexOf(currentGroupItem);
+        // getting previous group if it exists
+        if (currentItemIndex > 0) {
+            let previousItem = parentBranchItems[currentItemIndex - 1];
+            let prevGroupValue = previousItem[group.groupInstance.groupName];
+            let beforeGroup = curLevelGroups.filter((group) => group.value === prevGroupValue)[0];
+            if (beforeGroup) {
+                index = this._viewContainer.indexOf(beforeGroup.view) + this._getSubchildLength(beforeGroup) + 1;
+            }
+        }
+
+        return index;
+    }
+
+    // recursive find length of all childs and subchilds
+    private _getSubchildLength(gr: AGridForGroup) {
+        let length = 0;
+        if (gr.children && gr.children.length) {
+
+            gr.children.forEach((ch) => {
+                length += this._getSubchildLength(ch);
+            });
+            length += gr.children.length;
+        }
+
+        return length;
+    }
+
+    // get instances of existing groups for item
+    private _getExistingGroupsForItem(row) {
+        let groups = this._groupsMap.get(this._groups[0]);
+
+        let result = [];
+
+        if (groups) {
+            this._groups.forEach((group) => {
+                let groupInstance = groups.find((gr) => gr.$implicit.value === row[group.groupName]
+                    && gr.groupInstance.groupName === group.groupName);
+
+                if (groupInstance) {
+                    result.push(groupInstance);
+                    groups = groupInstance.children;
+                } else {
+                    groups = [];
+                }
+            });
+        }
+        return result;
     }
 
     private _getRowGroup(row) {
@@ -85,35 +177,13 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
             let groupInstanceNew = groups.find((gr) => gr.$implicit.value === row[group.groupName]
                 && gr.groupInstance.groupName === group.groupName);
 
-            // recursive find length of all childs and subchilds
-            function allSubChildLength(gr) {
-                let length = 0;
-                if (gr.children && gr.children.length) {
-
-                    gr.children.forEach((ch) => {
-                        length += allSubChildLength(ch);
-                    });
-                    length += gr.children.length;
-                }
-
-                return length;
-            }
-
             if (!groupInstanceNew) {
                 groupInstanceNew = new AGridForGroup(row[group.groupName],
                     group, this._groups.indexOf(group));
 
                 groupInstanceNew.parent = groupInstance;
 
-                let index = 0;
-                if (groupInstanceNew.parent) {
-                    index = this._viewContainer.indexOf(groupInstanceNew.parent.view);
-                    index += allSubChildLength(groupInstanceNew.parent) + 1;
-                } else if (!groupInstanceNew.parent && topLevelGroups.length) {
-                    index = this._viewContainer
-                        .indexOf(topLevelGroups[topLevelGroups.length - 1].view);
-                    index += allSubChildLength(topLevelGroups[topLevelGroups.length - 1]) + 1;
-                }
+                let index = this._getGroupIndex(groupInstanceNew);
 
                 // insert new group into current view
                 const view = this._viewContainer.createEmbeddedView(
@@ -133,7 +203,9 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         return groupInstance;
     }
 
-    private _insertNewGrouppedItem(item,itemIndex) {
+    private _insertNewGrouppedItem(item, itemIndex) {
+        // get instances of existing groups for item to actualize they indexes after adding
+        let existingGroups = this._getExistingGroupsForItem(item);
         let group: AGridForGroup = this._getRowGroup(item);
         let index = this._viewContainer.length;
         let row: AGridForRow;
@@ -141,8 +213,8 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         if (group) {
             group.addChild(row);
             index = this._findItemIndex(item, group);
-        }else{
-            index=itemIndex;
+        } else {
+            index = itemIndex;
         }
 
         const view = this._viewContainer.createEmbeddedView(
@@ -150,13 +222,55 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
 
         row.view = view;
         this._itemsMap.set(item, row);
+
+        // actualize indexes for previous existing groups
+        if (existingGroups.length) {
+            let itemGroupIndex = this._findItemIndex(item);
+            if (itemGroupIndex === 0) {
+                existingGroups.forEach((group) => {
+                    this._actualizeGroupIndex(group);
+                });
+            }
+        }
+
         return row;
+    }
+
+    // actualize index of group
+    private _actualizeGroupIndex(group: AGridForGroup) {
+        let currentIndex = this._viewContainer.indexOf(group.view);
+        let actualIndex = this._getGroupIndex(group);
+        let moveModifier = 0;
+
+        if (currentIndex !== actualIndex) {
+
+            let childsLength = this._getSubchildLength(group);
+            let viewArray = [];
+            // getting all views that have to be moved
+            for (let i = 0; i <= childsLength; i++) {
+                viewArray.push(this._viewContainer.get(i + currentIndex));
+            }
+
+            viewArray.forEach((view, index) => {
+                if (actualIndex > currentIndex) {
+                    moveModifier++;
+                }
+                this._viewContainer.move(view, actualIndex + index - moveModifier);
+            });
+
+        }
     }
 
     // removes item and it's parents if they do not have any other childs
     private _removeItem(item) {
-        let row: any = this._itemsMap.get(item);
+        let rowItem = this._itemsMap.get(item);
+        let row: any = rowItem
         if (row) {
+            let existingGroups = this._getExistingGroupsForItem(item);
+            if (rowItem.parent) {
+                let rowIndex = this._viewContainer.indexOf(rowItem.view);
+                let parentIndex = this._viewContainer.indexOf(rowItem.parent.view);
+            }
             do {
                 // remove all parents if they do not have any children
                 let index = this._viewContainer.indexOf(row.view);
@@ -182,6 +296,12 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
                     break;
                 }
             } while (row);
+
+            existingGroups.forEach((group) => {
+                if(this._viewContainer.indexOf(group.view)>-1){
+                    this._actualizeGroupIndex(group);
+                }
+            });
         }
     }
 
@@ -211,7 +331,7 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         this._groupsMap.delete(group);
     }
 
-    private _findItemIndex(item:any,group?: AGridForGroup){
+    private _findItemIndex(item: any, group?: AGridForGroup) {
         let grouppedItems = this.aGridForOf;
         if (this._groups) {
             // find list of items from the same groups
@@ -239,7 +359,7 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
         return index;
     }
 
-    private _actualizeGrouppedIndex(item) {
+    private _actualizeGrouppedItemIndex(item) {
         let row = this._itemsMap.get(item);
 
         // if row.parent is presented, it was not deleted, but added
@@ -250,9 +370,17 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
             group.addChild(row);
         }
 
-        let index = this._findItemIndex(item,group);
+        let index = this._findItemIndex(item, group);
 
         this._viewContainer.move(row.view, index);
+        // if item is now first in group, actualize it group's index
+        let indexInGroup=this._findItemIndex(item);
+        if(indexInGroup===0){
+            let groups=this._getExistingGroupsForItem(item);
+            groups.forEach((group)=>{
+                this._actualizeGroupIndex(group);
+            });
+        }
         return row;
     }
 
@@ -354,11 +482,11 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
 
                     let row;
                     if (item.previousIndex == null) {
-                        row = this._insertNewGrouppedItem(item.item,currentIndex);
+                        row = this._insertNewGrouppedItem(item.item, currentIndex);
                     } else if (currentIndex == null) {
                         this._removeItem(item.item);
                     } else {
-                        row = this._actualizeGrouppedIndex(item.item);
+                        row = this._actualizeGrouppedItemIndex(item.item);
                     }
 
                     if (row) {
@@ -374,7 +502,7 @@ export class AGridForDirective<T> implements DoCheck, OnChanges {
             for (let i = 0, ilen = this.aGridForOf.length; i < ilen; i++) {
                 let row = this._itemsMap.get(this.aGridForOf[i]);
 
-                let viewRef = <EmbeddedViewRef<any>> row.view;
+                let viewRef = <EmbeddedViewRef<any>>row.view;
                 viewRef.context.index = i;
                 viewRef.context.count = ilen;
             }
