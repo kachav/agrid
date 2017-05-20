@@ -1,5 +1,5 @@
 import { Input, Component, ViewContainerRef, OnChanges, EmbeddedViewRef } from '@angular/core';
-import { AGridDetailDirective } from "./aGridDetail.directive";
+import { AGridDetailDirective } from './aGridDetail.directive';
 
 @Component({
     selector: 'a-grid-detail-loader',
