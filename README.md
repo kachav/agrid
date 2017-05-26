@@ -91,13 +91,14 @@ Specify template of row groups by setting it like this:
 ```html
     <a-grid [items]="tableState.items">
         <!-- 
-            - set groupping field (by 'name')
+            - set groupping fields (by tableState.groupFields), tableState.groupFields can be a string name of single field, and array of multiple fields names
+            - optionally set initial collapsed groups (collapsed tableState.groupFields), tableState.groupFields can be a string name of single field, and array of multiple fields names
             - pass instance of group object (let group)
             - groupChild (instance of group childs array)
             - grLevel (groupping level)
             - groupCollapsed (state of group - collapsed/expanded)
             - group.toggleCollapse() (collapse/expand group) -->
-        <div *aGridGroup="let group by 'name'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;" [style.padding-left]="10+grLevel*20+'px'">
+        <div *aGridGroup="let group by tableState.groupFields collapsed tableState.groupFields; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;" [style.padding-left]="10+grLevel*20+'px'">
 			<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
 			{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
 
