@@ -95,26 +95,6 @@ describe('agrid.component', () => {
         expect(sanitizer.bypassSecurityTrustStyle).toHaveBeenCalledWith(`calc(100% - ${gridInstance.headerHeight + gridInstance.bottomHeight}px)`);
     });
 
-    it('bodyGroups should takes from groups._results', () => {
-        let groups = {
-            _results: [
-                { groupName: "gr1" },
-                { groupName: "gr2" }
-            ]
-        };
-
-        gridInstance.groups = groups;
-        gridInstance.updateBodyBindings();
-        expect(gridInstance.bodyGroups).toEqual(groups._results);
-    });
-
-    it('bodyGroups do not changes when groups is not presented', () => {
-        gridInstance.groups = null;
-        expect(gridInstance.bodyGroups).toEqual([]);
-        gridInstance.updateBodyBindings();
-        expect(gridInstance.bodyGroups).toEqual([]);
-    });
-
     it('bodyColumns should takes from columns._results', () => {
         let cols = {
             _results: [

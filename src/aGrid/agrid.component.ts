@@ -36,7 +36,7 @@ export class AGridComponent {
 
   @ContentChildren(AGridColumnComponent) private columns;
 
-  @ContentChildren(AGridGroupDirective) private groups;
+  @ContentChild(AGridGroupDirective) private group;
 
   @ContentChild(AGridDetailDirective) private detail;
 
@@ -45,8 +45,6 @@ export class AGridComponent {
   private checkedPropertyDefault = 'aGridChecked';
 
   private bodyColumns: AGridColumnComponent[] = [];
-
-  private bodyGroups: AGridGroupDirective[] = [];
 
   private bodyHeight;
 
@@ -102,9 +100,6 @@ export class AGridComponent {
   private updateBodyBindings() {
     if (this.columns) {
       this.bodyColumns = [...this.columns._results];
-    }
-    if (this.groups) {
-      this.bodyGroups = [...this.groups._results];
     }
   }
 

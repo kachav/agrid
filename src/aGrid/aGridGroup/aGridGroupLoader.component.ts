@@ -18,17 +18,23 @@ export class AGridGroupLoaderComponent implements OnChanges {
 
     private view: EmbeddedViewRef<any>;
 
+    private context;
+
     constructor(private viewContainer: ViewContainerRef) { }
     public ngOnInit() {
+        let groupLoader = this;
         if (this.group && this.group.template) {
-            this.view = this.viewContainer.createEmbeddedView(this.group.template,
-                {
-                    $implicit: this.groupData,
-                    group: this.groupData,
-                    children: this.children,
-                    groupLevel: this.groupLevel,
-                    collapsed: this.collapsed
-                });
+            this.context = {
+                $implicit: this.groupData,
+                group: this.groupData,
+                children: this.children,
+                groupLevel: this.groupLevel,
+                collapsed: this.collapsed,
+                toggleCollapse() {
+                    groupLoader.group.toggleCollapse(this.$implicit, this.collapsed);
+                }
+            };
+            this.view = this.viewContainer.createEmbeddedView(this.group.template, this.context);
         }
     }
 
@@ -37,7 +43,6 @@ export class AGridGroupLoaderComponent implements OnChanges {
             this.view.context.$implicit = this.groupData;
             this.view.context.group = this.groupData;
             this.view.context.children = this.children;
-            this.view.context.groupInstance = this.group;
             this.view.context.collapsed = this.collapsed;
         }
     }

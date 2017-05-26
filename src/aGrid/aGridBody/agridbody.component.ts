@@ -21,7 +21,7 @@ export class AGridBodyComponent {
     @Input() public selectedProperty: string;
     @Input() public columns: any[];
     @Input() public checkedProperty: string;
-    @Input() public groups: AGridGroupDirective[];
+    @Input() public group: AGridGroupDirective;
     @Input() public detail: AGridDetailDirective;
 
     public get columnsLength() {
