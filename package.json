@@ -22,6 +22,7 @@
     "@angular/core": ">=4.0.0"
   },
   "dependencies": {
+    "agroupfor": "1.1.0",
     "lodash": "4.17.4"
   },
   "devDependencies": {

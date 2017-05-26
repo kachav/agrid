@@ -4,31 +4,46 @@ import { TemplateRef, Directive, Input } from '@angular/core';
     selector: '[aGridGroup]'
 })
 export class AGridGroupDirective {
-    @Input('aGridGroupBy') public groupName;
+    @Input('aGridGroupBy') public by;
 
-    @Input('aGridGroupCollapsed') public collapsedDefault;
+    @Input('aGridGroupCollapsed') public set collapsedDefault(value) {
+        if (!value) {
+            value = [];
+        }
+        if (!(value instanceof Array)) {
+            value = [value];
+        }
+
+        this._collapsedDefault = value;
+    };
 
     public collapsedGroups: Map<any, boolean> = new Map<any, boolean>();
+
+    private _collapsedDefault = [];
+
     constructor(public template: TemplateRef<any>) { }
 
-    public isCollapsed(key: any) {
+    public isCollapsed(key: any, groupName:string) {
         if (this.collapsedGroups.has(key)) {
             return !!this.collapsedGroups.get(key);
         }
 
-        return this.collapsedDefault === true;
+        return this._collapsedDefault.indexOf(groupName) > -1;
     }
 
-    public collapse(key: any) {
-        this.collapsedGroups.set(key, true);
+    public isParentCollapsed(par) {
+        let item = par;
+        let result = false;
+        while (item) {
+            if (this.isCollapsed(item.$implicit,item.groupName)) {
+                result = true;
+            }
+            item = item.parent;
+        }
+        return result;
     }
 
-    public expand(key: any) {
-        this.collapsedGroups.set(key, false);
-    }
-
-    public toggleCollapse(key: any) {
-        let value = this.collapsedDefault;
+    public toggleCollapse(key: any, value) {
         if (this.collapsedGroups.has(key)) {
             value = this.collapsedGroups.get(key);
         }

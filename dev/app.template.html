@@ -2,11 +2,11 @@
 
 <label><input type="checkbox" [(ngModel)]="showCol2" />show col 2</label>
 
-<label><input type="checkbox" [(ngModel)]="showGroup1" />show group 1</label>
+<label><input type="checkbox" [(ngModel)]="tableState.showGroup1" />show group 1</label>
 
-<label><input type="checkbox" [(ngModel)]="showGroup2" />show group 2</label>
+<label><input type="checkbox" [(ngModel)]="tableState.showGroup2" />show group 2</label>
 
-<label><input type="checkbox" [(ngModel)]="showGroup3" />show group 3</label>
+<label><input type="checkbox" [(ngModel)]="tableState.showGroup3" />show group 3</label>
 
 <label><input type="checkbox" [(ngModel)]="showHeader" />show header</label>
 
@@ -14,7 +14,7 @@
 
 <div style="height: calc(100vh - 50px);">
 	<a-grid (onBodyScroll)="tableState.bodyScroll($event)" [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
-		(onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
+	 (onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
 		<div *aGridDetail="let index=rowIndex expandedrows tableState.expandedRows;">
 			<input type="text" [(ngModel)]="tableState.editableRow.aaa" placeholder="aaa" />
@@ -24,23 +24,10 @@
 			<button (click)="tableState.saveEditedRow(index)">save</button>
 		</div>
 
-		<ng-container *ngIf="showGroup1">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'aaa'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
-				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
-				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}
-			</div>
-		</ng-container>
-		<ng-container *ngIf="showGroup2">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'sss'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
-				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
-				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
-		</ng-container>
-
-		<ng-container *ngIf="showGroup3">
-			<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by 'ddd'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;">
-				<button (click)="group.toggleCollapse()">{{groupCollapsed?'+':'–'}}</button>
-				{{group.value + ' ('+groupChild.length+') level:'+grLevel}}</div>
-		</ng-container>
+		<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by tableState.groupFields collapsed 'aaa'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;let toggle = toggleCollapse">
+			<button (click)="toggle()">{{groupCollapsed?'+':'–'}}</button> {{group.value + ' ('+groupChild.length+')
+			level:'+grLevel}}
+		</div>
 
 		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
 			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
@@ -111,5 +98,5 @@
 								<a-grid-button>>></a-grid-button>
 			</a-grid-pager>
 		</a-grid-bottom>
-		</a-grid>
+	</a-grid>
 </div>
