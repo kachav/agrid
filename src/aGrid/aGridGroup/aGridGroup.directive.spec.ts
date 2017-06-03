@@ -37,81 +37,109 @@ describe('aGridGroup.component', () => {
         expect(result).toEqual(true);
     });
 
+    it('collapsed when collapsedDefault set by string', () => {
+        let key = { aaa: 123 }, groupName = 'groupName';
+
+        instance.collapsedDefault = groupName;
+
+        expect(instance.isCollapsed(key, groupName)).toEqual(true);
+
+        instance.toggleCollapse(key, true);
+
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
+    });
 
     it('collapsed when collapsedDefault', () => {
-        let key = { aaa: 123 };
+        let key = { aaa: 123 }, groupName = 'groupName';
 
-        instance.collapsedDefault = true;
+        instance.collapsedDefault = [groupName];
 
-        expect(instance.isCollapsed(key)).toEqual(true);
+        expect(instance.isCollapsed(key, groupName)).toEqual(true);
 
-        instance.toggleCollapse(key);
+        instance.toggleCollapse(key, true);
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
     });
 
     it('!collapsed when !collapsedDefault', () => {
-        let key = { aaa: 123 };
+        let key = { aaa: 123 }, groupName = 'groupName';
 
-        instance.collapsedDefault = false;
+        instance.collapsedDefault = null;
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
 
-        instance.toggleCollapse(key);
+        instance.toggleCollapse(key, false);
 
-        expect(instance.isCollapsed(key)).toEqual(true);
+        expect(instance.isCollapsed(key, groupName)).toEqual(true);
     });
 
-    it('Can collapse', () => {
-        let key = { aaa: 123 };
-
-        expect(instance.isCollapsed(key)).toEqual(false);
-
-        instance.collapse(key);
-
-        expect(instance.isCollapsed(key)).toEqual(true);
-    });
-
-    it('Can expand', () => {
-        let key = { aaa: 123 };
-
-        expect(instance.isCollapsed(key)).toEqual(false);
-
-        instance.collapse(key);
-
-        expect(instance.isCollapsed(key)).toEqual(true);
-
-        instance.expand(key);
-
-        expect(instance.isCollapsed(key)).toEqual(false);
-    });
 
     it('Can toggle collapse', () => {
-        let key = { aaa: 123 };
+        let key = { aaa: 123 }, groupName = 'groupName';
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
 
-        instance.toggleCollapse(key);
+        instance.toggleCollapse(key, false);
 
-        expect(instance.isCollapsed(key)).toEqual(true);
+        expect(instance.isCollapsed(key, groupName)).toEqual(true);
 
-        instance.toggleCollapse(key);
+        instance.toggleCollapse(key, true);
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
     });
 
+    it('isParentCollapsed true when one of the parent is collapsed', () => {
+        let parentOne: any = { $implicit: { aaa: 123 }, groupName: 'group1' };
+        let parentTwo: any = { $implicit: { aaa: 123 }, groupName: 'group2' };
+        let parentThree: any = { $implicit: { aaa: 123 }, groupName: 'group3' };
+
+        //only parentTwo isCollapsed
+        spyOn(instance, 'isCollapsed').and.callFake((item, groupName) => { return groupName === parentTwo.groupName });
+
+        parentOne.parent = parentTwo;
+        parentTwo.parent = parentThree;
+
+        let isParentCollapsedValue = instance.isParentCollapsed(parentOne);
+
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentOne.$implicit, parentOne.groupName);
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentTwo.$implicit, parentTwo.groupName);
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentThree.$implicit, parentThree.groupName);
+
+        expect(isParentCollapsedValue).toEqual(true);
+    })
+
+    it('isParentCollapsed false when no one of the parent is collapsed', () => {
+        let parentOne: any = { $implicit: { aaa: 123 }, groupName: 'group1' };
+        let parentTwo: any = { $implicit: { aaa: 123 }, groupName: 'group2' };
+        let parentThree: any = { $implicit: { aaa: 123 }, groupName: 'group3' };
+
+        //no one parent is collapsed
+        spyOn(instance, 'isCollapsed').and.callFake(() => false);
+
+        parentOne.parent = parentTwo;
+        parentTwo.parent = parentThree;
+
+        let isParentCollapsedValue = instance.isParentCollapsed(parentOne);
+
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentOne.$implicit, parentOne.groupName);
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentTwo.$implicit, parentTwo.groupName);
+        expect(instance.isCollapsed).toHaveBeenCalledWith(parentThree.$implicit, parentThree.groupName);
+
+        expect(isParentCollapsedValue).toEqual(false);
+    })
+
     it('Can delete collapse', () => {
-        let key = { aaa: 123 };
+        let key = { aaa: 123 }, groupName = 'groupName';
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
 
-        instance.collapse(key);
+        instance.toggleCollapse(key, false);
 
-        expect(instance.isCollapsed(key)).toEqual(true);
+        expect(instance.isCollapsed(key, groupName)).toEqual(true);
 
         instance.deleteCollapse(key);
 
-        expect(instance.isCollapsed(key)).toEqual(false);
+        expect(instance.isCollapsed(key, groupName)).toEqual(false);
     });
 
 })

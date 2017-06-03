@@ -18,7 +18,42 @@ export class HomeTableState {
 
     public expandedRows = [];
 
+    public groupFields = ['aaa', 'sss', 'ddd'];
+
     public editableRow = null;
+
+    public get showGroup1(){
+        return this._showGroup1;
+    }
+
+    public set showGroup1(val){
+        this._showGroup1=val;
+        this.updateGroups();
+    }
+
+    public get showGroup2(){
+        return this._showGroup2;
+    }
+
+    public set showGroup2(val){
+        this._showGroup2=val;
+        this.updateGroups();
+    }
+
+    public get showGroup3(){
+        return this._showGroup3;
+    }
+
+    public set showGroup3(val){
+        this._showGroup3=val;
+        this.updateGroups();
+    }
+
+    private _showGroup1 = true;
+
+    private _showGroup2 = true;
+
+    private _showGroup3 = true;
 
     private count = 0;
 
@@ -54,6 +89,20 @@ export class HomeTableState {
     }
     get checked() {
         return this._items.getValue().filter((item) => item[this.checkedProperty]);
+    }
+
+    public updateGroups() {
+        let groups = [];
+        if (this._showGroup1) {
+            groups.push('aaa');
+        }
+        if (this._showGroup2) {
+            groups.push('sss');
+        }
+        if (this._showGroup3) {
+            groups.push('ddd');
+        }
+        this.groupFields = groups;
     }
 
     public modifyDays(index: number, value: number) {
@@ -170,12 +219,12 @@ export class HomeTableState {
     }
 
     private _newItem() {
-/*        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
-        let dddValues = [
-            'Иванович', 'Петрович', 'Аристархович',
-            'Николаевич', 'Васильевич', 'Олегович'];
-        let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];*/
-                let aaaValues = ['Иванов', 'Петров', 'Сидоров'];
+        /*        let aaaValues = ['Иванов', 'Петров', 'Сидоров', 'Бананов', 'Пустозвонов', 'Бонд', 'Смит'];
+                let dddValues = [
+                    'Иванович', 'Петрович', 'Аристархович',
+                    'Николаевич', 'Васильевич', 'Олегович'];
+                let sssValues = ['Иван', 'Петр', 'Василий', 'Евлампий', 'Дмитрий', 'Николай'];*/
+        let aaaValues = ['Иванов', 'Петров', 'Сидоров'];
         let dddValues = [
             'Иванович', 'Петрович', 'Аристархович'];
         let sssValues = ['Иван', 'Петр', 'Василий'];

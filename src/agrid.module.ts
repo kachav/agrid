@@ -23,7 +23,6 @@ import {
 } from './aGrid/synkHorizontalScroll/synkHorizontalScroll.directive';
 import { MutationObserverService } from './aGrid/utils/mutationObserver.service';
 import { LodashService } from './aGrid/utils/lodash.service';
-import { AGridForDirective } from './aGrid/aGridFor/aGridFor.directive';
 import { AGridGroupDirective } from './aGrid/aGridGroup/aGridGroup.directive';
 import { AGridGroupLoaderComponent } from './aGrid/aGridGroup/aGridGroupLoader.component';
 
@@ -34,14 +33,16 @@ import { COMPILER_PROVIDERS } from '@angular/compiler';
 import { AGridDetailDirective } from "./aGrid/aGridDetail/aGridDetail.directive";
 import { AGridDetailLoaderComponent } from "./aGrid/aGridDetail/aGridDetailLoader.component";
 
+import {AGroupForModule} from 'agroupfor';
+
 @NgModule({
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, AGroupForModule],
     providers: [
         COMPILER_PROVIDERS, { provide: Window, useValue: window },
         MutationObserverService, LodashService
     ],
     declarations: [
-        AGridComponent, AGridForDirective, AGridGroupDirective,
+        AGridComponent, AGridGroupDirective,
         AGridGroupLoaderComponent, SynkHorizontalScrollDirective,
         ScrollToPaddingRightDirective, ContentUpdatedDirective,
         AGridColumnResizerComponent, AGridBottomComponent, AGridButtonComponent,

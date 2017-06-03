@@ -6,32 +6,32 @@
         </tr>
     </thead>
     <tbody>
-        <ng-container *aGridFor="let item of items groupby groups; let i = index; let group=groupInstance; let groupChildren=children; let grLevel=groupLevel; let par=parent; let groupCollapsed=collapsed;">
-            <tr *ngIf="!(par && par.collapsed)"
+        <ng-container *aGroupFor="let item of items by group?.by; let i = index; let grName=groupName; let groupChildren=children; let grLevel=groupLevel; let par=parent;">
+            <tr *ngIf="!(par && group?.isParentCollapsed(par))"
                 #row
                 class="a-grid__row"
                 [ngClass]="{'a-grid__row_selected':item[selectedProperty],
                 'a-grid__row_checked':item[checkedProperty], 
-                'a-grid__group':group,
+                'a-grid__group':grName,
                 'a-grid__row_before-selected':i && items[i-1] && items[i-1][selectedProperty],
                 'a-grid__row_after-selected':i && items[i+1] && items[i+1][selectedProperty],
                 'a-grid__row_before-checked':i && items[i-1] && items[i-1][checkedProperty],
                 'a-grid__row_after-checked':i && items[i+1] && items[i+1][checkedProperty]}"
-                (click)="!group?rowClick(item):null" (dblclick)="!group?rowDoubleClick(item):null">
-                <ng-container *ngIf="group">
+                (click)="!grName?rowClick(item):null" (dblclick)="!grName?rowDoubleClick(item):null">
+                <ng-container *ngIf="grName">
                     <td [attr.colspan]="columnsLength">
-                        <a-grid-group-loader [collapsed]="groupCollapsed" [groupLevel]="grLevel" [groupData]="item" [group]="group" [children]="groupChildren"></a-grid-group-loader>
+                        <a-grid-group-loader [collapsed]="group?.isCollapsed(item, grName)" [group]="group" [groupLevel]="grLevel" [groupData]="item" [children]="groupChildren"></a-grid-group-loader>
                     </td>
                 </ng-container>
-                <ng-container *ngIf="!group">
+                <ng-container *ngIf="!grName">
                     <td *ngFor="let column of columns" class="a-grid__cell">
                         <a-grid-column-cell-loader *ngIf="column.cell" [rowElement]="row" [rowData]="item" [rowIndex]="i" [column]="column"></a-grid-column-cell-loader>
                         <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
                     </td>
                 </ng-container>
-                <td *ngIf="lastColumnResizable && !group"></td>
+                <td *ngIf="lastColumnResizable && !grName"></td>
             </tr>
-            <tr *ngIf="!(par && par.collapsed) && !group && detail && detail.expandedRows && detail.expandedRows.indexOf(item)>-1">
+            <tr *ngIf="!(par && group?.isParentCollapsed(par)) && !grName && detail && detail.expandedRows && detail.expandedRows.indexOf(item)>-1">
                 <td [attr.colspan]="columnsLength">
                     <a-grid-detail-loader [detail]="detail" [rowData]="item" [rowIndex]="i"></a-grid-detail-loader>
                 </td>

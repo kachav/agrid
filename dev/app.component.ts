@@ -16,11 +16,6 @@ export class AppComponent {
 
     public showCol2 = true;
 
-    public showGroup1 = true;
-
-    public showGroup2 = true;
-
-    public showGroup3 = true;
 
     public showHeader = true;
 
