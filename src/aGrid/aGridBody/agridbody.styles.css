@@ -13,6 +13,10 @@
     padding: 0;
 }
 
+.a-grid__row_hidden{
+    display: none;
+}
+
 .a-grid__row {
     line-height: 25px;
     font-size: 12px;

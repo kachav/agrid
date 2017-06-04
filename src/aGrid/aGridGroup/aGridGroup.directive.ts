@@ -40,6 +40,7 @@ export class AGridGroupDirective {
             }
             item = item.parent;
         }
+
         return result;
     }
 

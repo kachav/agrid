@@ -10,7 +10,13 @@
             <tr *ngIf="!(par && group?.isParentCollapsed(par))"
                 #row
                 class="a-grid__row"
-                [ngClass]="{'a-grid__row_selected':item[selectedProperty],'a-grid__row_checked':item[checkedProperty], 'a-grid__group':grName}"
+                [ngClass]="{'a-grid__row_selected':item[selectedProperty],
+                'a-grid__row_checked':item[checkedProperty], 
+                'a-grid__group':grName,
+                'a-grid__row_before-selected':i && items[i-1] && items[i-1][selectedProperty],
+                'a-grid__row_after-selected':i && items[i+1] && items[i+1][selectedProperty],
+                'a-grid__row_before-checked':i && items[i-1] && items[i-1][checkedProperty],
+                'a-grid__row_after-checked':i && items[i+1] && items[i+1][checkedProperty]}"
                 (click)="!grName?rowClick(item):null" (dblclick)="!grName?rowDoubleClick(item):null">
                 <ng-container *ngIf="grName">
                     <td [attr.colspan]="columnsLength">
