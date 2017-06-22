@@ -19,7 +19,7 @@
   "peerDependencies": {
     "@angular/common": ">=4.0.0",
     "@angular/compiler": ">=4.0.0",
-    "@angular/core": ">=4.0.0"
+    "@angular/core": "4.2.3"
   },
   "dependencies": {
     "agroupfor": "1.1.2",
