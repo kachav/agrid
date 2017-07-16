@@ -4,7 +4,7 @@ import { TemplateRef, Directive, Input } from '@angular/core';
     selector: '[aGridDetail]'
 })
 export class AGridDetailDirective {
-    @Input('aGridDetailExpandedrows') public expandedRows:any[];
+    @Input('aGridDetailExpandedrows') public expandedRows: any[];
 
     constructor(public template: TemplateRef<any>) { }
 }

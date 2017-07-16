@@ -10,7 +10,7 @@ import { AGridGroupDirective } from './aGridGroup/aGridGroup.directive';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { isFinite } from 'lodash';
-import { AGridDetailDirective } from "./aGridDetail/aGridDetail.directive";
+import { AGridDetailDirective } from './aGridDetail/aGridDetail.directive';
 
 @Component({
   selector: 'a-grid',
