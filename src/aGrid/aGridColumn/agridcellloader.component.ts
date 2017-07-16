@@ -12,7 +12,7 @@ export class AGridColumnCellLoaderComponent implements OnChanges {
 
     @Input() public rowIndex: number;
 
-    @Input() public rowElement:any;
+    @Input() public rowElement: any;
 
     private view: EmbeddedViewRef<any>;
 
@@ -25,7 +25,7 @@ export class AGridColumnCellLoaderComponent implements OnChanges {
                     rowData: this.rowData,
                     rowColumn: this.column,
                     rowIndex: this.rowIndex,
-                    rowElement:this.rowElement
+                    rowElement: this.rowElement
                 });
         }
     }

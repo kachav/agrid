@@ -7,7 +7,7 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AGridGroupDirective } from '../aGridGroup/aGridGroup.directive';
-import { AGridDetailDirective } from "../aGridDetail/aGridDetail.directive";
+import { AGridDetailDirective } from '../aGridDetail/aGridDetail.directive';
 
 @Component({
     selector: 'a-grid-body',

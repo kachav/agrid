@@ -23,7 +23,7 @@ export class AGridGroupDirective {
 
     constructor(public template: TemplateRef<any>) { }
 
-    public isCollapsed(key: any, groupName:string) {
+    public isCollapsed(key: any, groupName: string) {
         if (this.collapsedGroups.has(key)) {
             return !!this.collapsedGroups.get(key);
         }
@@ -35,7 +35,7 @@ export class AGridGroupDirective {
         let item = par;
         let result = false;
         while (item) {
-            if (this.isCollapsed(item.$implicit,item.groupName)) {
+            if (this.isCollapsed(item.$implicit, item.groupName)) {
                 result = true;
             }
             item = item.parent;

@@ -12,40 +12,40 @@ export class HomeTableState {
 
     public checkedProperty: string;
 
-    private _items: BehaviorSubject<any[]>;
-
-    private _selectedIndex: BehaviorSubject<number>;
-
     public expandedRows = [];
 
     public groupFields = ['aaa', 'sss', 'ddd'];
 
     public editableRow = null;
 
-    public get showGroup1(){
+    private _items: BehaviorSubject<any[]>;
+
+    private _selectedIndex: BehaviorSubject<number>;
+
+    public get showGroup1() {
         return this._showGroup1;
     }
 
-    public set showGroup1(val){
-        this._showGroup1=val;
+    public set showGroup1(val) {
+        this._showGroup1 = val;
         this.updateGroups();
     }
 
-    public get showGroup2(){
+    public get showGroup2() {
         return this._showGroup2;
     }
 
-    public set showGroup2(val){
-        this._showGroup2=val;
+    public set showGroup2(val) {
+        this._showGroup2 = val;
         this.updateGroups();
     }
 
-    public get showGroup3(){
+    public get showGroup3() {
         return this._showGroup3;
     }
 
-    public set showGroup3(val){
-        this._showGroup3=val;
+    public set showGroup3(val) {
+        this._showGroup3 = val;
         this.updateGroups();
     }
 
@@ -125,7 +125,9 @@ export class HomeTableState {
     }
 
     public saveEditedRow(index: number) {
-        let leftPart = [], rightPart = [], items = this._items.getValue();
+        let leftPart = [];
+        let rightPart = [];
+        let items = this._items.getValue();
 
         if (index > 0) {
             leftPart = items.slice(0, index);
@@ -199,9 +201,6 @@ export class HomeTableState {
 
     }
 
-    public bodyScroll(e) {
-    }
-
     public checkDblClick(row) {
         let _itemsArray = this._items.getValue();
         row[this.checkedProperty] = !row[this.checkedProperty];
@@ -210,11 +209,11 @@ export class HomeTableState {
 
     }
 
-    deleteMouseOver(row) {
+    private deleteMouseOver(row) {
         this.renderer.setElementClass(row, 'row-delete', true);
     }
 
-    deleteMouseLeave(row) {
+    private deleteMouseLeave(row) {
         this.renderer.setElementClass(row, 'row-delete', false);
     }
 

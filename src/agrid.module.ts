@@ -30,8 +30,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { COMPILER_PROVIDERS } from '@angular/compiler';
-import { AGridDetailDirective } from "./aGrid/aGridDetail/aGridDetail.directive";
-import { AGridDetailLoaderComponent } from "./aGrid/aGridDetail/aGridDetailLoader.component";
+import { AGridDetailDirective } from './aGrid/aGridDetail/aGridDetail.directive';
+import { AGridDetailLoaderComponent } from './aGrid/aGridDetail/aGridDetailLoader.component';
 
 import {AGroupForModule} from 'agroupfor';
 
