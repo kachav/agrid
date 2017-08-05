@@ -1,7 +1,7 @@
 <table class="a-grid__body">
     <thead>
         <tr>
-            <th class="a-grid__body-column" *ngFor="let column of columns;let l = last; let i = index;" [style.width]="!l || lastColumnResizable?column.width+'px':null"></th>
+            <th class="a-grid__body-column" *ngFor="let column of columns;let l = last; let i = index;" [style.width]="!l || lastColumnResizable?(column.calcWidth$ | async):null"></th>
             <th class="a-grid__body-column" *ngIf="lastColumnResizable"></th>
         </tr>
     </thead>

@@ -1,9 +1,9 @@
 import {
   Component, Input, Output, EventEmitter,
   ElementRef, ViewChild, ViewEncapsulation,
-  ContentChildren, ContentChild
+  ContentChildren, ContentChild, QueryList, ViewChildren
 } from '@angular/core';
-import { AGridColumnComponent } from './aGridColumn/agridcolumn.component';
+import { AGridColumnComponent, UNIT_PERC,UNIT_PX } from './aGridColumn/agridcolumn.component';
 
 import { AGridGroupDirective } from './aGridGroup/aGridGroup.directive';
 
@@ -34,23 +34,37 @@ export class AGridComponent {
 
   @Input() public checkedProperty: string;
 
-  @ContentChildren(AGridColumnComponent) private columns;
+  @ContentChildren(AGridColumnComponent) private columns:QueryList<AGridColumnComponent>;
 
   @ContentChild(AGridGroupDirective) private group;
 
   @ContentChild(AGridDetailDirective) private detail;
 
-  private selectedPropertyDefault = 'aGridSelected';
+  @ViewChildren('colElement') private colElements:QueryList<ElementRef>;
 
-  private checkedPropertyDefault = 'aGridChecked';
+  @ViewChild('bodyContainer') private bodyContainer:ElementRef;
+  
+  @ViewChild('headerContainer') private headerContainer:ElementRef;
 
-  private bodyColumns: AGridColumnComponent[] = [];
+  public selectedPropertyDefault = 'aGridSelected';
 
-  private bodyHeight;
+  public checkedPropertyDefault = 'aGridChecked';
 
-  private headerHeight = 0;
+  public bodyColumns: AGridColumnComponent[] = [];
 
-  private bottomHeight = 0;
+  public bodyHeight;
+
+  public headerHeight = 0;
+
+  public bottomHeight = 0;
+
+  public minWidthTable:string;
+
+  public minWidthBody:string;
+
+  private headerPaddingRightValue=0;
+
+  public headerPaddingRight:string;
 
   constructor(private sanitizer: DomSanitizer) {
     this.setBodyHeight();
@@ -58,6 +72,7 @@ export class AGridComponent {
 
   public ngAfterContentInit() {
     this.updateBodyBindings();
+
   }
 
   public ngOnChanges() {
@@ -99,12 +114,72 @@ export class AGridComponent {
 
   private updateBodyBindings() {
     if (this.columns) {
-      this.bodyColumns = [...this.columns._results];
+      this.bodyColumns = [...this.columns.toArray()];
     }
   }
 
   private get lastColumnResizable() {
     return !!(this.bodyColumns && this.bodyColumns.length &&
       this.bodyColumns[this.bodyColumns.length - 1].resizable);
+  }
+
+  private calculateMinWidth(){
+    let width = 0;
+    let percentWidth = 0;
+    let columnsArray = this.columns.toArray();
+    this.colElements.forEach((col, index)=>{
+      if(columnsArray[index] && columnsArray[index].widthUnit===UNIT_PERC){
+        percentWidth+=col.nativeElement.offsetWidth;
+      }else{
+        width += col.nativeElement.offsetWidth;
+      }
+    });
+    if (width+percentWidth>this.bodyContainer.nativeElement.offsetWidth){
+      let bodyWidth:any = '';
+      let tableWidth:any = '';
+      let percentWidthHeader = (percentWidth/this.bodyContainer.nativeElement.offsetWidth)*100;
+
+      percentWidth = (percentWidth/this.bodyContainer.nativeElement.clientWidth)*100;
+
+      if(width && percentWidth){
+        
+        bodyWidth = this.sanitizer
+          .bypassSecurityTrustStyle(`calc(${percentWidth}% + ${width}px)`);
+        tableWidth = this.sanitizer
+          .bypassSecurityTrustStyle(`calc(${percentWidthHeader}% + ${width + this.headerPaddingRightValue}px)`);
+      }else if(percentWidth){
+        bodyWidth = `${percentWidth}%`;
+        tableWidth = this.sanitizer
+          .bypassSecurityTrustStyle(`calc(${percentWidthHeader}% + ${this.headerPaddingRightValue}px)`);
+      }else{
+        bodyWidth = `${width}px`;
+        tableWidth = `${width + this.headerPaddingRightValue}px`;
+      }
+      this.minWidthBody = bodyWidth
+      this.minWidthTable = tableWidth;
+    }else{
+      this.minWidthBody=null;
+      this.minWidthTable = null;
+    }
+  }
+
+  public columnResizeStart(){
+    this.bodyColumns.forEach(col=>{
+      col.widthChangeStart(this.bodyContainer.nativeElement.clientWidth);
+    });
+    this.calculateMinWidth();
+  }
+
+  public columnResizeEnd(){
+    this.bodyColumns.forEach(col=>{
+      col.widthChanged(this.bodyContainer.nativeElement.clientWidth);
+    });
+    this.calculateMinWidth();
+  }
+
+  public bodyScrollChanged(value:number){
+    this.headerPaddingRightValue = value;
+    this.headerPaddingRight = `${value}px`;
+    this.calculateMinWidth();
   }
 }

@@ -35,10 +35,11 @@ Bind the items you need to display to the [items] property of component and spec
     - colTitle - title of column (text in header)
     - resizable - column can be resized or not (true by default)
     - width - width of column in pixels
+    - widthUnit - units of width, can be px or %, default px
 
 ```html
     <a-grid [items]="tableState.items">
-        <a-grid-column [resizable]="true" colName="name" colTitle="Name" [width]="240"></a-grid-column>
+        <a-grid-column [resizable]="true" colName="name" colTitle="Name" [width]="240" widthUnit="%"></a-grid-column>
         <a-grid-column [resizable]="false" colName="surname" colTitle="Surname"></a-grid-column>
     </a-grid>
 ```
