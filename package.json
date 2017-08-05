@@ -22,8 +22,7 @@
     "@angular/core": ">=4.0.0"
   },
   "dependencies": {
-    "agroupfor": "1.1.2",
-    "lodash": "4.17.4"
+    "agroupfor": "1.1.2"
   },
   "devDependencies": {
     "@angular/common": "^4.3.0",
@@ -32,8 +31,6 @@
     "@angular/forms": "^4.3.0",
     "@angular/platform-browser": "^4.3.0",
     "@angular/platform-browser-dynamic": "^4.3.0",
-    "rxjs": "5.4.2",
-    "zone.js": "0.8.13",
     "@types/core-js": "0.9.42",
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.2.34",
@@ -70,12 +67,14 @@
     "karma-remap-istanbul": "^0.6.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "2.0.4",
+    "lodash": "^4.17.4",
     "merge2": "1.1.0",
     "nyc": "^11.0.2",
     "path": "0.12.7",
     "phantomjs": "^2.1.7",
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.10",
+    "rxjs": "5.4.2",
     "semantic-release": "6.3.6",
     "source-map-loader": "0.2.1",
     "to-string-loader": "1.1.5",
@@ -85,7 +84,8 @@
     "typescript": "^2.2.1",
     "webpack": "3.2.0",
     "webpack-dev-middleware": "^1.10.0",
-    "webpack-dev-server": "2.5.1"
+    "webpack-dev-server": "2.5.1",
+    "zone.js": "0.8.12"
   },
   "repository": {
     "type": "git",

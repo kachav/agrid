@@ -1,59 +1,57 @@
-import { Directive, ElementRef, Input, HostListener, Renderer } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 import { MutationObserverService } from '../utils/mutationObserver.service';
-
-import { LodashService } from '../utils/lodash.service';
 
 const DEBOUNCE_TIME = 100;
 
 @Directive({ selector: '[scrollToPaddingRight]' })
 export class ScrollToPaddingRightDirective {
-    @Input('scrollToPaddingRight') public targetElement;
-
-    private paddingRight = 0;
 
     private observer: MutationObserver;
 
-    @HostListener('window:resize') private windowResize;
+    private _destroy=new Subject();
 
-    constructor(private curElement: ElementRef, private renderer: Renderer,
-        private observerBuilder: MutationObserverService, private _: LodashService) {
+    private destroy$=this._destroy.asObservable().first();
+
+    private _windowResize=new Subject();
+
+    private windowResize$=this._windowResize.asObservable()
+        .debounceTime(DEBOUNCE_TIME).takeUntil(this.destroy$);
+
+    private _scrollChanged=new Subject();
+
+    private scrollChanged$=this._scrollChanged.asObservable()
+        .merge(this.windowResize$)
+        .takeUntil(this.destroy$).map(()=>
+            this.curElement.nativeElement.offsetWidth - this.curElement.nativeElement.clientWidth);
+
+    @Output() public scrollToPaddingRight = new EventEmitter<number>();
+
+    @HostListener('window:resize') private windowResize(){
+        this._windowResize.next();
+    };
+
+    constructor(private curElement: ElementRef,
+        private observerBuilder: MutationObserverService) {
         // configuration of the observer:
         let config = { childList: true, subtree: true };
 
         // subtree modified event
         this.observer = this.observerBuilder.getObserver(() => {
-            this.calculatePadding();
+            this._scrollChanged.next();
         });
         // pass in the target node, as well as the observer options
         this.observer.observe(this.curElement.nativeElement, config);
 
-        this.windowResize = this._.debounce(() => {
-            this.calculatePadding();
-        }, DEBOUNCE_TIME);
-    }
-
-    public ngAfterViewInit() {
-        this.calculatePadding();
+        //emit value of paddingRight, equal to width of scroll
+        this.scrollChanged$.subscribe((value)=>{
+            this.scrollToPaddingRight.emit(value);
+        });
     }
 
     public ngOnDestroy() {
+        this._destroy.next();
         this.observer.disconnect();
-    }
-
-    // calculating width of current element's vertical scrollbar
-    // and set it as padding right to target element
-    private calculatePadding() {
-        if (this.targetElement) {
-            let newPaddingRight = this.curElement.nativeElement.offsetWidth
-                - this.curElement.nativeElement.clientWidth;
-
-            if (newPaddingRight !== this.paddingRight) {
-                this.paddingRight = newPaddingRight;
-
-                this.renderer
-                    .setElementStyle(this.targetElement, 'padding-right', `${newPaddingRight}px`);
-            }
-        }
     }
 }

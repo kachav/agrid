@@ -14,6 +14,10 @@ export class AGridColumnResizerComponent {
 
     @Output() public columnResized = new EventEmitter();
 
+    @Output() public columnResizing = new EventEmitter();
+
+    @Output() public columnResizeStart = new EventEmitter();
+
     private active = false;
     private xPrev: number;
 
@@ -21,6 +25,7 @@ export class AGridColumnResizerComponent {
     private rightNumber: number;
 
     @HostListener('mousedown', ['$event']) public colResizerMouseDown(e) {
+        this.columnResizeStart.emit();
         this.active = true;
         this.startRight = 0;
         this.rightNumber = this.startRight;
@@ -28,11 +33,10 @@ export class AGridColumnResizerComponent {
     }
 
     @HostListener('document:mouseup') public colResizerMouseUp() {
-
         if (this.active) {
             this.active = false;
 
-            this.columnResized.next(this.startRight - this.rightNumber);
+            this.columnResized.emit(this.startRight - this.rightNumber);
         }
     }
 
@@ -43,7 +47,7 @@ export class AGridColumnResizerComponent {
             // save current coordinate as previous coordinate
             this.xPrev = e.pageX;
 
-            this.columnResized.next(this.startRight - this.rightNumber);
+            this.columnResizing.emit(this.startRight - this.rightNumber);
         }
     }
 }

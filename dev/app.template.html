@@ -13,7 +13,7 @@
 <button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
 <div style="height: calc(100vh - 50px);">
-	<a-grid (onBodyScroll)="tableState.bodyScroll($event)" [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
+	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
 	 (onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
 		<div *aGridDetail="let index=rowIndex expandedrows tableState.expandedRows;">
@@ -44,7 +44,7 @@
 			</button>
 		</a-grid-column>
 
-		<a-grid-column *ngIf="showCol2" [colName]="'aaa'" [colTitle]="'aaaTitle'">
+		<a-grid-column *ngIf="showCol2" colName="aaa" colTitle="aaaTitle" [width]="30" widthUnit="%">
 
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('aaa')">aaa</a>
 
