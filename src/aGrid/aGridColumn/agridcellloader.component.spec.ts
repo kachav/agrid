@@ -22,7 +22,8 @@ describe('agridcellloader.component', () => {
             providers: [
                 { provide: ViewContainerRef, useClass: ViewContainerRefMock }
             ]
-        }).compileComponents().then(() => {
+        })
+        .compileComponents().then(() => {
             instance = TestBed.createComponent(AGridColumnCellLoaderComponent).componentInstance;
         });
     }));

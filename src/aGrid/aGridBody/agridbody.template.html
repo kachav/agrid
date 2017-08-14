@@ -6,7 +6,7 @@
         </tr>
     </thead>
     <tbody>
-        <ng-container *aGroupFor="let item of items by group?.by; let i = index; let grName=groupName; let groupChildren=children; let grLevel=groupLevel; let par=parent;">
+         <ng-container *aGroupFor="let item of items by group?.by; let i = index; let grName=groupName; let groupChildren=children; let grLevel=groupLevel; let par=parent;">
             <tr *ngIf="!(par && group?.isParentCollapsed(par))"
                 #row
                 class="a-grid__row"

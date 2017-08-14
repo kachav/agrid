@@ -7,7 +7,7 @@ import {
 import { AGridCellDirective } from './agridcell.directive';
 import { AGridHeaderDirective } from './agridheader.directive';
 import { AGridFilterDirective } from './agridfilter.directive';
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export const UNIT_PX='px';
 export const UNIT_PERC='%';
@@ -55,7 +55,7 @@ export class AGridColumnComponent {
     private _units = new BehaviorSubject<string>(UNIT_PX);
     public units$ = this._units.asObservable()
         
-        .filter(unit=>WIDTH_UNITS.indexOf(unit)>-1)
+        .filter((unit)=>WIDTH_UNITS.indexOf(unit)>-1)
         .takeUntil(this.destroy$);
     
 
@@ -115,7 +115,7 @@ export class AGridColumnComponent {
         //px when changing, last units$ value when changing ends
         const changingUnits$=this.isChanging$
             .withLatestFrom(this.units$,(isChanging, units)=>({isChanging, units}))
-            .map(context=>context.isChanging?UNIT_PX:context.units);
+            .map((context)=>context.isChanging?UNIT_PX:context.units);
 
         //all sources units flow
         const currentUnits$ = this.units$.startWith(this.widthUnit).merge(changingUnits$).pairwise();
@@ -125,7 +125,7 @@ export class AGridColumnComponent {
             
             .withLatestFrom(this.gridWidth$,(context, gridWidth)=>({...context, gridWidth}))
             
-            .map(context=>{
+            .map((context)=>{
                 let widthValue=context.width;
                 
                 if(context.curUnits===UNIT_PX && context.prevUnits===UNIT_PERC){
