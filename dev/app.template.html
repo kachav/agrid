@@ -16,7 +16,7 @@
 	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
 	 (onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
-		<div *aGridDetail="let index=rowIndex expandedrows tableState.expandedRows;">
+<!-- 		<div *aGridDetail="let index=rowIndex expandedrows tableState.expandedRows;">
 			<input type="text" [(ngModel)]="tableState.editableRow.aaa" placeholder="aaa" />
 			<input type="text" [(ngModel)]="tableState.editableRow.sss" placeholder="sss" />
 			<input type="text" [(ngModel)]="tableState.editableRow.ddd" placeholder="ddd" />
@@ -27,7 +27,7 @@
 		<div [style.padding-left]="10+grLevel*20+'px'" *aGridGroup="let group by tableState.groupFields collapsed 'aaa'; let groupChild=children;let grLevel=groupLevel;let groupCollapsed=collapsed;let toggle = toggleCollapse">
 			<button (click)="toggle()">{{groupCollapsed?'+':'–'}}</button> {{group.value + ' ('+groupChild.length+')
 			level:'+grLevel}}
-		</div>
+		</div> -->
 
 		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
 			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
@@ -44,7 +44,7 @@
 			</button>
 		</a-grid-column>
 
-		<a-grid-column *ngIf="showCol2" colName="aaa" colTitle="aaaTitle" [width]="30" widthUnit="%">
+		<a-grid-column *ngIf="showCol2" colName="aaa" colTitle="aaaTitle" [minInitialWidth]="200" [width]="100" widthUnit="%">
 
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('aaa')">aaa</a>
 

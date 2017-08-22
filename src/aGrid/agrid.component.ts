@@ -57,6 +57,10 @@ export class AGridComponent {
 
   @ViewChild('headerContainer') private headerContainer: ElementRef;
 
+  @ViewChild('headertable') private headertable: ElementRef;
+
+  @ViewChild('bodyComponent',{read:ElementRef}) private bodyComponent: ElementRef;
+
   private _destroy = new Subject();
 
   private destroy$ = this._destroy.asObservable().first();
@@ -92,6 +96,10 @@ export class AGridComponent {
 
   public ngAfterContentInit() {
     this.updateBodyBindings();
+  }
+
+  public ngAfterViewInit(){
+      this.calculateMinWidth(true);
   }
 
   public ngOnChanges() {
@@ -142,15 +150,22 @@ export class AGridComponent {
       this.bodyColumns[this.bodyColumns.length - 1].resizable);
   }
 
-  private calculateMinWidth() {
+  private calculateMinWidth(init?:boolean) {
     let width = 0;
     let percentWidth = 0;
     let columnsArray = this.columns.toArray();
-    this.colElements.forEach((col, index) => {
+    let colElementsArray = this.colElements.toArray();
+    colElementsArray.forEach((col, index) => {
+      let colWidth = col.nativeElement.offsetWidth;
+
+      if(init){
+        colWidth = Math.max(colWidth,columnsArray[index].minInitialWidth);
+      }
+
       if (columnsArray[index] && columnsArray[index].widthUnit === UNIT_PERC) {
-        percentWidth += col.nativeElement.offsetWidth;
+        percentWidth += colWidth;
       } else {
-        width += col.nativeElement.offsetWidth;
+        width += colWidth;
       }
     });
     if (width + percentWidth > this.bodyContainer.nativeElement.offsetWidth) {
@@ -161,15 +176,11 @@ export class AGridComponent {
       percentWidth = (percentWidth / this.bodyContainer.nativeElement.clientWidth) * 100;
 
       if (width && percentWidth) {
-
-        bodyWidth = this.sanitizer
-          .bypassSecurityTrustStyle(`calc(${percentWidth}% + ${width}px)`);
-        tableWidth = this.sanitizer
-          .bypassSecurityTrustStyle(`calc(${percentWidthHeader}% + ${width + this.headerPaddingRightValue}px)`);
+        bodyWidth = `calc(${percentWidth}% + ${width}px)`;
+        tableWidth = `calc(${percentWidthHeader}% + ${width + this.headerPaddingRightValue}px)`;
       } else if (percentWidth) {
         bodyWidth = `${percentWidth}%`;
-        tableWidth = this.sanitizer
-          .bypassSecurityTrustStyle(`calc(${percentWidthHeader}% + ${this.headerPaddingRightValue}px)`);
+        tableWidth = `calc(${percentWidthHeader}% + ${this.headerPaddingRightValue}px)`;
       } else {
         bodyWidth = `${width}px`;
         tableWidth = `${width + this.headerPaddingRightValue}px`;
@@ -180,11 +191,14 @@ export class AGridComponent {
       this.minWidthBody = null;
       this.minWidthTable = null;
     }
+      this.renderer.setStyle(this.headertable.nativeElement,'min-width',this.minWidthTable);
+      this.renderer.setStyle(this.bodyComponent.nativeElement,'min-width',this.minWidthBody);
   }
 
   public columnResizeStart() {
-    this.bodyColumns.forEach((col) => {
-      col.widthChangeStart(this.bodyContainer.nativeElement.clientWidth);
+    let colElementsArray = this.colElements.toArray();
+    this.bodyColumns.forEach((col,index) => {
+      col.widthChangeStart(this.bodyContainer.nativeElement.clientWidth,colElementsArray[index].nativeElement.offsetWidth);
     });
     this.calculateMinWidth();
   }

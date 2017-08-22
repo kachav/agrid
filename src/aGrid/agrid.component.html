@@ -3,17 +3,17 @@
 </div>
 <div name="gridView" class="a-grid">
 	<div #headerContainer [ngClass]="{'a-grid__header-container_hidden':!showHeader}" class="a-grid__header-container noselect" (contentUpdated)="headerHeightChanged(headerContainer.offsetHeight)">
-		<table class="a-grid__header" #headertable [style.min-width]="minWidthTable" [style.padding-right]="headerPaddingRight">
+		<table class="a-grid__header" #headertable [style.padding-right]="headerPaddingRight">
 			<thead *ngIf="showHeader">
 				<tr>
-					<th class="a-grid__column" #colElement *ngFor="let column of columns; let i = index; let l = last;" [style.width]="!l || lastColumnResizable?(column.calcWidth$ | async):null">
+					<th class="a-grid__column" #colElement *ngFor="let column of columns; let i = index; let l = last;" [style.width]="column.calcWidth$ | async">
 						<span class="a-grid__column-title">
                             <span *ngIf="!column.header" [textContent]="column.colTitle || ''"></span>
 						<a-grid-column-header-loader *ngIf="column.header" [column]="column"></a-grid-column-header-loader>
 						</span>
 						<div (mousedown)="colChangeStart(i)" *ngIf="column.resizable" class="a-grid__column-resizer"></div>
 					</th>
-					<th *ngIf="lastColumnResizable"></th>
+					<th></th>
 				</tr>
 				<tr>
 					<th *ngFor="let column of columns; let i = index;">
@@ -24,7 +24,7 @@
 		</table>
 	</div>
 	<div #bodyContainer class="a-grid__body-container" (scroll)="onScroll($event)" (scrollToPaddingRight)="bodyScrollChanged($event)" [style.height]="bodyHeight">
-		<a-grid-body [style.min-width]="minWidthBody" [detail]="detail" [columns]="bodyColumns" [group]="group" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
+		<a-grid-body #bodyComponent [detail]="detail" [columns]="bodyColumns" [group]="group" [items]="items" [selectedProperty]="selectedProperty || selectedPropertyDefault" [checkedProperty]="checkedProperty || checkedPropertyDefault"
 			(onRowClick)="rowClick($event)" (onRowDoubleClick)="rowDoubleClick($event)"></a-grid-body>
 	</div>
 	<div #bottomContainer (contentUpdated)="bottomHeightChanged(bottomContainer.offsetHeight)">

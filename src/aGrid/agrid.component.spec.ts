@@ -1,3 +1,4 @@
+import { toArray } from 'rxjs/operator/toArray';
 import { Renderer2 } from '@angular/core';
 import { inject } from '@angular/core/testing';
 
@@ -232,21 +233,35 @@ describe('agrid.component', () => {
             }
         };
 
-        gridInstance.colElements = [
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100)
         ];
 
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
+
+        gridInstance.headertable = new DomElement(100);
+        gridInstance.bodyComponent = new DomElement(100);
+        spyOn(gridInstance.renderer,'setStyle');
         gridInstance.bodyContainer = new DomElement(100);
 
         gridInstance.columns = cols;
 
         gridInstance.headerPaddingRightValue = 15;
 
+
+
         gridInstance.calculateMinWidth();
 
         expect(gridInstance.minWidthBody).toEqual('200px');
         expect(gridInstance.minWidthTable).toEqual('215px');
+
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
     });
 
     it('calculateMinWidth don\'t works when body width is more then summ of column width', () => {
@@ -261,10 +276,20 @@ describe('agrid.component', () => {
             }
         };
 
-        gridInstance.colElements = [
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100)
         ];
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
+
+        gridInstance.headertable = new DomElement(100);
+        gridInstance.bodyComponent = new DomElement(100);
+        spyOn(gridInstance.renderer,'setStyle');
 
         gridInstance.bodyContainer = new DomElement(400);
 
@@ -276,6 +301,9 @@ describe('agrid.component', () => {
 
         expect(gridInstance.minWidthBody).toEqual(null);
         expect(gridInstance.minWidthTable).toEqual(null);
+
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
     });
 
     it('calculateMinWidth works with percents', () => {
@@ -292,12 +320,22 @@ describe('agrid.component', () => {
             }
         };
 
-        gridInstance.colElements = [
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100),
             new DomElement(100),
             new DomElement(100)
         ];
+
+        gridInstance.headertable = new DomElement(100);
+        gridInstance.bodyComponent = new DomElement(100);
+        spyOn(gridInstance.renderer,'setStyle');
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
 
         gridInstance.bodyContainer = new DomElement(300, 300);
 
@@ -308,8 +346,57 @@ describe('agrid.component', () => {
         gridInstance.calculateMinWidth();
 
         expect(gridInstance.minWidthBody).toEqual(`${(400 / 300) * 100}%`);
-        expect(gridInstance.sanitizer.bypassSecurityTrustStyle)
-            .toHaveBeenCalledWith(`calc(${(400 / 300) * 100}% + 15px)`);
+        expect(gridInstance.minWidthTable).toEqual(`calc(${(400 / 300) * 100}% + 15px)`);
+
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
+    });
+
+    it('calculateMinWidth takes max values from minInitialWidth on init', () => {
+        let res = [
+            { colName: "col1", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 150 },
+            { colName: "col2", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 50 },
+            { colName: "col3", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 50 },
+            { colName: "col4", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 50 }
+        ];
+
+        let cols = {
+            toArray() {
+                return res;
+            }
+        };
+
+        let colElementsArray = [
+            new DomElement(100),
+            new DomElement(100),
+            new DomElement(100),
+            new DomElement(100)
+        ];
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
+
+        gridInstance.headertable = new DomElement(100);
+        gridInstance.bodyComponent = new DomElement(100);
+        spyOn(gridInstance.renderer,'setStyle');
+
+        gridInstance.bodyContainer = new DomElement(300, 300);
+
+        gridInstance.columns = cols;
+
+        gridInstance.headerPaddingRightValue = 15;
+
+        gridInstance.calculateMinWidth(true);
+
+        expect(gridInstance.minWidthBody).toEqual(`${(450 / 300) * 100}%`);
+        expect(gridInstance.minWidthTable)
+            .toEqual(`calc(${(450 / 300) * 100}% + 15px)`);
+
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
     });
 
     it('calculateMinWidth works with percents and pixels both', () => {
@@ -326,12 +413,22 @@ describe('agrid.component', () => {
             }
         };
 
-        gridInstance.colElements = [
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100),
             new DomElement(100),
             new DomElement(100)
         ];
+
+        gridInstance.headertable = new DomElement(100);
+        gridInstance.bodyComponent = new DomElement(100);
+        spyOn(gridInstance.renderer,'setStyle');
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
 
         gridInstance.bodyContainer = new DomElement(300, 300);
 
@@ -341,10 +438,12 @@ describe('agrid.component', () => {
 
         gridInstance.calculateMinWidth();
 
-        expect(gridInstance.sanitizer.bypassSecurityTrustStyle)
-            .toHaveBeenCalledWith(`calc(100% + 100px)`);
-        expect(gridInstance.sanitizer.bypassSecurityTrustStyle)
-            .toHaveBeenCalledWith(`calc(100% + 115px)`);
+        expect(gridInstance.minWidthBody)
+            .toEqual(`calc(100% + 100px)`);
+        expect(gridInstance.minWidthTable)
+            .toEqual(`calc(100% + 115px)`);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
     });
 
     it('columnResizeStart triggers widthChangeStart for all columns', () => {
@@ -365,12 +464,19 @@ describe('agrid.component', () => {
             spyOn(resItem, 'widthChangeStart');
         })
 
-        gridInstance.colElements = [
+
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100),
             new DomElement(100),
             new DomElement(100)
         ];
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
 
         gridInstance.bodyContainer = new DomElement(300, 300);
 
@@ -381,8 +487,8 @@ describe('agrid.component', () => {
         gridInstance.updateBodyBindings();
         gridInstance.columnResizeStart();
 
-        res.forEach(resItem => {
-            expect(resItem.widthChangeStart).toHaveBeenCalledWith(gridInstance.bodyContainer.nativeElement.clientWidth);
+        res.forEach((resItem, index) => {
+            expect(resItem.widthChangeStart).toHaveBeenCalledWith(gridInstance.bodyContainer.nativeElement.clientWidth,colElementsArray[index].nativeElement.offsetWidth);
         })
 
         expect(gridInstance.calculateMinWidth).toHaveBeenCalled();
@@ -404,14 +510,20 @@ describe('agrid.component', () => {
 
         res.forEach(resItem => {
             spyOn(resItem, 'widthChanged');
-        })
+        });
 
-        gridInstance.colElements = [
+        let colElementsArray = [
             new DomElement(100),
             new DomElement(100),
             new DomElement(100),
             new DomElement(100)
         ];
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
 
         gridInstance.bodyContainer = new DomElement(300, 300);
 
@@ -422,7 +534,7 @@ describe('agrid.component', () => {
         gridInstance.updateBodyBindings();
         gridInstance.columnResizeEnd();
 
-        res.forEach(resItem => {
+        res.forEach((resItem) => {
             expect(resItem.widthChanged).toHaveBeenCalledWith(gridInstance.bodyContainer.nativeElement.clientWidth);
         })
 
@@ -434,6 +546,13 @@ describe('agrid.component', () => {
 
         gridInstance.ngAfterContentInit();
         expect(gridInstance.updateBodyBindings).toHaveBeenCalled();
+    });
+
+    it('calculateMinWidth fires on ngAfterViewInit', () => {
+        spyOn(gridInstance, 'calculateMinWidth');
+
+        gridInstance.ngAfterViewInit();
+        expect(gridInstance.calculateMinWidth).toHaveBeenCalledWith(true);
     });
 
     it('updateBodyBindings fires on ngOnChanges', () => {

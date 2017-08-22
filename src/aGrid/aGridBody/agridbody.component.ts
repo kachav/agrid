@@ -18,6 +18,10 @@ import { AGridDetailDirective } from '../aGridDetail/aGridDetail.directive';
 })
 export class AGridBodyComponent {
     @Input() public items: any[];
+    private _safeItems=[];
+    public get safeItems(){
+        return this.items || this._safeItems;
+    }
     @Input() public selectedProperty: string;
     @Input() public columns: any[];
     @Input() public checkedProperty: string;
