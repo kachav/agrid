@@ -19,34 +19,58 @@ describe('agridcolumn.component', () => {
     it('widthChangeStart sets gridWidth', async(() => {
         let startWidth = 137;
 
-        colInstance.gridWidth$.skip(1).first().subscribe(gridWidth=>{
+        colInstance.gridWidth$.last().subscribe(gridWidth=>{
             expect(gridWidth).toEqual(startWidth);
         });
 
-        colInstance.widthChangeStart(startWidth);
+        colInstance.widthChangeStart(startWidth,15);
+        colInstance.ngOnDestroy();
+    }));
 
+    it('widthChangeStart emits width$', async(() => {
+        let startWidth = 137, colOffsetWidth=50;
+
+        colInstance.width$.last().subscribe(width=>{
+            expect(width).toEqual(colOffsetWidth);
+        });
+        //colInstance.widthUnit=UNIT_PERC;
+
+        colInstance.widthChangeStart(startWidth,colOffsetWidth);
+        colInstance.ngOnDestroy();
+    }));
+
+    it('widthChangeStart emits width$ in percents', async(() => {
+        let startWidth = 200, colOffsetWidth=50;
+
+        colInstance.width$.last().subscribe(width=>{
+            expect(width).toEqual((colOffsetWidth/startWidth)*100);
+        });
+        colInstance.widthUnit=UNIT_PERC;
+
+        colInstance.widthChangeStart(startWidth,colOffsetWidth);
+        colInstance.ngOnDestroy();
     }));
 
     it('widthChangeStart emits changingStart$ true', async(() => {
         let startWidth = 137;
 
-        colInstance.changingStart$.skip(1).first().subscribe(started=>{
+        colInstance.changingStart$.last().subscribe(started=>{
             expect(started).toEqual(true);
         });
 
-        colInstance.widthChangeStart(startWidth);
-
+        colInstance.widthChangeStart(startWidth,25);
+        colInstance.ngOnDestroy();
     }));
 
     it('widthChanging emits diff$', async(() => {
         let diff = 4;
 
-        colInstance.diff$.skip(1).first().subscribe(emitDiff=>{
+        colInstance.diff$.last().subscribe(emitDiff=>{
             expect(emitDiff).toEqual(diff);
         });
 
         colInstance.widthChanging(diff);
-
+        colInstance.ngOnDestroy();
     }));
 
     it('widthUnit emits units$', async(() => {
@@ -62,11 +86,16 @@ describe('agridcolumn.component', () => {
         expect(colInstance.widthUnit).toEqual(UNIT_PERC);
     });
 
+    it('minWidth returns minWidth$ value', () => {
+        colInstance.minWidth = 100;
+        expect(colInstance.minWidth).toEqual(100);
+    });
+
     it('widthChanged emits gridWidth$ and _changingEnd', async(() => {
         let gridWidth = 400;
         let instance:any = colInstance;
 
-        colInstance.gridWidth$.skip(1).first().subscribe(emitWidth=>{
+        colInstance.gridWidth$.last().subscribe(emitWidth=>{
             expect(emitWidth).toEqual(gridWidth);
         });
 
@@ -75,7 +104,7 @@ describe('agridcolumn.component', () => {
         colInstance.widthChanged(gridWidth);
 
         expect(instance._changingEnd.next).toHaveBeenCalled();
-
+        colInstance.ngOnDestroy();
     }));
 
     it('ngOnDestroy emits _destroy', async(() => {
@@ -106,7 +135,7 @@ describe('agridcolumn.component', () => {
         
         colInstance.width=200;
 
-        colInstance.widthChangeStart(500);
+        colInstance.widthChangeStart(500,200);
 
         colInstance.widthChanging(5);
 
@@ -121,7 +150,7 @@ describe('agridcolumn.component', () => {
         
         colInstance.width=200;
 
-        colInstance.widthChangeStart(500);
+        colInstance.widthChangeStart(500,200);
 
         colInstance.widthChanging(5);
 
@@ -140,7 +169,7 @@ describe('agridcolumn.component', () => {
 
         colInstance.minWidth = 200;
 
-        colInstance.widthChangeStart(500);
+        colInstance.widthChangeStart(500,200);
 
         colInstance.widthChanging(-5);
 
@@ -163,7 +192,7 @@ describe('agridcolumn.component', () => {
         })
         colInstance.widthUnit=UNIT_PERC;
         colInstance.width=50;
-        colInstance.widthChangeStart(500);
+        colInstance.widthChangeStart(500,250);
         colInstance.ngOnDestroy();
     }));
 
@@ -175,7 +204,7 @@ describe('agridcolumn.component', () => {
         
         colInstance.widthUnit=UNIT_PERC;
         colInstance.width=50;
-        colInstance.widthChangeStart(500);
+        colInstance.widthChangeStart(500,250);
 
         colInstance.widthChanging(5);
 
@@ -192,7 +221,7 @@ describe('agridcolumn.component', () => {
         
         colInstance.widthUnit=UNIT_PERC;
         colInstance.width=50;
-        colInstance.widthChangeStart(gridWidth);
+        colInstance.widthChangeStart(gridWidth, 250);
 
         colInstance.widthChanging(5);
 
@@ -200,13 +229,5 @@ describe('agridcolumn.component', () => {
 
         colInstance.ngOnDestroy();
     }));
-
-/* 
-    it('can\'t set column width less then 36px', () => {
-        let modificator = 35;
-        expect(colInstance.width).toEqual(100);
-        //colInstance.setWidth(modificator);
-        expect(colInstance.width).toEqual(100);
-    }); */
 
 });

@@ -30,14 +30,18 @@ export class AGridColumnComponent {
     public get width(){
         return this._width.getValue();
     }
-    private _width=new BehaviorSubject<number>(100);
-    public width$=this._width.asObservable().takeUntil(this.destroy$).distinctUntilChanged();
+
 
     private _gridWidth=new Subject<number>();
     public gridWidth$=this._gridWidth.asObservable().takeUntil(this.destroy$).startWith(null);
     
+    @Input() public minInitialWidth = 30;
+
     @Input() public set minWidth(value:number){
         this._minWidth.next(value);
+    }
+    public get minWidth(){
+        return this._minWidth.getValue();
     }
     private _minWidth = new BehaviorSubject<number>(30);
     private minWidth$ = this._minWidth.asObservable().takeUntil(this.destroy$);
@@ -51,12 +55,30 @@ export class AGridColumnComponent {
     }
 
 
+
     //units of width
     private _units = new BehaviorSubject<string>(UNIT_PX);
     public units$ = this._units.asObservable()
         
         .filter((unit)=>WIDTH_UNITS.indexOf(unit)>-1)
         .takeUntil(this.destroy$);
+
+    private _changeStartActualWidth = new Subject<number>();
+    //actual width on starting resize
+    private changeStartActualWidth$=this._changeStartActualWidth.asObservable()
+        .withLatestFrom(this.gridWidth$,this.units$,(width, gridWidth, units)=>({width, gridWidth, units}))
+        .map((context)=>{
+            let result = context.width;
+            if(context.units===UNIT_PERC){
+                result = (result/context.gridWidth)*100;
+            }
+            return result;
+        })
+        .takeUntil(this.destroy$);
+
+
+    private _width=new BehaviorSubject<number>(100);
+    public width$=this._width.asObservable().merge(this.changeStartActualWidth$).takeUntil(this.destroy$).distinctUntilChanged();
     
 
 
@@ -83,8 +105,9 @@ export class AGridColumnComponent {
     @ContentChild(AGridHeaderDirective) public header;
     @ContentChild(AGridFilterDirective) public filter;
 
-    public widthChangeStart(gridWidth:number){
+    public widthChangeStart(gridWidth:number, actualWidth:number){
         this._gridWidth.next(gridWidth);
+        this._changeStartActualWidth.next(actualWidth);
         this._changingStart.next(true);
     }
 
