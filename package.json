@@ -85,7 +85,7 @@
     "webpack": "3.5.5",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-dev-server": "2.5.1",
-    "zone.js": "0.8.12"
+    "zone.js": "0.8.17"
   },
   "repository": {
     "type": "git",
