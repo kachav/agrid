@@ -399,6 +399,53 @@ describe('agrid.component', () => {
         expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
     });
 
+    it('calculateMinWidth works when body offsetWidth is 0', () => {
+        let res = [
+            { colName: "col1", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 150 },
+            { colName: "col2", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 50 },
+            { colName: "col3", resizable: true, widthUnit: UNIT_PX, minInitialWidth: 50 },
+            { colName: "col4", resizable: true, widthUnit: UNIT_PERC, minInitialWidth: 50 }
+        ];
+
+        let cols = {
+            toArray() {
+                return res;
+            }
+        };
+
+        let colElementsArray = [
+            new DomElement(0),
+            new DomElement(0),
+            new DomElement(0),
+            new DomElement(0)
+        ];
+
+        gridInstance.headertable = new DomElement(0);
+        gridInstance.bodyComponent = new DomElement(0);
+        spyOn(gridInstance.renderer,'setStyle');
+
+        gridInstance.colElements = {
+            toArray(){
+                return colElementsArray;
+            }
+        }
+
+        gridInstance.bodyContainer = new DomElement(0, 0);
+
+        gridInstance.columns = cols;
+
+        gridInstance.headerPaddingRightValue = 15;
+
+        gridInstance.calculateMinWidth();
+
+        expect(gridInstance.minWidthBody)
+            .toEqual(`300px`);
+        expect(gridInstance.minWidthTable)
+            .toEqual(`300px`);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.headertable.nativeElement,'min-width',gridInstance.minWidthTable);
+        expect(gridInstance.renderer.setStyle).toHaveBeenCalledWith(gridInstance.bodyComponent.nativeElement,'min-width',gridInstance.minWidthBody);
+    });
+
     it('calculateMinWidth works with percents and pixels both', () => {
         let res = [
             { colName: "col1", resizable: true, widthUnit: UNIT_PERC },
