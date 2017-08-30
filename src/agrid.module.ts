@@ -14,13 +14,6 @@ import {
     ScrollToPaddingRightDirective
 } from './aGrid/scrollToPaddingRight/scrollToPaddingRight.directive';
 import { ContentUpdatedDirective } from './aGrid/contentUpdated/contentUpdated.directive';
-import {
-    AGridColumnResizerComponent
-}
-from './aGrid/aGridColumnResizer/aGridColumnResizer.component';
-import {
-    SynkHorizontalScrollDirective
-} from './aGrid/synkHorizontalScroll/synkHorizontalScroll.directive';
 import { MutationObserverService } from './aGrid/utils/mutationObserver.service';
 import { AGridGroupDirective } from './aGrid/aGridGroup/aGridGroup.directive';
 import { AGridGroupLoaderComponent } from './aGrid/aGridGroup/aGridGroupLoader.component';
@@ -42,9 +35,9 @@ import {AGroupForModule} from 'agroupfor';
     ],
     declarations: [
         AGridComponent, AGridGroupDirective,
-        AGridGroupLoaderComponent, SynkHorizontalScrollDirective,
+        AGridGroupLoaderComponent,
         ScrollToPaddingRightDirective, ContentUpdatedDirective,
-        AGridColumnResizerComponent, AGridBottomComponent, AGridButtonComponent,
+        AGridBottomComponent, AGridButtonComponent,
         AGridFilterLoaderComponent, AGridPagerComponent,
         AGridBodyComponent, AGridColumnComponent,
         AGridFilterDirective, AGridCellDirective,
