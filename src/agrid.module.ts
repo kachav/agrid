@@ -14,15 +14,7 @@ import {
     ScrollToPaddingRightDirective
 } from './aGrid/scrollToPaddingRight/scrollToPaddingRight.directive';
 import { ContentUpdatedDirective } from './aGrid/contentUpdated/contentUpdated.directive';
-import {
-    AGridColumnResizerComponent
-}
-from './aGrid/aGridColumnResizer/aGridColumnResizer.component';
-import {
-    SynkHorizontalScrollDirective
-} from './aGrid/synkHorizontalScroll/synkHorizontalScroll.directive';
 import { MutationObserverService } from './aGrid/utils/mutationObserver.service';
-import { LodashService } from './aGrid/utils/lodash.service';
 import { AGridGroupDirective } from './aGrid/aGridGroup/aGridGroup.directive';
 import { AGridGroupLoaderComponent } from './aGrid/aGridGroup/aGridGroupLoader.component';
 
@@ -39,13 +31,13 @@ import {AGroupForModule} from 'agroupfor';
     imports: [CommonModule, FormsModule, AGroupForModule],
     providers: [
         COMPILER_PROVIDERS, { provide: Window, useValue: window },
-        MutationObserverService, LodashService
+        MutationObserverService
     ],
     declarations: [
         AGridComponent, AGridGroupDirective,
-        AGridGroupLoaderComponent, SynkHorizontalScrollDirective,
+        AGridGroupLoaderComponent,
         ScrollToPaddingRightDirective, ContentUpdatedDirective,
-        AGridColumnResizerComponent, AGridBottomComponent, AGridButtonComponent,
+        AGridBottomComponent, AGridButtonComponent,
         AGridFilterLoaderComponent, AGridPagerComponent,
         AGridBodyComponent, AGridColumnComponent,
         AGridFilterDirective, AGridCellDirective,
@@ -62,3 +54,8 @@ import {AGroupForModule} from 'agroupfor';
     ]
 })
 export class AgridModule { }
+export { AGridGroupDirective } from './aGrid/aGridGroup/aGridGroup.directive';
+export { AGridCellDirective } from './aGrid/aGridColumn/agridcell.directive';
+export { AGridFilterDirective } from './aGrid/aGridColumn/agridfilter.directive';
+export { AGridHeaderDirective } from './aGrid/aGridColumn/agridheader.directive';
+export { AGridDetailDirective } from './aGrid/aGridDetail/aGridDetail.directive';

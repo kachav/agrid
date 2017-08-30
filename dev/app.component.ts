@@ -18,6 +18,8 @@ export class AppComponent {
 
     public showHeader = true;
 
+    public visible=false;
+
     constructor(private tableState: HomeTableState) { }
 
     public showMessage(message) {

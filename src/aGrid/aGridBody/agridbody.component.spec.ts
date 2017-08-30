@@ -63,9 +63,20 @@ describe('agridbody.component', () => {
         expect(instance.columnsLength).toEqual(instance.columns.length + 1);
     })
 
-        it('columnsLength equal columns.length when lastColumnResizable===false', () => {
+    it('columnsLength equal columns.length when lastColumnResizable===false', () => {
         instance.columns = [{ resizable: true }, { resizable: false }];
         expect(instance.lastColumnResizable).toEqual(false);
         expect(instance.columnsLength).toEqual(instance.columns.length);
+    })
+
+    it('safeItems never returns null or undefined', () => {
+        expect(instance.safeItems).toEqual([]);
+        let itemsArr = [{},{}];
+        instance.items=itemsArr;
+        expect(instance.safeItems).toBe(itemsArr);
+        instance.items = null;
+        expect(instance.safeItems).toEqual([]);
+        instance.items = undefined;
+        expect(instance.safeItems).toEqual([]);
     })
 });

@@ -1,12 +1,12 @@
 <table class="a-grid__body">
     <thead>
         <tr>
-            <th class="a-grid__body-column" *ngFor="let column of columns;let l = last; let i = index;" [style.width]="!l || lastColumnResizable?column.width+'px':null"></th>
-            <th class="a-grid__body-column" *ngIf="lastColumnResizable"></th>
+            <th class="a-grid__body-column" *ngFor="let column of columns;let l = last; let i = index;" [style.width]="column.calcWidth$ | async"></th>
+            <th class="a-grid__body-column"></th>
         </tr>
     </thead>
     <tbody>
-        <ng-container *aGroupFor="let item of items by group?.by; let i = index; let grName=groupName; let groupChildren=children; let grLevel=groupLevel; let par=parent;">
+         <ng-container *aGroupFor="let item of safeItems by group?.by; let i = index; let grName=groupName; let groupChildren=children; let grLevel=groupLevel; let par=parent;">
             <tr *ngIf="!(par && group?.isParentCollapsed(par))"
                 #row
                 class="a-grid__row"
@@ -29,7 +29,7 @@
                         <span *ngIf="!column.cell" [textContent]="item[column.colName]"></span>
                     </td>
                 </ng-container>
-                <td *ngIf="lastColumnResizable && !grName"></td>
+                <td *ngIf="!grName"></td>
             </tr>
             <tr *ngIf="!(par && group?.isParentCollapsed(par)) && !grName && detail && detail.expandedRows && detail.expandedRows.indexOf(item)>-1">
                 <td [attr.colspan]="columnsLength">

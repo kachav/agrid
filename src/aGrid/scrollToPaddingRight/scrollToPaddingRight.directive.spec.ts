@@ -6,7 +6,6 @@ import { Component, ViewChild, Renderer } from '@angular/core';
 
 import { MutationObserverService } from '../utils/mutationObserver.service';
 
-import { LodashService } from '../utils/lodash.service';
 
 let fakeObserver, observerDelegate, fakeObserverService;
 class MutationObserverServiceMock {
@@ -22,24 +21,23 @@ class MutationObserverServiceMock {
 
 
 @Component({
-    template: '<div #paddingTarget></div><div [scrollToPaddingRight]="paddingTarget"></div>',
+    template: '<div #paddingTarget></div><div (scrollToPaddingRight)="onPaddingChanged($event)"></div>',
     selector: 'test-container'
 })
 class testContainer {
 
     @ViewChild(ScrollToPaddingRightDirective) public targetDirective;
 
-    public handleContentUpdated() {
+    public onPaddingChanged() {
 
     }
 
 }
 
 describe('scrollToPaddingRight.directive', () => {
-    let instance;
+    let instance, containerInstance;
 
-    let debouncedFunction, debounceResult = function () { },
-        lodashServiceMock;
+    let debouncedFunction, debounceResult = function () { }, onObserve;
 
     beforeEach(async(() => {
         fakeObserver = {
@@ -53,25 +51,18 @@ describe('scrollToPaddingRight.directive', () => {
         fakeObserverService = new MutationObserverServiceMock();
 
 
-        lodashServiceMock = {
-            debounce() { }
-        }
-        spyOn(lodashServiceMock, 'debounce').and.callFake((delegate) => {
-            debouncedFunction = delegate;
-            return debounceResult;
-        });
-
         return TestBed.configureTestingModule({
 
             declarations: [
                 ScrollToPaddingRightDirective, testContainer
             ],
             providers: [
-                { provide: MutationObserverService, useValue: fakeObserverService },
-                { provide: LodashService, useValue: lodashServiceMock }
+                { provide: MutationObserverService, useValue: fakeObserverService }
             ]
         }).compileComponents().then(() => {
-            instance = TestBed.createComponent(testContainer).componentInstance.targetDirective;
+            containerInstance = TestBed.createComponent(testContainer).componentInstance;
+            instance = containerInstance.targetDirective;
+            spyOn(containerInstance,'onPaddingChanged');
         });
     }));
 
@@ -89,10 +80,30 @@ describe('scrollToPaddingRight.directive', () => {
         expect(fakeObserver.observe).toHaveBeenCalledWith(instance.curElement.nativeElement, { childList: true, subtree: true });
     })
 
-    it('debounce fires on directive creation', () => {
-        expect(lodashServiceMock.debounce).toHaveBeenCalled();
+    it('observer triggers scrollToPaddingRight event', () => {
+        instance.curElement.nativeElement = {
+            offsetWidth:20,
+            clientWidth:10
+        }
+        observerDelegate();
+        expect(containerInstance.onPaddingChanged).toHaveBeenCalledWith(10);
     })
 
+    it('event triggers on window resize event with debounce', async(() => {
+        instance.curElement.nativeElement = {
+            offsetWidth:20,
+            clientWidth:10
+        }
+        setTimeout(()=>{
+            expect(containerInstance.onPaddingChanged).toHaveBeenCalledTimes(1);
+            expect(containerInstance.onPaddingChanged).toHaveBeenCalledWith(10);
+        },200);
+        instance.windowResize();
+        setTimeout(()=>{
+            instance.windowResize();
+        },50);
+    }))
+/* 
     it('windowResize is result of debounce', () => {
         expect(instance.windowResize).toBe(debounceResult);
     })
@@ -113,14 +124,14 @@ describe('scrollToPaddingRight.directive', () => {
         spyOn(instance, 'calculatePadding');
         observerDelegate();
         expect(instance.calculatePadding).toHaveBeenCalled();
-    })
+    }) */
 
     it('observer.disconnect fires on ngOnDestroy', () => {
         instance.ngOnDestroy();
         expect(fakeObserver.disconnect).toHaveBeenCalled();
     })
 
-    it('setElementStyle do not fires without target element', () => {
+    /* it('setElementStyle do not fires without target element', () => {
         spyOn(instance.renderer,'setElementStyle');
         instance.targetElement = null;
         instance.calculatePadding();
@@ -146,6 +157,6 @@ describe('scrollToPaddingRight.directive', () => {
         instance.calculatePadding();
         expect(instance.paddingRight).toEqual(20);
         expect(instance.renderer.setElementStyle).toHaveBeenCalledWith(instance.targetElement, 'padding-right', '20px');
-    })
+    }) */
 
 });
