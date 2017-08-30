@@ -155,10 +155,12 @@ export class AGridComponent {
     let percentWidth = 0;
     let columnsArray = this.columns.toArray();
     let colElementsArray = this.colElements.toArray();
+    let bodyOffsetWidth = this.bodyContainer.nativeElement.offsetWidth;
+    let bodyClientWidth = this.bodyContainer.nativeElement.clientWidth;
     colElementsArray.forEach((col, index) => {
       let colWidth = col.nativeElement.offsetWidth;
 
-      if(init){
+      if(init || !bodyOffsetWidth){
         colWidth = Math.max(colWidth,columnsArray[index].minInitialWidth);
       }
 
@@ -168,12 +170,13 @@ export class AGridComponent {
         width += colWidth;
       }
     });
-    if (width + percentWidth > this.bodyContainer.nativeElement.offsetWidth) {
+    if (width + percentWidth > bodyOffsetWidth && bodyOffsetWidth) {
       let bodyWidth: any = '';
       let tableWidth: any = '';
-      let percentWidthHeader = (percentWidth / this.bodyContainer.nativeElement.offsetWidth) * 100;
 
-      percentWidth = (percentWidth / this.bodyContainer.nativeElement.clientWidth) * 100;
+      let percentWidthHeader = (percentWidth / bodyOffsetWidth) * 100;
+
+      percentWidth = (percentWidth / bodyClientWidth) * 100;
 
       if (width && percentWidth) {
         bodyWidth = `calc(${percentWidth}% + ${width}px)`;
@@ -187,6 +190,9 @@ export class AGridComponent {
       }
       this.minWidthBody = bodyWidth;
       this.minWidthTable = tableWidth;
+    }else if(!bodyOffsetWidth){
+      this.minWidthBody = `${percentWidth+width}px`;
+      this.minWidthTable = this.minWidthBody;
     } else {
       this.minWidthBody = null;
       this.minWidthTable = null;
