@@ -10,9 +10,11 @@
 
 <label><input type="checkbox" [(ngModel)]="showHeader" />show header</label>
 
+<label><input type="checkbox" [(ngModel)]="visible" />visible</label>
+
 <button *ngIf="showFilters" (click)="tableState.addItem()">+</button>
 
-<div style="height: calc(100vh - 50px);">
+<div style="height: calc(100vh - 60px);" [style.display]="visible?'block':'none'">
 	<a-grid [showHeader]="showHeader" [items]="tableState.items$ | async | myListFilter:['aaa',tableState.aaaFilter,'ddd',tableState.dddFilter]"
 	 (onRowClick)="tableState.select($event)" (onRowDoubleClick)="tableState.checkDblClick($event)">
 
@@ -29,7 +31,7 @@
 			level:'+grLevel}}
 		</div> -->
 
-		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
+ 		<a-grid-column [colName]="'index'" [resizable]="false" [width]="40">
 			<span *aGridCell="let index=rowIndex">{{index+1}}</span>
 		</a-grid-column>
 
@@ -38,13 +40,13 @@
 		</a-grid-column>
 
 
-		<a-grid-column [colName]="'toggle'" [resizable]="false" [width]="40">
+		<a-grid-column [colName]="'toggle'" [width]="100" widthUnit="%" [minInitialWidth]="150">
 			<button *aGridCell="let row" (click)="tableState.toggleRow(row)">
 				{{tableState.expandedRows.indexOf(row)===-1?'+':'–'}}
 			</button>
 		</a-grid-column>
 
-		<a-grid-column *ngIf="showCol2" colName="aaa" colTitle="aaaTitle" [minInitialWidth]="200" [width]="100" widthUnit="%">
+		<a-grid-column *ngIf="showCol2" colName="aaa" colTitle="aaaTitle" [width]="60" [minInitialWidth]="60">
 
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('aaa')">aaa</a>
 
@@ -53,25 +55,25 @@
 			</div>
 		</a-grid-column>
 
-		<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="110">
+		<a-grid-column [colName]="'sss'" [colTitle]="'sssTitle'" [width]="60" [minInitialWidth]="60">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('sss')">sss</a>
 		</a-grid-column>
 
-		<a-grid-column colName="ddd" colTitle="dddTitle">
+		<a-grid-column colName="ddd" colTitle="dddTitle" [width]="120" [minInitialWidth]="120">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('ddd')">ddd</a>
 			<div *ngIf="showFilters">
 				<input [(ngModel)]="tableState.dddFilter" *aGridFilter class="a-grid__filter-control" type="text" />
 			</div>
 		</a-grid-column>
 
-		<a-grid-column>
+		<a-grid-column [width]="120" [minInitialWidth]="120">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('aGridChecked')">checked</a>
 			<span *aGridCell="let row">{{row.aGridChecked}}</span>
 		</a-grid-column>
 
 
 
-		<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'"></a-grid-column>
+		<a-grid-column [colName]="'eee'" [colTitle]="'eeeTitle'" [width]="30" [minInitialWidth]="30" [resizable]="false"></a-grid-column>
 
 		<a-grid-column [resizable]="true">
 			<a *aGridHeader="let col;" (click)="tableState.sortBy('eee')">ddd</a>
