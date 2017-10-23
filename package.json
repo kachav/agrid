@@ -54,7 +54,7 @@
     "gulp-inline-ng2-template": "4.0.0",
     "gulp-rimraf": "0.2.1",
     "gulp-tslint": "^8.0.0",
-    "gulp-typescript": "3.2.2",
+    "gulp-typescript": "3.2.3",
     "istanbul-instrumenter-loader": "3.0.0",
     "jasmine-core": "2.6.4",
     "karma": "1.7.1",
