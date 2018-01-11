@@ -30,7 +30,7 @@
     "@angular/core": "^4.3.0",
     "@angular/forms": "^4.3.0",
     "@angular/platform-browser": "^4.3.0",
-    "@angular/platform-browser-dynamic": "^4.3.0",
+    "@angular/platform-browser-dynamic": "^5.2.0",
     "@types/core-js": "0.9.43",
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.2.34",
