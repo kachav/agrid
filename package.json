@@ -41,7 +41,7 @@
     "@types/uglify-js": "^2.0.27",
     "@types/webpack": "^3.0.2",
     "angular2-template-loader": "0.6.2",
-    "awesome-typescript-loader": "3.2.3",
+    "awesome-typescript-loader": "5.0.0-1",
     "codecov.io": "^0.1.6",
     "codelyzer": "^3.0.0-beta.4",
     "commitizen": "^2.9.5",
