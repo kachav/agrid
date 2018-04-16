@@ -48,7 +48,7 @@
     "core-js": "2.5.0",
     "css-loader": "0.28.5",
     "cz-conventional-changelog": "^2.0.0",
-    "ghooks": "^2.0.0",
+    "ghooks": "2.0.2",
     "gulp": "3.9.1",
     "gulp-inline-ng2-styles": "0.0.1",
     "gulp-inline-ng2-template": "4.0.0",
