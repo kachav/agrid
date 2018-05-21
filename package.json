@@ -75,7 +75,7 @@
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.4.3",
-    "semantic-release": "7.0.1",
+    "semantic-release": "15.4.4",
     "source-map-loader": "0.2.1",
     "to-string-loader": "1.1.5",
     "ts-helpers": "1.1.2",
