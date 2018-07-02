@@ -51,7 +51,7 @@
     "ghooks": "^2.0.0",
     "gulp": "3.9.1",
     "gulp-inline-ng2-styles": "0.0.1",
-    "gulp-inline-ng2-template": "4.0.0",
+    "gulp-inline-ng2-template": "5.0.1",
     "gulp-rimraf": "0.2.1",
     "gulp-tslint": "^8.0.0",
     "gulp-typescript": "3.2.2",
