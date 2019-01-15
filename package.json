@@ -73,7 +73,7 @@
     "path": "0.12.7",
     "phantomjs": "^2.1.7",
     "raw-loader": "0.5.1",
-    "reflect-metadata": "0.1.10",
+    "reflect-metadata": "0.1.13",
     "rxjs": "5.4.3",
     "semantic-release": "7.0.1",
     "source-map-loader": "0.2.1",
