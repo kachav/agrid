@@ -34,7 +34,7 @@
     "@types/core-js": "0.9.43",
     "@types/hammerjs": "^2.0.33",
     "@types/jasmine": "^2.2.34",
-    "@types/lodash": "4.14.74",
+    "@types/lodash": "4.14.134",
     "@types/node": "^8.0.9",
     "@types/selenium-webdriver": "3.0.5",
     "@types/source-map": "^0.5.0",
