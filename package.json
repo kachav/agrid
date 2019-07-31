@@ -68,7 +68,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "2.0.4",
     "lodash": "^4.17.4",
-    "merge2": "1.1.0",
+    "merge2": "1.2.4",
     "nyc": "^11.0.2",
     "path": "0.12.7",
     "phantomjs": "^2.1.7",
