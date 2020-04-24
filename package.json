@@ -46,7 +46,7 @@
     "codelyzer": "^3.0.0-beta.4",
     "commitizen": "^2.9.5",
     "core-js": "2.5.0",
-    "css-loader": "0.28.5",
+    "css-loader": "3.5.3",
     "cz-conventional-changelog": "^2.0.0",
     "ghooks": "^2.0.0",
     "gulp": "3.9.1",
